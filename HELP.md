@@ -1,0 +1,78 @@
+# Hyperion - Local Setup Guide
+
+Welcome to the **Hyperion** project! Follow this guide to set up your local development environment and get the application running smoothly.
+
+---
+
+## 🛠️ Prerequisites
+
+Before running the application, ensure you have the following installed on your machine:
+* **Java Development Kit (JDK) 26**
+* **Apache Maven 3.9+** (or use IntelliJ's built-in Maven)
+* **PostgreSQL Server**
+
+---
+
+## 💾 1. Database Setup (PostgreSQL)
+
+The application requires a local PostgreSQL database instance.
+
+### Step A: Create the Database & User Configuration
+Open your PostgreSQL terminal (`psql`), pgAdmin, or DataGrip, and execute the following commands:
+
+```sql
+-- Create the project database
+CREATE DATABASE hyperion;
+
+-- Set the password for the default 'postgres' user
+ALTER USER postgres WITH PASSWORD 'mdp';
+```
+
+> ⚠️ **Important:** We use **`mdp`** as the default local password for simplicity across the team. Make sure your local PostgreSQL instance matches this setup.
+
+---
+
+## ⚙️ 2. Application Configuration
+
+Verify that your `src/main/resources/application.properties` file contains the correct database credentials:
+
+```properties
+spring.application.name=hyperion
+
+# PostgreSQL Local Connection
+spring.datasource.url=jdbc:postgresql://localhost:5432/hyperion
+spring.datasource.username=postgres
+spring.datasource.password=mdp
+
+# Hibernate DDL Auto-Generation
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+---
+
+## 🚀 3. Building the Application
+
+### Using the Command Line
+Navigate to the project's root directory and run:
+```bash
+mvn clean install
+```
+
+### Using IntelliJ IDEA
+1. Open the project in IntelliJ.
+2. Go to `File` ➔ `Project Structure` ➔ `Project` and ensure the **Project SDK** is set to **Java 26**.
+3. Open the **Maven** tool window on the right side of the IDE.
+4. Expand **Lifecycle**, then double-click **`clean`**, followed by **`install`**.
+
+> 💡 **Tip:** During the first build, Hibernate will automatically connect to your local PostgreSQL server and generate all the required database tables for you.
+
+---
+
+## 📚 Reference Documentation
+For further reference, please consider the following sections:
+
+* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
+* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/current/reference/html/data.html#data.sql.jpa-and-spring-data)
