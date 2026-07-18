@@ -70,4 +70,19 @@ public class Cart {
         items.removeIf(item -> item.getWeapon().getId().equals(weaponId));
     }
 
+    public void updateQuantity(Long weaponId, int quantity) {
+
+        CartItem item = findItemByWeaponId(weaponId);
+
+        if (item == null) {
+            return;
+        }
+
+        if (quantity <= 0) {
+            removeWeapon(weaponId);
+        } else {
+            item.setQuantity(quantity);
+        }
+    }
+
 }

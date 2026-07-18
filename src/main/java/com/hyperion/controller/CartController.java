@@ -83,4 +83,14 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    @PostMapping("/cart/update/{weaponId}")
+    public String updateQuantity(
+            @PathVariable Long weaponId,
+            @RequestParam int quantity) {
+
+        panel.getCart().updateQuantity(weaponId, quantity);
+
+        return "redirect:/cart";
+    }
+
 }

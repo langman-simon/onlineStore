@@ -39,6 +39,19 @@
                     <button type="submit">Supprimer</button>
                     </form>
                 </td>
+                <td>
+                <form method="post" action="<c:url value='/cart/update/${item.weapon.id}'/>">
+                    <input
+                        type="number"
+                        name="quantity"
+                        value="${item.quantity}"
+                        min="0"
+                        max="${item.weapon.stock}">
+                    <button type="submit">
+                        Mettre à jour
+                    </button>
+                </form>
+</td>
             </tr>
         </c:forEach>
         </tbody>
