@@ -99,3 +99,23 @@ git merge feature -m "merge branch 'feature' into main"
 git push
 git switch feature
 ```
+
+---
+
+### Étape D : Déployer sur le main local et pousser
+convention de nommage des commits git.
+```bash
+feat: Nouvelle fonctionnalité
+
+fix: Correction bug
+
+docs: Documentation (README, commentaires)
+
+style: Formatage, points-virgules (pas de changement de code)
+
+refactor: Amélioration du code (sans ajouter de feature ni réparer de bug)
+
+test: Ajout ou modification de tests
+
+chore: Outils, mise à jour de dépendances, config (ex: package.json)
+```
