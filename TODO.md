@@ -2,8 +2,8 @@
 ---
 
 ## 🔵🛒 "Cart" Module & 🟡🎨 UI Design — **[`Simon`]**
-- [ ] Create dynamic shopping cart logic (session scope)
 - [ ] Design general user interface and layout components (template.jsp)
+- [ ] Create dynamic shopping cart logic (session scope)
 
 ---
 
