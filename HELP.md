@@ -70,34 +70,32 @@ mvn clean install
 
 ---
 
-## 🌿 4. Git Workflow (Template & Main)
+## 🌿 4. Git Workflow (feature & Main)
 
-Suis rigoureusement ce cheminement de commandes pour développer sur ta branche `template` et envoyer proprement ton code sur le dépôt distant sans casser la branche `main`.
-
-### Étape A : Travailler sur la branche template
+### Étape A : Travailler sur la branche feature
 Fais tes modifications de code dans ton IDE, puis sauvegarde ton travail localement :
 ```bash
 git commit -am "Mon message de commit clair"
 ```
 
 ### Étape B : Récupérer le main distant et fusionner
-Sans quitter ta branche `template`, va chercher les mises à jour du serveur et fusionne-les pour anticiper les conflits :
+Sans quitter ta branche `feature`, va chercher les mises à jour du serveur et fusionne-les pour anticiper les conflits :
 ```bash
-git pull origin main
+git fetch origin
+git merge origin/main -m "sync: fusion du main distant dans la branche feature"
 ```
 
 ### Étape C : Résoudre les conflits (Si nécessaire)
 Si Git indique des conflits, règle-les directement dans IntelliJ, puis valide la résolution :
 ```bash
-git add .
-git commit -m "chore: résolution des conflits avec le main distant"
+git commit -am "chore: résolution des conflits avec le main distant"
 ```
 
 ### Étape D : Déployer sur le main local et pousser
-Une fois que ta branche `template` est propre et à jour, bascule sur `main` pour y injecter ton travail et le pousser sur le serveur :
+Une fois que ta branche `feature` est propre et à jour, bascule sur `main` pour y injecter ton travail et le pousser sur le serveur :
 ```bash
 git switch main
-git merge template
+git merge feature -m "merge branch 'feature' into main"
 git push
-git switch template
+git switch feature
 ```
