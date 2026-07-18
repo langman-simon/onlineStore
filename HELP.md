@@ -70,9 +70,34 @@ mvn clean install
 
 ---
 
-## 📚 Reference Documentation
-For further reference, please consider the following sections:
+## 🌿 4. Git Workflow (Template & Main)
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/current/reference/html/data.html#data.sql.jpa-and-spring-data)
+Suis rigoureusement ce cheminement de commandes pour développer sur ta branche `template` et envoyer proprement ton code sur le dépôt distant sans casser la branche `main`.
+
+### Étape A : Travailler sur la branche template
+Fais tes modifications de code dans ton IDE, puis sauvegarde ton travail localement :
+```bash
+git commit -am "Mon message de commit clair"
+```
+
+### Étape B : Récupérer le main distant et fusionner
+Sans quitter ta branche `template`, va chercher les mises à jour du serveur et fusionne-les pour anticiper les conflits :
+```bash
+git pull origin main
+```
+
+### Étape C : Résoudre les conflits (Si nécessaire)
+Si Git indique des conflits, règle-les directement dans IntelliJ, puis valide la résolution :
+```bash
+git add .
+git commit -m "chore: résolution des conflits avec le main distant"
+```
+
+### Étape D : Déployer sur le main local et pousser
+Une fois que ta branche `template` est propre et à jour, bascule sur `main` pour y injecter ton travail et le pousser sur le serveur :
+```bash
+git switch main
+git merge template
+git push
+git switch template
+```
