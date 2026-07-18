@@ -40,18 +40,23 @@
                     </form>
                 </td>
                 <td>
-                <form method="post" action="<c:url value='/cart/update/${item.weapon.id}'/>">
-                    <input
-                        type="number"
-                        name="quantity"
-                        value="${item.quantity}"
-                        min="0"
-                        max="${item.weapon.stock}">
+                    <form method="post" action="<c:url value='/cart/update/${item.weapon.id}'/>">
+                        <input
+                            type="number"
+                            name="quantity"
+                            value="${item.quantity}"
+                            min="0"
+                            max="${item.weapon.stock}">
+                        <button type="submit">
+                            Mettre à jour
+                        </button>
+                    </form>
+                </td>
+                <form method="post" action="<c:url value='/cart/clear'/>">
                     <button type="submit">
-                        Mettre à jour
+                        Vider le panier
                     </button>
                 </form>
-</td>
             </tr>
         </c:forEach>
         </tbody>

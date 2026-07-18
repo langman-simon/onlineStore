@@ -93,4 +93,10 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    @PostMapping("/cart/clear")
+    public String clearCart() {
+        panel.getCart().clear();
+        return "redirect:/cart";
+    }
+
 }
