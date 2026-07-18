@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>${title}</title>
-    <link rel="stylesheet" href="<c:url value='/css/style.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/styles.css'/>">
 </head>
 <body>
 
@@ -15,7 +15,9 @@
 </header>
 
 <main>
-    <jsp:include page="${body}"/>
+    <div class="container">
+        <jsp:include page="${body}" />
+    </div>
 </main>
 
 <footer>

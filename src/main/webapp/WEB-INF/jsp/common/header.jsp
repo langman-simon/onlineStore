@@ -3,28 +3,32 @@
 
 <header class="navbar">
 
-    <h1>Hyperion</h1>
+    <div class="container">
 
-    <nav>
+        <h1 class="logo">Hyperion</h1>
 
-        <a href="<c:url value='/'/>">Accueil</a>
+        <nav>
 
-        <a href="<c:url value='/catalogue'/>">Catalogue</a>
+            <a href="<c:url value='/'/>">Accueil</a>
 
-        <a href="<c:url value='/company'/>">Notre société</a>
+            <a href="<c:url value='/catalogue'/>">Catalogue</a>
 
-        <a href="<c:url value='/cart'/>">
-            Panier (${panel.cart.totalQuantity})
-        </a>
+            <a href="<c:url value='/company'/>">Notre société</a>
 
-        <a href="<c:url value='/login'/>">Connexion</a>
+            <a href="<c:url value='/cart'/>">
+                Panier (${panel.cart.totalQuantity})
+            </a>
 
-        <a href="<c:url value='/register'/>">Inscription</a>
+            <a href="<c:url value='/login'/>">Connexion</a>
 
-        <a href="?lang=fr">FR</a>
+            <a href="<c:url value='/register'/>">Inscription</a>
 
-        <a href="?lang=en">EN</a>
+            <a href="?lang=fr">FR</a>
 
-    </nav>
+            <a href="?lang=en">EN</a>
+
+        </nav>
+
+    </div>
 
 </header>
