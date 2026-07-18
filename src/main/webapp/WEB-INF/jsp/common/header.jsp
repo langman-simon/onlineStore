@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/include/importTags.jsp" %>
 
 <header class="navbar">
@@ -12,7 +13,9 @@
 
         <a href="<c:url value='/company'/>">Notre société</a>
 
-        <a href="<c:url value='/panier'/>">Panier</a>
+        <a href="<c:url value='/cart'/>">
+            Panier (${panel.cart.totalQuantity})
+        </a>
 
         <a href="<c:url value='/login'/>">Connexion</a>
 
