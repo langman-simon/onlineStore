@@ -20,9 +20,7 @@
     </div>
 </main>
 
-<footer>
-    <jsp:include page="/WEB-INF/jsp/common/footer.jsp"/>
-</footer>
+<jsp:include page="/WEB-INF/jsp/common/footer.jsp"/>
 
 </body>
 </html>

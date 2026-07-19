@@ -24,8 +24,9 @@ public class Weapon {
     @Column(nullable = false)
     private int stock;
 
-    @Column(length = 100)
-    private String category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(length = 100)
     private String manufacturer;
@@ -44,7 +45,7 @@ public class Weapon {
             String description,
             BigDecimal price,
             int stock,
-            String category,
+            Category category,
             String manufacturer,
             String reference,
             String imageUrl
@@ -95,11 +96,11 @@ public class Weapon {
         this.stock = stock;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

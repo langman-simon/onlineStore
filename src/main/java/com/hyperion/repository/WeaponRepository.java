@@ -10,5 +10,7 @@ public interface WeaponRepository extends JpaRepository<Weapon, Long> {
 
     List<Weapon> findByCategoryIgnoreCase(String category);
 
+    List<Weapon> findByOrderByNameAsc();
+
     Optional<Weapon> findByReference(String reference);
 }

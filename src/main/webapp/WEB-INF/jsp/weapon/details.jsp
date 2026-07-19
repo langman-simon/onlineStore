@@ -1,37 +1,80 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/importTags.jsp" %>
 
-<h1>${weapon.name}</h1>
+<section class="product-details">
 
-<p>${weapon.description}</p>
+    <div class="product-details__image">
+        <c:choose>
+            <c:when test="${not empty weapon.imageUrl}">
+                <img src="${weapon.imageUrl}" alt="${weapon.name}">
+            </c:when>
 
-<p>
-  Prix :
-  <strong>${weapon.price} €</strong>
-</p>
+            <c:otherwise>
+                <div class="image-placeholder">
+                    Aucune image
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
 
-<p>Catégorie : ${weapon.category}</p>
+    <div class="product-details__content">
 
-<p>Fabricant : ${weapon.manufacturer}</p>
+        <h1>${weapon.name}</h1>
 
-<p>Référence : ${weapon.reference}</p>
+        <p class="product-price">
+            ${weapon.price} €
+        </p>
 
-<p>Stock : ${weapon.stock}</p>
+        <p>
+            ${weapon.description}
+        </p>
 
-<form method="post"
-      action="<c:url value='/cart/add/${weapon.id}'/>">
+        <dl class="product-characteristics">
+            <dt>Catégorie</dt>
+            <dd>${weapon.category.name}</dd>
 
-  <label>Quantité</label>
+            <dt>Fabricant</dt>
+            <dd>${weapon.manufacturer}</dd>
 
-  <input
-          type="number"
-          name="quantity"
-          value="1"
-          min="1"
-          max="${weapon.stock}">
+            <dt>Référence</dt>
+            <dd>${weapon.reference}</dd>
 
-  <button type="submit">
-    Ajouter au panier
-  </button>
+            <dt>Stock</dt>
+            <dd>${weapon.stock}</dd>
+        </dl>
 
-</form>
+        <c:choose>
+            <c:when test="${weapon.stock > 0}">
+                <form method="post"
+                      action="<c:url value='/cart/add/${weapon.id}'/>"
+                      class="add-to-cart-form">
+
+                    <div>
+                        <label for="quantity">Quantité</label>
+
+                        <input id="quantity"
+                               type="number"
+                               name="quantity"
+                               value="1"
+                               min="1"
+                               max="${weapon.stock}"
+                               required>
+                    </div>
+
+                    <button type="submit">
+                        Ajouter au panier
+                    </button>
+
+                </form>
+            </c:when>
+
+            <c:otherwise>
+                <p class="error">
+                    Produit indisponible.
+                </p>
+            </c:otherwise>
+        </c:choose>
+
+    </div>
+
+</section>

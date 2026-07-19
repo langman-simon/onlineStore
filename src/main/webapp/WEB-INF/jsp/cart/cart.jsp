@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/importTags.jsp" %>
 
+<section class="cart-page">
 <h1>Votre panier</h1>
 
 <c:if test="${empty cart.items}">
@@ -36,7 +37,7 @@
 
                 <td>
                     <form method="post" action="<c:url value='/cart/remove/${item.weapon.id}'/>">
-                    <button type="submit">Supprimer</button>
+                    <button type="submit" class="btn-delete">Supprimer</button>
                     </form>
                 </td>
                 <td>
@@ -53,7 +54,7 @@
                     </form>
                 </td>
                 <form method="post" action="<c:url value='/cart/clear'/>">
-                    <button type="submit">
+                    <button type="submit" class="btn-delete">
                         Vider le panier
                     </button>
                 </form>
@@ -72,3 +73,4 @@
         <strong>${cart.totalPrice} €</strong>
     </p>
 </c:if>
+</section>
