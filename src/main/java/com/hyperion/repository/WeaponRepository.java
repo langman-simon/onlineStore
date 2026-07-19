@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface WeaponRepository extends JpaRepository<Weapon, Long> {
 
-    List<Weapon> findByCategoryIgnoreCase(String category);
-
     List<Weapon> findByOrderByNameAsc();
+
+    List<Weapon> findByCategoryIdOrderByNameAsc(Long categoryId);
 
     Optional<Weapon> findByReference(String reference);
 }

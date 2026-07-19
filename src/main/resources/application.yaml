@@ -8,20 +8,24 @@ spring:
     password: mdp
     driver-class-name: org.postgresql.Driver
 
-  server:
-    servlet:
-      encoding:
-        charset: UTF-8
-        enabled: true
-        force: true
-
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
+
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
 
   mvc:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
