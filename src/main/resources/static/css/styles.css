@@ -508,6 +508,16 @@ td form {
     margin: 0 0 1rem;
 }
 
+.stock-available {
+    color: #2f6b3b;
+    font-weight: 600;
+}
+
+.stock-unavailable {
+    color: #8b2f2f;
+    font-weight: 700;
+}
+
 /* ===========================
    MEDIA
 =========================== */

@@ -113,7 +113,7 @@ SELECT
     'Équipement Echo',
     'Produit actuellement indisponible pour tester le stock nul.',
     150000.00,
-    0,
+    3,
     id,
     'Hyperion Marine',
     'HYP-005',
@@ -121,3 +121,11 @@ SELECT
 FROM categories
 WHERE name = 'Équipements maritimes'
 ON CONFLICT (reference) DO NOTHING;
+
+UPDATE weapons
+SET stock = 3
+WHERE reference = 'HYP-005';
+
+SELECT id, name, reference, stock
+FROM weapons
+WHERE reference = 'HYP-005';

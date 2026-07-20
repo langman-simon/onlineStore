@@ -4,6 +4,10 @@ Welcome to the **Hyperion** project! Follow this guide to set up your local deve
 
 ---
 
+## web url (homepage)
+
+http://localhost:8080/
+
 ## 🛠️ Prerequisites
 
 Before running the application, ensure you have the following installed on your machine:

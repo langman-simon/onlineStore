@@ -35,56 +35,72 @@
         </form>
     </div>
 
-    <c:choose>
-        <c:when test="${empty weapons}">
-            <p class="catalogue-empty">
-                Aucun produit disponible dans cette catégorie.
-            </p>
-        </c:when>
+<c:choose>
+    <c:when test="${empty weapons}">
+        <p class="catalogue-empty">
+            Aucun produit disponible dans cette catégorie.
+        </p>
+    </c:when>
 
-        <c:otherwise>
-            <div class="product-grid">
+    <c:otherwise>
+        <div class="product-grid">
 
-                <c:forEach var="weapon" items="${weapons}">
-                    <article class="product-card">
+            <c:forEach var="weapon" items="${weapons}">
+                <article class="product-card">
 
-                        <div class="product-card__image">
-                            <c:choose>
-                                <c:when test="${not empty weapon.imageUrl}">
-                                    <img src="${weapon.imageUrl}"
-                                         alt="${weapon.name}">
-                                </c:when>
+                    <div class="product-card__image">
+                        <c:choose>
+                            <c:when test="${not empty weapon.imageUrl}">
+                                <img src="${weapon.imageUrl}"
+                                     alt="${weapon.name}">
+                            </c:when>
 
-                                <c:otherwise>
-                                    <div class="image-placeholder">
-                                        Aucune image
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
+                            <c:otherwise>
+                                <div class="image-placeholder">
+                                    Aucune image
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
 
-                        <div class="product-card__content">
-                            <h2>${weapon.name}</h2>
+                    <div class="product-card__content">
 
-                            <p class="product-card__category">
-                                ${weapon.category.name}
-                            </p>
+                        <h2>${weapon.name}</h2>
 
-                            <p class="product-price">
-                                ${weapon.price} €
-                            </p>
+                        <p class="product-card__category">
+                            ${weapon.category.name}
+                        </p>
 
-                            <a class="btn"
-                               href="<c:url value='/weapons/${weapon.id}'/>">
-                                Voir le détail
-                            </a>
-                        </div>
+                        <p class="product-price">
+                            ${weapon.price} €
+                        </p>
 
-                    </article>
-                </c:forEach>
+                        <c:choose>
+                            <c:when test="${weapon.stock > 0}">
+                                <p class="stock-available">
+                                    En stock : ${weapon.stock}
+                                </p>
+                            </c:when>
 
-            </div>
-        </c:otherwise>
-    </c:choose>
+                            <c:otherwise>
+                                <p class="stock-unavailable">
+                                    Rupture de stock
+                                </p>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <a class="btn"
+                           href="<c:url value='/weapons/${weapon.id}'/>">
+                            Voir le détail
+                        </a>
+
+                    </div>
+
+                </article>
+            </c:forEach>
+
+        </div>
+    </c:otherwise>
+</c:choose>
 
 </section>
