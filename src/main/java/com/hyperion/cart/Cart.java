@@ -28,10 +28,20 @@ public class Cart {
 
         CartItem existingItem = findItemByWeaponId(weapon.getId());
 
-        if (existingItem != null) {
-            existingItem.setQuantity(
-                    existingItem.getQuantity() + quantity
+        int currentQuantity = existingItem == null
+                ? 0
+                : existingItem.getQuantity();
+
+        int newQuantity = currentQuantity + quantity;
+
+        if (newQuantity > weapon.getStock()) {
+            throw new IllegalArgumentException(
+                    "La quantité totale dépasse le stock disponible."
             );
+        }
+
+        if (existingItem != null) {
+            existingItem.setQuantity(newQuantity);
         } else {
             items.add(new CartItem(weapon, quantity));
         }

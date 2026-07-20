@@ -55,15 +55,22 @@ public class CartController {
 
             return "redirect:/weapons/" + weaponId;
         }
+        try {
+            panel.getCart().addWeapon(weapon, quantity);
 
-        panel.getCart().addWeapon(weapon, quantity);
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Le produit a été ajouté au panier."
+            );
+            return "redirect:/cart";
 
-        redirectAttributes.addFlashAttribute(
-                "success",
-                "Le produit a été ajouté au panier."
-        );
-
-        return "redirect:/cart";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    e.getMessage()
+            );
+        }
+        return "redirect:/weapons/" + weaponId;
     }
 
     @GetMapping("/cart")

@@ -28,7 +28,7 @@ SELECT
     NULL
 FROM categories
 WHERE name = 'Armes de poing'
-ON CONFLICT DO NOTHING;
+ON CONFLICT (reference) DO NOTHING;
 
 INSERT INTO weapons (
     name,
@@ -51,7 +51,7 @@ SELECT
     NULL
 FROM categories
 WHERE name = 'Fusils'
-ON CONFLICT DO NOTHING;
+ON CONFLICT (reference) DO NOTHING;
 
 INSERT INTO weapons (
     name,
@@ -74,7 +74,7 @@ SELECT
     NULL
 FROM categories
 WHERE name = 'Protections'
-ON CONFLICT DO NOTHING;
+ON CONFLICT (reference) DO NOTHING;
 
 INSERT INTO weapons (
     name,
@@ -97,7 +97,7 @@ SELECT
     NULL
 FROM categories
 WHERE name = 'Véhicules blindés'
-ON CONFLICT DO NOTHING;
+ON CONFLICT (reference) DO NOTHING;
 
 INSERT INTO weapons (
     name,
@@ -120,4 +120,4 @@ SELECT
     NULL
 FROM categories
 WHERE name = 'Équipements maritimes'
-ON CONFLICT DO NOTHING;
+ON CONFLICT (reference) DO NOTHING;

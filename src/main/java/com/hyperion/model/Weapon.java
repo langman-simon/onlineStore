@@ -31,7 +31,7 @@ public class Weapon {
     @Column(length = 100)
     private String manufacturer;
 
-    @Column(length = 100)
+    @Column(nullable = false, unique = true, length = 100)
     private String reference;
 
     @Column(length = 500)
