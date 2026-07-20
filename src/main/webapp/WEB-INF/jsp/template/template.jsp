@@ -16,6 +16,17 @@
 
 <main>
     <div class="container">
+        <c:if test="${not empty success}">
+            <p class="success">
+                ${success}
+            </p>
+            </c:if>
+
+            <c:if test="${not empty error}">
+            <p class="error">
+                ${error}
+            </p>
+        </c:if>
         <jsp:include page="${body}" />
     </div>
 </main>
