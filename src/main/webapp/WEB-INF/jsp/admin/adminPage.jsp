@@ -90,6 +90,14 @@
                             Voir le détail
                         </a>
 
+                        <form method="post"
+                              action="<c:url value='/admin/remove/${item.weapon.id}'/>">
+
+                            <button type="submit" class="btn-delete">
+                                Supprimer Produit
+                            </button>
+                        </form>
+
                     </div>
 
                 </article>

@@ -11,6 +11,10 @@
 
             <a href="<c:url value='/'/>">Accueil</a>
 
+            <c:if test="${isAdmin == true}">
+                <a href="<c:url value='/admin'/>">Gestion Stock</a>
+            </c:if>
+
             <a href="<c:url value='/catalogue'/>">Catalogue</a>
 
             <a href="<c:url value='/company'/>">Notre société</a>
