@@ -56,7 +56,7 @@ spring.jpa.show-sql=true
 
 ---
 
-## 🚀 3. Building the Application
+## 🚀 Building the Application
 
 ### Using the Command Line
 Navigate to the project's root directory and run:
@@ -74,28 +74,28 @@ mvn clean install
 
 ---
 
-## 🌿 4. Git Workflow (feature & Main)
+## 🌿 Git Workflow (feature & Main)
 
-### Étape A : Travailler sur la branche feature
+### Travailler sur la branche feature
 Fais tes modifications de code dans ton IDE, puis sauvegarde ton travail localement :
 ```bash
 git commit -am "Mon message de commit clair"
 ```
 
-### Étape B : Récupérer le main distant et fusionner
+### Récupérer le main distant et fusionner
 Sans quitter ta branche `feature`, va chercher les mises à jour du serveur et fusionne-les pour anticiper les conflits :
 ```bash
 git fetch origin
 git merge origin/main -m "sync: fusion du main distant dans la branche feature"
 ```
 
-### Étape C : Résoudre les conflits (Si nécessaire)
+### Résoudre les conflits (Si nécessaire)
 Si Git indique des conflits, règle-les directement dans IntelliJ, puis valide la résolution :
 ```bash
 git commit -am "chore: résolution des conflits avec le main distant"
 ```
 
-### Étape D : Déployer sur le main local et pousser
+### Déployer sur le main local et pousser
 Une fois que ta branche `feature` est propre et à jour, bascule sur `main` pour y injecter ton travail et le pousser sur le serveur :
 ```bash
 git switch main
@@ -106,7 +106,15 @@ git switch feature
 
 ---
 
-### Étape D : Déployer sur le main local et pousser
+### PUSH/DELETE your local feature branch to remote repository. 
+```bash
+git push -u origin template
+git push origin --delete template
+```
+
+---
+
+### Déployer sur le main local et pousser
 convention de nommage des commits git.
 ```bash
 feat: Nouvelle fonctionnalité
