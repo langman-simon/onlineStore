@@ -3,7 +3,7 @@ package com.hyperion.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "clients")
+@Table(name = "users")
 public class User {
 
     @Id
