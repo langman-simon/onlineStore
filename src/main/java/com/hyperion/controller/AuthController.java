@@ -1,11 +1,46 @@
 package com.hyperion.controller;
 
+import com.hyperion.model.User;
+import com.hyperion.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Controller
 public class AuthController {
+
+    private final UserService userService;
+
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/login")
+    public String processLogin(@RequestParam String login,
+                               @RequestParam String password,
+                               HttpSession session,
+                               Model model) {
+        Optional<User> userOpt = userService.authenticate(login, password);
+
+        if (userOpt.isEmpty()) {
+            model.addAttribute("title", "Connexion");
+            model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
+            model.addAttribute("error", "Invalid login or password");
+            return "template/template";
+        }
+
+        User user = userOpt.get();
+        session.setAttribute("login", user.getLogin());
+        session.setAttribute("isAdmin", user.isAdmin());
+
+        return "redirect:/";
+    }
+
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -13,6 +48,12 @@ public class AuthController {
         model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
 
         return "template/template";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
     }
 
     @GetMapping("/register")
