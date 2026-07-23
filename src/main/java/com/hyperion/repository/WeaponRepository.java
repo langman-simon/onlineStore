@@ -11,4 +11,6 @@ public interface WeaponRepository extends JpaRepository<Weapon, Long> {
 
     List<Weapon> findByCategoryIdOrderByNameAsc(Long categoryId);
 
+    void removeWeaponById(Long idWeapon);
+
 }

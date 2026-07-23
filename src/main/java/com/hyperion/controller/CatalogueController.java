@@ -6,12 +6,12 @@ import com.hyperion.repository.CategoryRepository;
 import com.hyperion.repository.WeaponRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
+@RequestMapping("/catalogue")
 public class CatalogueController {
 
     private final WeaponRepository weaponRepository;
@@ -25,7 +25,7 @@ public class CatalogueController {
         this.categoryRepository = categoryRepository;
     }
 
-    @GetMapping("/catalogue")
+    @GetMapping()
     public String catalogue(
             @RequestParam(required = false) Long categoryId,
             Model model
@@ -51,5 +51,13 @@ public class CatalogueController {
         );
 
         return "template/template";
+    }
+
+    @PostMapping("/remove/{weaponId}")
+    public String removeFromCatalogue(@PathVariable Long weapon) {
+
+        weaponRepository.removeWeaponById(weapon);
+
+        return "redirect:/admin";
     }
 }

@@ -106,7 +106,7 @@ git switch feature
 
 ---
 
-### PUSH/DELETE your local feature branch to remote repository. 
+### if yours coworker need to see your code PUSH/DELETE your local feature branch to remote repository. 
 ```bash
 git push -u origin template
 git push origin --delete template
