@@ -4,7 +4,6 @@ import com.hyperion.model.Weapon;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface WeaponRepository extends JpaRepository<Weapon, Long> {
 
@@ -12,5 +11,4 @@ public interface WeaponRepository extends JpaRepository<Weapon, Long> {
 
     List<Weapon> findByCategoryIdOrderByNameAsc(Long categoryId);
 
-    Optional<Weapon> findByReference(String reference);
 }

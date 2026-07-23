@@ -28,10 +28,6 @@
                 </c:forEach>
             </select>
 
-            <noscript>
-                <button type="submit">Filtrer</button>
-            </noscript>
-
         </form>
     </div>
 
