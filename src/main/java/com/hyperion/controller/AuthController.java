@@ -1,18 +1,21 @@
 package com.hyperion.controller;
 
+import com.hyperion.dto.RegistrationForm;
 import com.hyperion.model.User;
 import com.hyperion.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import com.hyperion.dto.RegistrationForm;
-import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -24,8 +27,15 @@ public class AuthController {
         this.userService = userService;
     }
 
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("title", "Connexion");
+        model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
+        return "template/template";
+    }
+
     @PostMapping("/login")
-    public String processLogin(@RequestParam String login,
+    public String processLogin(@RequestParam("username") String login,
                                @RequestParam String password,
                                HttpSession session,
                                Model model) {
@@ -42,20 +52,24 @@ public class AuthController {
         session.setAttribute("login", user.getLogin());
         session.setAttribute("isAdmin", user.isAdmin());
 
+        List<GrantedAuthority> authorities = user.isAdmin()
+                ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"))
+                : List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(user.getLogin(), null, authorities);
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authToken);
+        SecurityContextHolder.setContext(context);
+        session.setAttribute("SPRING_SECURITY_CONTEXT", context);
+
         return "redirect:/";
-    }
-
-
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("title", "Connexion");
-        model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
-
-        return "template/template";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
+        SecurityContextHolder.clearContext();
         session.invalidate();
         return "redirect:/";
     }
@@ -64,7 +78,6 @@ public class AuthController {
     public String register(Model model) {
         model.addAttribute("title", "Inscription");
         model.addAttribute("body", "/WEB-INF/jsp/auth/register.jsp");
-
         return "template/template";
     }
 
@@ -78,17 +91,17 @@ public class AuthController {
             return "template/template";
         }
 
-        if (!form.getPassword().equals(form.getConfirmPassword())) {
+        if (!form.getPassword().equals(form.getPasswordConfirmation())) {
             model.addAttribute("title", "Inscription");
             model.addAttribute("body", "/WEB-INF/jsp/auth/register.jsp");
             model.addAttribute("error", "Passwords do not match");
             return "template/template";
         }
 
-        if (userService.loginExists(form.getLogin())) {
+        if (userService.loginExists(form.getUsername())) {
             model.addAttribute("title", "Inscription");
             model.addAttribute("body", "/WEB-INF/jsp/auth/register.jsp");
-            model.addAttribute("error", "Login already exists");
+            model.addAttribute("error", "Username already exists");
             return "template/template";
         }
 
@@ -98,7 +111,7 @@ public class AuthController {
         user.setDeliveryAddress(form.getDeliveryAddress());
         user.setEmail(form.getEmail());
         user.setPhone(form.getPhone());
-        user.setLogin(form.getLogin());
+        user.setLogin(form.getUsername());
         user.setSecondaryPhone(form.getSecondaryPhone());
 
         userService.register(user, form.getPassword());

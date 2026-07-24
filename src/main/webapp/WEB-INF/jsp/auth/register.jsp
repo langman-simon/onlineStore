@@ -11,12 +11,23 @@
               class="auth-form">
 
             <div class="form-group">
+                <label for="firstName">Prénom</label>
+                <input id="firstName" type="text" name="firstName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Nom</label>
+                <input id="lastName" type="text" name="lastName" required>
+            </div>
+
+            <div class="form-group">
                 <label for="username">Pseudo</label>
                 <input id="username"
                        type="text"
                        name="username"
                        required>
             </div>
+
 
             <div class="form-group">
                 <label for="email">Adresse e-mail</label>
@@ -43,6 +54,21 @@
                        type="password"
                        name="passwordConfirmation"
                        required>
+            </div>
+
+            <div class="form-group">
+                <label for="deliveryAddress">Adresse de livraison</label>
+                <input id="deliveryAddress" type="text" name="deliveryAddress" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Téléphone</label>
+                <input id="phone" type="tel" name="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="secondaryPhone">Téléphone secondaire (facultatif)</label>
+                <input id="secondaryPhone" type="tel" name="secondaryPhone">
             </div>
 
             <button type="submit">Créer le compte</button>
