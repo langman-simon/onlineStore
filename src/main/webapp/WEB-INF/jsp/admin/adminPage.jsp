@@ -103,6 +103,58 @@
                 </article>
             </c:forEach>
 
+            <article class="product-card">
+
+                    <div class="product-card__image">
+                        <form action="/action_page.php">
+                            <input type="file" id="myFile" name="filename">
+                            <input type="submit">
+                        </form>
+                    </div>
+
+                    <div class="product-card__content">
+
+                        <h2>${weapon.name}</h2>
+
+                        <p class="product-card__category">
+                            ${weapon.category.name}
+                        </p>
+
+                        <p class="product-price">
+                            ${weapon.price} €
+                        </p>
+
+                        <c:choose>
+                            <c:when test="${weapon.stock > 0}">
+                                <p class="stock-available">
+                                    En stock : ${weapon.stock}
+                                </p>
+                            </c:when>
+
+                            <c:otherwise>
+                                <p class="stock-unavailable">
+                                    Rupture de stock
+                                </p>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <a class="btn"
+                           href="<c:url value='/weapons/${weapon.id}'/>">
+                            Voir le détail
+                        </a>
+
+                        <form method="post"
+                              action="<c:url value='/admin/remove/${item.weapon.id}'/>">
+
+                            <button type="submit" class="btn-delete">
+                                Supprimer Produit
+                            </button>
+                        </form>
+
+                    </div>
+
+                </article>
+
         </div>
     </c:otherwise>
 </c:choose>
