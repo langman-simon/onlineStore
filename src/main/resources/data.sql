@@ -254,9 +254,3 @@ UPDATE weapons SET stock = 1  WHERE reference = 'HYP-016';
 UPDATE weapons SET stock = 1  WHERE reference = 'HYP-017';
 UPDATE weapons SET stock = 7  WHERE reference = 'HYP-018';
 UPDATE weapons SET stock = 4  WHERE reference = 'HYP-019';
-
-DELETE FROM categories
-WHERE name IN (
-               'Bombe humaine',
-               'Bombes humaines'
-    );
