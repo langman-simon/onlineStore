@@ -87,7 +87,7 @@ public class AuthController {
                                   Model model) {
         if (result.hasErrors()) {
             model.addAttribute("title", "Inscription");
-            model.addAttribute("body", "/WEB-INF/jsp/auth/register.jsp");
+            model.addAttribute("body", "/WEB-INF/jsp/auth/home.jsp");
             return "template/template";
         }
 
