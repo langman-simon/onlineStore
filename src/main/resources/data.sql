@@ -122,14 +122,6 @@ FROM categories
 WHERE name = 'Équipements maritimes'
 ON CONFLICT (reference) DO NOTHING;
 
-UPDATE weapons
-SET stock = 3
-WHERE reference = 'HYP-005';
-
-SELECT id, name, reference, stock
-FROM weapons
-WHERE reference = 'HYP-005';
-
 UPDATE weapons SET stock = 12 WHERE reference = 'HYP-001';
 UPDATE weapons SET stock = 4  WHERE reference = 'HYP-002';
 UPDATE weapons SET stock = 25 WHERE reference = 'HYP-003';
