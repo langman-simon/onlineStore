@@ -23,17 +23,16 @@ public class RegistrationForm {
     @Size(min = 8, max = 20, message = "Phone must be between 8 and 20 characters")
     private String phone;
 
-    @NotBlank(message = "Login is required")
+    @NotBlank(message = "Username is required")
     @Size(max = 50)
-    private String login;
+    private String username;
 
     @NotBlank(message = "Password is required")
     private String password;
 
     @NotBlank(message = "Password confirmation is required")
-    private String confirmPassword;
+    private String passwordConfirmation;
 
-    // Optional field
     private String secondaryPhone;
 
     public String getLastName() { return lastName; }
@@ -46,12 +45,12 @@ public class RegistrationForm {
     public void setEmail(String email) { this.email = email; }
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
-    public String getLogin() { return login; }
-    public void setLogin(String login) { this.login = login; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-    public String getConfirmPassword() { return confirmPassword; }
-    public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
+    public String getPasswordConfirmation() { return passwordConfirmation; }
+    public void setPasswordConfirmation(String passwordConfirmation) { this.passwordConfirmation = passwordConfirmation; }
     public String getSecondaryPhone() { return secondaryPhone; }
     public void setSecondaryPhone(String secondaryPhone) { this.secondaryPhone = secondaryPhone; }
 }
