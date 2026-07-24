@@ -100,14 +100,14 @@
                 </button>
             </form>
 
-            <form method="post"
-                  action="<c:url value='/cart/clear'/>"
-                  class="cart-clear-form">
+        <form method="post"
+              action="<c:url value='/cart/clear'/>"
+              class="cart-clear-form">
 
-                <button type="submit" class="btn-delete">
-                    Vider le panier
-                </button>
-            </form>
+            <button type="submit" class="btn-delete">
+                Vider le panier
+            </button>
+        </form>
 
         </div>
 

@@ -11,8 +11,7 @@ VALUES
     ('Lanceurs', 'Lance-roquettes et lance-missiles'),
     ('Munitions et explosifs', 'Munitions, grenades et charges explosives'),
     ('Protections', 'Équipements de protection individuelle'),
-    ('Équipements maritimes', 'Sous-marins, croiseurs et bâtiments militaires'),
-    ('Bombes humaines', 'Unités explosives à usage unique')
+    ('Équipements maritimes', 'Sous-marins, croiseurs et bâtiments militaires')
 ON CONFLICT (name) DO UPDATE
     SET description = EXCLUDED.description;
 
@@ -207,7 +206,7 @@ VALUES
         'Petite unité explosive mobile à usage unique.',
         1499.00,
         7,
-        (SELECT id FROM categories WHERE name = 'Bombes humaines'),
+        (SELECT id FROM categories WHERE name = 'Munitions et explosifs'),
         'Hyperion Experimental',
         'HYP-018',
         '/images/little_human_bomb.webp'
@@ -217,7 +216,7 @@ VALUES
         'Unité explosive mobile lourde à usage unique.',
         2999.00,
         4,
-        (SELECT id FROM categories WHERE name = 'Bombes humaines'),
+        (SELECT id FROM categories WHERE name = 'Munitions et explosifs'),
         'Hyperion Experimental',
         'HYP-019',
         '/images/human_bomb.webp'
@@ -255,3 +254,9 @@ UPDATE weapons SET stock = 1  WHERE reference = 'HYP-016';
 UPDATE weapons SET stock = 1  WHERE reference = 'HYP-017';
 UPDATE weapons SET stock = 7  WHERE reference = 'HYP-018';
 UPDATE weapons SET stock = 4  WHERE reference = 'HYP-019';
+
+DELETE FROM categories
+WHERE name IN (
+               'Bombe humaine',
+               'Bombes humaines'
+    );
