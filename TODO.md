@@ -11,6 +11,7 @@
 ## 🟢📦 "Catalog" Module (Product Management) — **[`Altin`]**
 - [ ] Create and manage database products
 - [ ] Design catalog display and product details views
+- [ ] Implement product search and filtering functionality
 
 ---
 
