@@ -111,23 +111,3 @@ git switch feature
 git push -u origin template
 git push origin --delete template
 ```
-
----
-
-### Déployer sur le main local et pousser
-convention de nommage des commits git.
-```bash
-feat: Nouvelle fonctionnalité
-
-fix: Correction bug
-
-docs: Documentation (README, commentaires)
-
-style: Formatage, points-virgules (pas de changement de code)
-
-refactor: Amélioration du code (sans ajouter de feature ni réparer de bug)
-
-test: Ajout ou modification de tests
-
-chore: Outils, mise à jour de dépendances, config (ex: package.json)
-```
