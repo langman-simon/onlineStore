@@ -67,7 +67,7 @@ public class AuthController {
         return "redirect:/";
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public String logout(HttpSession session) {
         SecurityContextHolder.clearContext();
         session.invalidate();

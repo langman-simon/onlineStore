@@ -12,3 +12,6 @@
 
 <%-- Spring Forms (binding, validation) --%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+<%-- Spring security tags (security, session) --%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
