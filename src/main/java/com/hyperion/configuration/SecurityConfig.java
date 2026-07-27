@@ -20,18 +20,17 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
 
-                        // Administration
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")
 
-                        // Commande réservée aux utilisateurs connectés
                         .requestMatchers(
                                 "/checkout",
                                 "/orders/**"
                         )
                         .authenticated()
 
-                        // Tout le reste est accessible au visiteur
+                        .requestMatchers("/cart/**").permitAll()
+
                         .anyRequest()
                         .permitAll()
                 )

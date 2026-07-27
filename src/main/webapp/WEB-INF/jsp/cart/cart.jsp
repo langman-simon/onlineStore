@@ -57,6 +57,8 @@
                                    max="${item.weapon.stock}"
                                    required>
 
+                            <sec:csrfInput/>
+
                             <button type="submit">
                                 Mettre à jour
                             </button>
@@ -66,6 +68,8 @@
                     <td>
                         <form method="post"
                               action="<c:url value='/cart/remove/${item.weapon.id}'/>">
+
+                            <sec:csrfInput/>
 
                             <button type="submit" class="btn-delete">
                                 Supprimer
@@ -103,6 +107,8 @@
         <form method="post"
               action="<c:url value='/cart/clear'/>"
               class="cart-clear-form">
+
+            <sec:csrfInput/>
 
             <button type="submit" class="btn-delete">
                 Vider le panier

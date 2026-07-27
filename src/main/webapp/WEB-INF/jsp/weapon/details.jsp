@@ -61,6 +61,8 @@
                                required>
                     </div>
 
+                    <sec:csrfInput/>
+
                     <button type="submit">
                         Ajouter au panier
                     </button>

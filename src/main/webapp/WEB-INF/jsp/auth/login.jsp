@@ -26,6 +26,8 @@
                        required>
             </div>
 
+            <sec:csrfInput/>
+
             <button type="submit">Se connecter</button>
 
         </form>

@@ -1,4 +1,53 @@
 -- =========================================================
+-- USERS
+-- =========================================================
+
+INSERT INTO users (
+    last_name,
+    first_name,
+    delivery_address,
+    email,
+    phone,
+    login,
+    password,
+    secondary_phone,
+    is_admin
+)
+VALUES
+    (
+        'user',
+        'user',
+        '12 rue de Bruxelles, 1000 Bruxelles',
+        'user@user.com',
+        '0569368522',
+        'user',
+        '$2a$10$96j7flItAKcO2OK6nBAfOuhGPMc47VnwnI4ZXalb0Yx7rwOP06xB6',
+        NULL,
+        FALSE
+    ),
+    (
+        'admin',
+        'admin',
+        '1 avenue Hyperion, 1000 Bruxelles',
+        'admin@admin.com',
+        '0523524785',
+        'admin',
+        '$2a$10$96j7flItAKcO2OK6nBAfOuhGPMc47VnwnI4ZXalb0Yx7rwOP06xB6',
+        '0369619732',
+        TRUE
+    )
+ON CONFLICT (login) DO UPDATE
+    SET
+        last_name = EXCLUDED.last_name,
+        first_name = EXCLUDED.first_name,
+        delivery_address = EXCLUDED.delivery_address,
+        email = EXCLUDED.email,
+        phone = EXCLUDED.phone,
+        password = EXCLUDED.password,
+        secondary_phone = EXCLUDED.secondary_phone,
+        is_admin = EXCLUDED.is_admin;
+
+-- =========================================================
 -- CATÉGORIES
 -- =========================================================
 
@@ -12,8 +61,7 @@ VALUES
     ('Munitions et explosifs', 'Munitions, grenades et charges explosives'),
     ('Protections', 'Équipements de protection individuelle'),
     ('Équipements maritimes', 'Sous-marins, croiseurs et bâtiments militaires')
-ON CONFLICT (name) DO UPDATE
-    SET description = EXCLUDED.description;
+ON CONFLICT (name) DO UPDATE SET description = EXCLUDED.description;
 
 
 -- =========================================================
@@ -229,7 +277,6 @@ ON CONFLICT (reference) DO UPDATE
         category_id = EXCLUDED.category_id,
         manufacturer = EXCLUDED.manufacturer,
         image_url = EXCLUDED.image_url;
-
 
 -- =========================================================
 -- RÉINITIALISATION DES STOCKS AU DÉMARRAGE

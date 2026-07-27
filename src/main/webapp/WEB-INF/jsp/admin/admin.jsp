@@ -209,9 +209,7 @@
                                       required></textarea>
                         </div>
 
-                        <input type="hidden"
-                               name="${_csrf.parameterName}"
-                               value="${_csrf.token}">
+                        <sec:csrfInput/>
 
                         <button type="submit" class="btn">
                             Valider l’ajout

@@ -71,6 +71,8 @@
                 <input id="secondaryPhone" type="tel" name="secondaryPhone">
             </div>
 
+            <sec:csrfInput/>
+
             <button type="submit">Créer le compte</button>
 
         </form>
