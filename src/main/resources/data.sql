@@ -202,14 +202,14 @@ VALUES
         '/images/dreadnought.webp'
     ),
     (
-        'Petite bombe humaine',
+        'explosif humain',
         'Petite unité explosive mobile à usage unique.',
         1499.00,
         7,
         (SELECT id FROM categories WHERE name = 'Munitions et explosifs'),
         'Hyperion Experimental',
         'HYP-018',
-        '/images/little_human_bomb.webp'
+        '/images/human_bomb_2.webp'
     ),
     (
         'Bombe humaine',

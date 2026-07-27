@@ -28,50 +28,13 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login(@RequestParam(required = false) String error, Model model) {
         model.addAttribute("title", "Connexion");
         model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
-        return "template/template";
-    }
-
-    @PostMapping("/login")
-    public String processLogin(@RequestParam("username") String login,
-                               @RequestParam String password,
-                               HttpSession session,
-                               Model model) {
-        Optional<User> userOpt = userService.authenticate(login, password);
-
-        if (userOpt.isEmpty()) {
-            model.addAttribute("title", "Connexion");
-            model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
-            model.addAttribute("error", "Invalid login or password");
-            return "template/template";
+        if (error != null) {
+            model.addAttribute("error", "Identifiant ou mot de passe incorrect.");
         }
-
-        User user = userOpt.get();
-        session.setAttribute("login", user.getLogin());
-        session.setAttribute("isAdmin", user.isAdmin());
-
-        List<GrantedAuthority> authorities = user.isAdmin()
-                ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"))
-                : List.of(new SimpleGrantedAuthority("ROLE_USER"));
-
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(user.getLogin(), null, authorities);
-
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authToken);
-        SecurityContextHolder.setContext(context);
-        session.setAttribute("SPRING_SECURITY_CONTEXT", context);
-
-        return "redirect:/";
-    }
-
-    @PostMapping("/logout")
-    public String logout(HttpSession session) {
-        SecurityContextHolder.clearContext();
-        session.invalidate();
-        return "redirect:/";
+        return "template/template";
     }
 
     @GetMapping("/register")
