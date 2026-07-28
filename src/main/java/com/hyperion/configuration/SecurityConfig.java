@@ -25,7 +25,7 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/checkout",
-                                "/orders/**"
+                                "/order/**"
                         )
                         .authenticated()
 
@@ -34,7 +34,6 @@ public class SecurityConfig {
                         .anyRequest()
                         .permitAll()
                 )
-
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
@@ -44,7 +43,6 @@ public class SecurityConfig {
                         .failureUrl("/login?error")
                         .permitAll()
                 )
-
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")

@@ -96,13 +96,17 @@
         <div class="cart-actions">
 
             <form method="get"
-                  action="<c:url value='/checkout'/>"
+                  action="<c:url value='/order/checkout'/>"
                   class="cart-checkout-form">
 
-                <button type="submit">
+                <button type="submit" class="btn">
                     Continuer vers la commande
                 </button>
             </form>
+
+        <a class="btn" href="<c:url value='/catalogue'/>">
+            Retour au catalogue
+        </a>
 
         <form method="post"
               action="<c:url value='/cart/clear'/>"

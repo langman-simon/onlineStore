@@ -35,7 +35,6 @@ public class OrderController {
         if (panel.getCart().isEmpty()) {
             return "redirect:/cart";
         }
-
         model.addAttribute("cart", panel.getCart());
         model.addAttribute("title", "Récapitulatif de commande");
         model.addAttribute(
@@ -59,7 +58,7 @@ public class OrderController {
                     "Commande confirmée."
             );
 
-            return "redirect:/orders" + order.getId();
+            return "redirect:/order/" + order.getId();
 
         } catch (IllegalArgumentException exception) {
             redirectAttributes.addFlashAttribute(
@@ -79,7 +78,7 @@ public class OrderController {
         CustomerOrder order = customerOrderRepository.findById(id)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "Commande introuvable : " + id
+                                "Commande n" + id + " introuvable"
                         )
                 );
 
@@ -92,4 +91,5 @@ public class OrderController {
 
         return "template/template";
     }
+
 }

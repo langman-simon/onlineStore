@@ -36,10 +36,10 @@
 
     <div class="checkout-actions">
 
-        <sec:csrfInput/>
-
         <form method="post"
-              action="<c:url value='/orders/confirm'/>">
+              action="<c:url value='/order/confirm'/>">
+
+            <sec:csrfInput/>
 
             <button type="submit">
                 Confirmer la commande

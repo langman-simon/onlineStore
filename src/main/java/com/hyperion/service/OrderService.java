@@ -64,9 +64,7 @@ public class OrderService {
             order.addItem(orderItem);
         }
 
-        CustomerOrder savedOrder =
-                customerOrderRepository.save(order);
-
+        CustomerOrder savedOrder = customerOrderRepository.save(order);
         cart.clear();
 
         return savedOrder;
