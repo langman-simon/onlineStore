@@ -9,9 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequestMapping("/order")
 public class OrderController {
 
     private final OrderService orderService;
@@ -44,7 +46,7 @@ public class OrderController {
         return "template/template";
     }
 
-    @PostMapping("/orders/confirm")
+    @PostMapping("/confirm")
     public String confirmOrder(
             RedirectAttributes redirectAttributes
     ) {
@@ -57,7 +59,7 @@ public class OrderController {
                     "Commande confirmée."
             );
 
-            return "redirect:/orders/" + order.getId();
+            return "redirect:/orders" + order.getId();
 
         } catch (IllegalArgumentException exception) {
             redirectAttributes.addFlashAttribute(
@@ -69,7 +71,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/orders/{id}")
+    @GetMapping("/{id}")
     public String orderDetails(
             @PathVariable Long id,
             Model model
