@@ -33,11 +33,12 @@
             </sec:authorize>
 
             <sec:authorize access="isAuthenticated()">
+                <a href="<c:url value='/account'/>">Mon compte</a>
                 <span>${sessionScope.login}</span>
 
-                <form method="post"
-                      action="<c:url value='/logout'/>"
-                      class="logout-form">
+            <form method="post"
+                action="<c:url value='/logout'/>"
+                class="logout-form">
 
                     <input type="hidden"
                            name="${_csrf.parameterName}"

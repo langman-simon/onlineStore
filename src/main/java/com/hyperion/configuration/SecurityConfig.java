@@ -25,7 +25,8 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/checkout",
-                                "/order/**"
+                                "/order/**",
+                                "/account"
                         )
                         .authenticated()
 

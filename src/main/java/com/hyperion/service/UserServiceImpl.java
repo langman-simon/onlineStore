@@ -41,4 +41,26 @@ public class UserServiceImpl implements UserService {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<User> findByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
+
+    @Override
+    public User updateProfile(String login, String lastName, String firstName,
+                              String deliveryAddress, String email, String phone,
+                              String secondaryPhone) {
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.setLastName(lastName);
+        user.setFirstName(firstName);
+        user.setDeliveryAddress(deliveryAddress);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setSecondaryPhone(secondaryPhone);
+
+        return userRepository.save(user);
+    }
+
 }
