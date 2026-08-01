@@ -69,4 +69,52 @@ public class OrderService {
 
         return savedOrder;
     }
+
+    @Transactional
+    public CustomerOrder validatePayment(Long orderId) {
+
+        CustomerOrder order = customerOrderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Commande introuvable : " + orderId
+                        )
+                );
+
+        if ("PAID".equals(order.getStatus())) {
+            throw new IllegalArgumentException(
+                    "Cette commande est déjà payée."
+            );
+        }
+
+        for (OrderItem orderItem : order.getItems()) {
+
+            Weapon weapon = weaponRepository.findById(
+                            orderItem.getWeapon().getId()
+                    )
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "Produit introuvable : "
+                                            + orderItem.getWeapon().getId()
+                            )
+                    );
+
+            int quantity = orderItem.getQuantity();
+
+            if (weapon.getStock() < quantity) {
+                throw new IllegalArgumentException(
+                        "Stock insuffisant pour le produit : "
+                                + weapon.getName()
+                );
+            }
+
+            weapon.setStock(
+                    weapon.getStock() - quantity
+            );
+        }
+
+        order.setStatus("PAID");
+
+        return customerOrderRepository.save(order);
+    }
+
 }
