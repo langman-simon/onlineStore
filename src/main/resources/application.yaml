@@ -1,5 +1,4 @@
 spring:
-
   application:
     name: Hyperion
 
@@ -31,6 +30,16 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
-      multipart:
-        max-file-size: 5MB
-        max-request-size: 5MB
+
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+app:
+  base-url: http://localhost:8080
+
+paypal:
+  sandbox-url: https://www.sandbox.paypal.com/cgi-bin/webscr
+  seller-email: sb-h943ag52349284@business.example.com
+  client-id: AZ3M0eBXJYOiQBviuSBMj
+  currency: EUR
