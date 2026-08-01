@@ -46,8 +46,69 @@
         </p>
     </div>
 
+    <c:choose>
+
+        <c:when test="${order.status == 'PAID'}">
+            <p class="success">
+                Paiement validé.
+            </p>
+        </c:when>
+
+        <c:otherwise>
+            <p class="error">
+                Paiement en attente.
+            </p>
+        </c:otherwise>
+
+    </c:choose>
+
     <a class="btn" href="<c:url value='/catalogue'/>">
         Retour au catalogue
     </a>
+
+    <c:if test="${order.status == 'PENDING_PAYMENT'}">
+
+    <form method="post"
+          action="${paypalSandboxUrl}">
+
+        <input type="hidden"
+               name="business"
+               value="${paypalSellerEmail}">
+
+        <input type="hidden"
+               name="cmd"
+               value="_xclick">
+
+        <input type="hidden"
+               name="amount"
+               value="${order.totalPrice}">
+
+        <input type="hidden"
+               name="item_name"
+               value="Commande Hyperion n°${order.id}">
+
+        <input type="hidden"
+               name="currency_code"
+               value="EUR">
+
+        <input type="hidden"
+               name="lc"
+               value="FR">
+
+        <input type="hidden"
+               name="return"
+               value="${baseUrl}/order/${order.id}/payment/success">
+
+        <input type="hidden"
+               name="cancel_return"
+               value="${baseUrl}/order/${order.id}/payment/cancel">
+
+        <button type="submit">
+            Payer avec PayPal
+        </button>
+
+    </form>
+
+</c:if>
 
 </section>

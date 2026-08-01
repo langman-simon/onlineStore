@@ -59,4 +59,12 @@ public class OrderItem {
         return quantity;
     }
 
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
 }

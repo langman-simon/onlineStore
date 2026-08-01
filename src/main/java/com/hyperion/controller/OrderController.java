@@ -4,6 +4,7 @@ import com.hyperion.model.CustomerOrder;
 import com.hyperion.repository.CustomerOrderRepository;
 import com.hyperion.service.OrderService;
 import com.hyperion.session.SessionCart;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,14 @@ public class OrderController {
     private final OrderService orderService;
     private final SessionCart sessionCart;
     private final CustomerOrderRepository customerOrderRepository;
+    @Value("${paypal.sandbox-url}")
+    private String paypalSandboxUrl;
+
+    @Value("${paypal.seller-email}")
+    private String paypalSellerEmail;
+
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     public OrderController(
             OrderService orderService,
@@ -88,8 +97,49 @@ public class OrderController {
                 "body",
                 "/WEB-INF/jsp/order/details.jsp"
         );
+        model.addAttribute("paypalSandboxUrl", paypalSandboxUrl);
+        model.addAttribute("paypalSellerEmail", paypalSellerEmail);
+        model.addAttribute("baseUrl", baseUrl);
 
         return "template/template";
+    }
+
+    @GetMapping("/{id}/payment/success")
+    public String paymentSuccess(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            orderService.validatePayment(id);
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Paiement validé."
+            );
+
+            return "redirect:/order/" + id;
+
+        } catch (IllegalArgumentException exception) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    exception.getMessage()
+            );
+
+            return "redirect:/order/" + id;
+        }
+    }
+
+    @GetMapping("/{id}/payment/cancel")
+    public String paymentCancel(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes
+    ) {
+        redirectAttributes.addFlashAttribute(
+                "error",
+                "Paiement annulé."
+        );
+
+        return "redirect:/order/" + id;
     }
 
 }
