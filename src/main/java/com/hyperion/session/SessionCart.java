@@ -6,7 +6,7 @@ import org.springframework.web.context.annotation.SessionScope;
 
 @Component
 @SessionScope
-public class Panel {
+public class SessionCart {
 
     private final Cart cart = new Cart();
 

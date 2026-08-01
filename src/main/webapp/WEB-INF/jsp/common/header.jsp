@@ -21,6 +21,13 @@
 
             <a href="<c:url value='/company'/>">Notre société</a>
 
+            <sec:authorize access="isAuthenticated()">
+                <p>
+                    Bienvenue,
+                    <strong><sec:authentication property="name"/></strong>
+                </p>
+            </sec:authorize>
+
             <a href="<c:url value='/cart'/>">Panier (${panel.cart.totalQuantity})</a>
 
             <a href="?lang=fr">FR</a>

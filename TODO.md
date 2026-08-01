@@ -26,8 +26,8 @@
 - ✅ Permettre à un client authentifié d’utiliser toutes les fonctionnalités publiques
 - ✅ Permettre à un client authentifié de passer commande
 - [ ] Permettre à un client authentifié de payer une commande
-- [ ] Afficher un message personnalisé dans la bannière
-- [ ] Afficher le login de l’utilisateur connecté
+- ✅ Afficher un message personnalisé dans la bannière
+- ✅ Afficher le login de l’utilisateur connecté
 - ✅ Permettre au client de modifier son compte
 - ✅ Permettre au client de se déconnecter
 - ✅ Faire reprendre au client déconnecté le rôle d’utilisateur anonyme
