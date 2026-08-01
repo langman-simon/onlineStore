@@ -3,7 +3,7 @@ package com.hyperion.controller;
 import com.hyperion.model.CustomerOrder;
 import com.hyperion.repository.CustomerOrderRepository;
 import com.hyperion.service.OrderService;
-import com.hyperion.session.Panel;
+import com.hyperion.session.SessionCart;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,25 +17,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class OrderController {
 
     private final OrderService orderService;
-    private final Panel panel;
+    private final SessionCart sessionCart;
     private final CustomerOrderRepository customerOrderRepository;
 
     public OrderController(
             OrderService orderService,
-            Panel panel,
+            SessionCart sessionCart,
             CustomerOrderRepository customerOrderRepository
     ) {
         this.orderService = orderService;
-        this.panel = panel;
+        this.sessionCart = sessionCart;
         this.customerOrderRepository = customerOrderRepository;
     }
 
     @GetMapping("/checkout")
     public String checkout(Model model) {
-        if (panel.getCart().isEmpty()) {
+        if (sessionCart.getCart().isEmpty()) {
             return "redirect:/cart";
         }
-        model.addAttribute("cart", panel.getCart());
+        model.addAttribute("cart", sessionCart.getCart());
         model.addAttribute("title", "Récapitulatif de commande");
         model.addAttribute(
                 "body",
@@ -51,7 +51,7 @@ public class OrderController {
     ) {
         try {
             CustomerOrder order =
-                    orderService.validateOrder(panel.getCart());
+                    orderService.validateOrder(sessionCart.getCart());
 
             redirectAttributes.addFlashAttribute(
                     "success",

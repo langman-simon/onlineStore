@@ -2,7 +2,7 @@ package com.hyperion.controller;
 
 import com.hyperion.model.Weapon;
 import com.hyperion.repository.WeaponRepository;
-import com.hyperion.session.Panel;
+import com.hyperion.session.SessionCart;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,14 +14,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class CartController {
 
-    private final Panel panel;
+    private final SessionCart sessionCart;
     private final WeaponRepository weaponRepository;
 
     public CartController(
-            Panel panel,
+            SessionCart sessionCart,
             WeaponRepository weaponRepository
     ) {
-        this.panel = panel;
+        this.sessionCart = sessionCart;
         this.weaponRepository = weaponRepository;
     }
 
@@ -56,7 +56,7 @@ public class CartController {
             return "redirect:/weapons/" + weaponId;
         }
         try {
-            panel.getCart().addWeapon(weapon, quantity);
+            sessionCart.getCart().addWeapon(weapon, quantity);
 
             redirectAttributes.addFlashAttribute(
                     "success",
@@ -77,7 +77,7 @@ public class CartController {
     public String showCart(Model model) {
         model.addAttribute("title", "Panier");
         model.addAttribute("body", "/WEB-INF/jsp/cart/cart.jsp");
-        model.addAttribute("cart", panel.getCart());
+        model.addAttribute("cart", sessionCart.getCart());
 
         return "template/template";
     }
@@ -85,7 +85,7 @@ public class CartController {
     @PostMapping("/cart/remove/{weaponId}")
     public String removeFromCart(@PathVariable Long weaponId) {
 
-        panel.getCart().removeWeapon(weaponId);
+        sessionCart.getCart().removeWeapon(weaponId);
 
         return "redirect:/cart";
     }
@@ -95,14 +95,14 @@ public class CartController {
             @PathVariable Long weaponId,
             @RequestParam int quantity) {
 
-        panel.getCart().updateQuantity(weaponId, quantity);
+        sessionCart.getCart().updateQuantity(weaponId, quantity);
 
         return "redirect:/cart";
     }
 
     @PostMapping("/cart/clear")
     public String clearCart() {
-        panel.getCart().clear();
+        sessionCart.getCart().clear();
         return "redirect:/cart";
     }
 

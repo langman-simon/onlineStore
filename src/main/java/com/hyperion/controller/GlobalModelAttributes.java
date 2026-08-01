@@ -1,20 +1,20 @@
 package com.hyperion.controller;
 
-import com.hyperion.session.Panel;
+import com.hyperion.session.SessionCart;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
 public class GlobalModelAttributes {
 
-    private final Panel panel;
+    private final SessionCart sessionCart;
 
-    public GlobalModelAttributes(Panel panel) {
-        this.panel = panel;
+    public GlobalModelAttributes(SessionCart panel) {
+        this.sessionCart = panel;
     }
 
     @ModelAttribute("panel")
-    public Panel panel() {
-        return panel;
+    public SessionCart panel() {
+        return sessionCart;
     }
 }
