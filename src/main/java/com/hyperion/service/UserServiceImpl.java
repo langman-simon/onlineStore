@@ -47,12 +47,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateProfile(String login, String lastName, String firstName,
-                              String deliveryAddress, String email, String phone,
-                              String secondaryPhone) {
-        User user = userRepository.findByLogin(login)
+    public User updateProfile(String currentLogin, String newLogin, String lastName, String firstName,
+                              String deliveryAddress, String email, String phone, String secondaryPhone) {
+        User user = userRepository.findByLogin(currentLogin)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+        if (!currentLogin.equals(newLogin) && userRepository.existsByLogin(newLogin)) {
+            throw new IllegalArgumentException("Ce pseudo est déjà utilisé");
+        }
+
+        user.setLogin(newLogin);
         user.setLastName(lastName);
         user.setFirstName(firstName);
         user.setDeliveryAddress(deliveryAddress);

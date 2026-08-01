@@ -22,8 +22,8 @@ public class ProfileController {
 
     @GetMapping("/account")
     public String showAccount(Authentication authentication, Model model) {
-        String login = authentication.getName();
-        Optional<User> userOpt = userService.findByLogin(login);
+        String currentLogin = authentication.getName();
+        Optional<User> userOpt = userService.findByLogin(currentLogin);
 
         if (userOpt.isEmpty()) {
             return "redirect:/login";
@@ -35,8 +35,9 @@ public class ProfileController {
         return "template/template";
     }
 
-    @PostMapping("/account")
-    public String updateAccount(Authentication authentication,
+        @PostMapping("/account")
+        public String updateAccount(Authentication authentication,
+                                @RequestParam String login,
                                 @RequestParam String lastName,
                                 @RequestParam String firstName,
                                 @RequestParam String deliveryAddress,
@@ -44,9 +45,17 @@ public class ProfileController {
                                 @RequestParam String phone,
                                 @RequestParam(required = false) String secondaryPhone,
                                 Model model) {
-        String login = authentication.getName();
+        String currentLogin = authentication.getName();
 
-        userService.updateProfile(login, lastName, firstName, deliveryAddress, email, phone, secondaryPhone);
+        try {
+            userService.updateProfile(currentLogin, login, lastName, firstName, deliveryAddress, email, phone, secondaryPhone);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("title", "Mon compte");
+            model.addAttribute("body", "/WEB-INF/jsp/account/account.jsp");
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("user", userService.findByLogin(currentLogin).get());
+            return "template/template";
+        }
 
         model.addAttribute("success", "Profile updated successfully");
         model.addAttribute("user", userService.findByLogin(login).get());
