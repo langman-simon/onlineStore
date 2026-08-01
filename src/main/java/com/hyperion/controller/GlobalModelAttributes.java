@@ -9,12 +9,12 @@ public class GlobalModelAttributes {
 
     private final SessionCart sessionCart;
 
-    public GlobalModelAttributes(SessionCart panel) {
-        this.sessionCart = panel;
+    public GlobalModelAttributes(SessionCart sessionCart) {
+        this.sessionCart = sessionCart;
     }
 
-    @ModelAttribute("panel")
-    public SessionCart panel() {
+    @ModelAttribute("sessionCart")
+    public SessionCart sessionCart() {
         return sessionCart;
     }
 }

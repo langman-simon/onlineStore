@@ -9,7 +9,9 @@
 
         <nav>
 
-            <a href="<c:url value='/'/>">Accueil</a>
+            <a href="<c:url value='/'/>">
+                Accueil
+            </a>
 
             <sec:authorize access="hasRole('ADMIN')">
                 <a href="<c:url value='/admin'/>">
@@ -17,44 +19,114 @@
                 </a>
             </sec:authorize>
 
-            <a href="<c:url value='/catalogue'/>">Catalogue</a>
+            <a href="<c:url value='/catalogue'/>">
+                Catalogue
+            </a>
 
-            <a href="<c:url value='/company'/>">Notre société</a>
+            <a href="<c:url value='/company'/>">
+                Notre société
+            </a>
 
-            <sec:authorize access="isAuthenticated()">
-                <p>
-                    Bienvenue,
-                    <strong><sec:authentication property="name"/></strong>
-                </p>
-            </sec:authorize>
+            <a href="<c:url value='/cart'/>">
+                Panier (${sessionCart.cart.totalQuantity})
+            </a>
 
-            <a href="<c:url value='/cart'/>">Panier (${panel.cart.totalQuantity})</a>
+            <details class="language-menu">
 
-            <a href="?lang=fr">FR</a>
+                <summary class="language-button" title="Choisir la langue">
+                    <img src="<c:url value='/assets/flags/fr.png'/>"
+                         alt="Français">
+                    <span>Langue</span>
+                </summary>
 
-            <a href="?lang=en">EN</a>
+                <div class="language-dropdown">
+
+                    <a href="?lang=fr">
+                        <img src="<c:url value='/assets/flags/fr.png'/>"
+                             alt="Français">
+                        Français
+                    </a>
+
+                    <a href="?lang=en">
+                        <img src="<c:url value='/assets/flags/en.png'/>"
+                             alt="English">
+                        English
+                    </a>
+
+                </div>
+
+            </details>
 
             <sec:authorize access="isAnonymous()">
-                <a href="<c:url value='/login'/>">Connexion</a>
-                <a href="<c:url value='/register'/>">Inscription</a>
+
+                <details class="user-menu">
+
+                    <summary
+                            class="user-avatar user-avatar--anonymous"
+                            title="Non connecté">
+                        ?
+                    </summary>
+
+                    <div class="user-dropdown">
+
+                        <p class="user-dropdown__login">
+                            Non connecté
+                        </p>
+
+                        <a href="<c:url value='/login'/>">
+                            Se connecter
+                        </a>
+
+                        <a href="<c:url value='/register'/>">
+                            Créer un compte
+                        </a>
+
+                    </div>
+
+                </details>
+
             </sec:authorize>
 
             <sec:authorize access="isAuthenticated()">
-                <a href="<c:url value='/account'/>">Mon compte</a>
-                <span>${sessionScope.login}</span>
 
-            <form method="post"
-                action="<c:url value='/logout'/>"
-                class="logout-form">
+                <sec:authentication
+                        property="name"
+                        var="currentLogin"/>
 
-                    <input type="hidden"
-                           name="${_csrf.parameterName}"
-                           value="${_csrf.token}">
+                <details class="user-menu">
 
-                    <button type="submit" class="nav-link-button">
-                        Déconnexion
-                    </button>
-                </form>
+                    <summary
+                            class="user-avatar"
+                            title="${currentLogin}">
+                        ${fn:toUpperCase(fn:substring(currentLogin, 0, 1))}
+                    </summary>
+
+                    <div class="user-dropdown">
+
+                        <p class="user-dropdown__login">
+                            ${currentLogin}
+                        </p>
+
+                        <a href="<c:url value='/account'/>">
+                            Gérer mon compte
+                        </a>
+
+                        <form
+                                method="post"
+                                action="<c:url value='/logout'/>">
+
+                            <sec:csrfInput/>
+
+                            <button type="submit">
+                                Déconnexion
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </details>
+
             </sec:authorize>
 
         </nav>
