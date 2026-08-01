@@ -8,7 +8,6 @@ public interface UserService {
     boolean loginExists(String login);
     Optional<User> authenticate(String login, String rawPassword);
     Optional<User> findByLogin(String login);
-    User updateProfile(String login, String lastName, String firstName,
-                       String deliveryAddress, String email, String phone,
-                       String secondaryPhone);
+    User updateProfile(String currentLogin, String newLogin, String lastName, String firstName,
+                       String deliveryAddress, String email, String phone, String secondaryPhone);
 }
