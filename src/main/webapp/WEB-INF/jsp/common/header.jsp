@@ -31,23 +31,25 @@
                 Panier (${sessionCart.cart.totalQuantity})
             </a>
 
-            <details class="language-menu">
+            <div class="hover-menu">
 
-                <summary class="language-button" title="Choisir la langue">
-                    <img src="<c:url value='/assets/flags/fr.png'/>"
-                         alt="Français">
-                    <span>Langue</span>
-                </summary>
+                <div class="hover-menu__content language-dropdown">
 
-                <div class="language-dropdown">
+                    <c:url var="frUrl" value="">
+                        <c:param name="lang" value="fr"/>
+                    </c:url>
 
-                    <a href="?lang=fr">
+                    <a href="${frUrl}">
                         <img src="<c:url value='/assets/flags/fr.png'/>"
                              alt="Français">
                         Français
                     </a>
 
-                    <a href="?lang=en">
+                    <c:url var="enUrl" value="">
+                        <c:param name="lang" value="en"/>
+                    </c:url>
+
+                    <a href="${enUrl}">
                         <img src="<c:url value='/assets/flags/en.png'/>"
                              alt="English">
                         English
@@ -55,19 +57,18 @@
 
                 </div>
 
-            </details>
+            </div>
 
             <sec:authorize access="isAnonymous()">
 
-                <details class="user-menu">
+                <div class="hover-menu">
 
-                    <summary
-                            class="user-avatar user-avatar--anonymous"
-                            title="Non connecté">
+                    <div class="user-avatar user-avatar--anonymous"
+                         title="Non connecté">
                         ?
-                    </summary>
+                    </div>
 
-                    <div class="user-dropdown">
+                    <div class="hover-menu__content user-dropdown">
 
                         <p class="user-dropdown__login">
                             Non connecté
@@ -83,25 +84,22 @@
 
                     </div>
 
-                </details>
+                </div>
 
             </sec:authorize>
 
             <sec:authorize access="isAuthenticated()">
 
-                <sec:authentication
-                        property="name"
-                        var="currentLogin"/>
+                <sec:authentication property="name" var="currentLogin"/>
 
-                <details class="user-menu">
+                <div class="hover-menu">
 
-                    <summary
-                            class="user-avatar"
-                            title="${currentLogin}">
+                    <div class="user-avatar"
+                         title="${currentLogin}">
                         ${fn:toUpperCase(fn:substring(currentLogin, 0, 1))}
-                    </summary>
+                    </div>
 
-                    <div class="user-dropdown">
+                    <div class="hover-menu__content user-dropdown">
 
                         <p class="user-dropdown__login">
                             ${currentLogin}
@@ -111,9 +109,8 @@
                             Gérer mon compte
                         </a>
 
-                        <form
-                                method="post"
-                                action="<c:url value='/logout'/>">
+                        <form method="post"
+                              action="<c:url value='/logout'/>">
 
                             <sec:csrfInput/>
 
@@ -125,7 +122,7 @@
 
                     </div>
 
-                </details>
+                </div>
 
             </sec:authorize>
 

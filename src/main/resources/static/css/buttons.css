@@ -1,0 +1,5 @@
+button, .btn { display: inline-block; padding: .7rem 1rem; background-color: #c49a3a; color: #111; border: none; border-radius: 4px; font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; transition: background-color .2s ease, transform .2s ease; }
+button:hover, .btn:hover { background-color: #d8b45a; }
+button:active, .btn:active { transform: translateY(1px); }
+.btn-delete { background-color: #8b2f2f; color: white; }
+.btn-delete:hover { background-color: #a43a3a; }

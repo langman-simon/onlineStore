@@ -1,0 +1,9 @@
+* { box-sizing: border-box; }
+html { min-height: 100%; }
+body { min-height: 100vh; margin: 0; display: flex; flex-direction: column; font-family: Arial, sans-serif; background-color: #f4f4f4; color: #222; }
+a { color: inherit; }
+img { max-width: 100%; }
+main { flex: 1; min-height: 70vh; padding: 2rem 0; }
+.success, .error { margin-bottom: 1rem; padding: 0.8rem; border-radius: 4px; }
+.success { background-color: #d9f2df; color: #205c2d; }
+.error { background-color: #f6d6d6; color: #7a1f1f; }

@@ -6,7 +6,21 @@
 <head>
     <meta charset="UTF-8">
     <title>${title}</title>
-    <link rel="stylesheet" href="<c:url value='/css/styles.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/base.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/layout.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/header.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/footer.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/buttons.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/forms.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/tables.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/home.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/catalogue.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/product-details.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/cart.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/checkout.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/company.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/order.css'/> ">
+    <link rel="stylesheet" href="<c:url value='/css/responsive.css'/> ">
 </head>
 <body>
 
