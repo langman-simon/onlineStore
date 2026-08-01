@@ -37,7 +37,7 @@ public class CustomerOrder {
     public CustomerOrder(BigDecimal totalPrice) {
         this.createdAt = LocalDateTime.now();
         this.totalPrice = totalPrice;
-        this.status = "VALIDATED";
+        this.status = "PENDING_PAYMENT";
     }
 
     public void addItem(OrderItem item) {
@@ -59,6 +59,10 @@ public class CustomerOrder {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<OrderItem> getItems() {
