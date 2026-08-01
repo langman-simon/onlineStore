@@ -58,13 +58,13 @@ public class OrderService {
                 );
             }
 
-            weapon.setStock(weapon.getStock() - quantity);
-
             OrderItem orderItem = new OrderItem(weapon, quantity);
             order.addItem(orderItem);
         }
 
-        CustomerOrder savedOrder = customerOrderRepository.save(order);
+        CustomerOrder savedOrder =
+                customerOrderRepository.save(order);
+
         cart.clear();
 
         return savedOrder;
