@@ -12,7 +12,7 @@
 
             <div class="form-group">
                 <label for="firstName">Prénom</label>
-                <input id="firstName" type="text" name="firstName" required>
+                <input id="firstName" type="text" name="firstName" required autofocus>
             </div>
 
             <div class="form-group">
