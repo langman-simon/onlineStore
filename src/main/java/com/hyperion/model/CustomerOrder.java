@@ -28,6 +28,13 @@ public class CustomerOrder {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal originalPrice;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal discountAmount;
+
+
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,
@@ -35,11 +42,16 @@ public class CustomerOrder {
     )
     private List<OrderItem> items = new ArrayList<>();
 
-    public CustomerOrder() {
-    }
+    protected CustomerOrder() {}
 
-    public CustomerOrder(BigDecimal totalPrice) {
+    public CustomerOrder(
+            BigDecimal originalPrice,
+            BigDecimal discountAmount,
+            BigDecimal totalPrice
+    ) {
         this.createdAt = LocalDateTime.now();
+        this.originalPrice = originalPrice;
+        this.discountAmount = discountAmount;
         this.totalPrice = totalPrice;
         this.status = "PENDING_PAYMENT";
     }
@@ -79,6 +91,14 @@ public class CustomerOrder {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public BigDecimal getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
     }
 
 }

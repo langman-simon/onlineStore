@@ -69,7 +69,7 @@ public class OrderController {
         try {
             User user = userService.findByLogin(authentication.getName()).orElseThrow(()-> new IllegalArgumentException("Utilisateur introuvable."));
             CustomerOrder order =
-                    orderService.validateOrder(sessionCart.getCart(), user);
+                    orderService.validateOrder(sessionCart.getCart(), user, authentication.isAuthenticated());
 
             redirectAttributes.addFlashAttribute(
                     "success",

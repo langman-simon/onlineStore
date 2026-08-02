@@ -367,6 +367,8 @@ ON CONFLICT (reference) DO UPDATE
 INSERT INTO customer_orders (
     id,
     created_at,
+    original_price,
+    discount_amount,
     total_price,
     status,
     user_id
@@ -376,17 +378,28 @@ VALUES
         -1,
         TIMESTAMP '2026-07-20 14:30:00',
         1899.95,
+        0.00,
+        1899.95,
         'PAID',
         (SELECT id FROM users WHERE login = 'user')
     ),
     (
         -2,
         TIMESTAMP '2026-07-25 10:15:00',
+        1499.00,
+        200.00,
         1299.00,
         'PENDING_PAYMENT',
         (SELECT id FROM users WHERE login = 'user')
     )
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE
+    SET
+        created_at = EXCLUDED.created_at,
+        original_price = EXCLUDED.original_price,
+        discount_amount = EXCLUDED.discount_amount,
+        total_price = EXCLUDED.total_price,
+        status = EXCLUDED.status,
+        user_id = EXCLUDED.user_id;
 
 -- =========================================================
 -- LIGNES DES COMMANDES DE DÉMONSTRATION
