@@ -1,5 +1,5 @@
 -- =========================================================
--- USERS
+-- UTILISATEURS
 -- =========================================================
 
 INSERT INTO users (
@@ -350,18 +350,19 @@ ON CONFLICT (reference) DO UPDATE
         name = EXCLUDED.name,
         description = EXCLUDED.description,
         price = EXCLUDED.price,
+        stock = EXCLUDED.stock,
         category_id = EXCLUDED.category_id,
         manufacturer = EXCLUDED.manufacturer,
         image_url = EXCLUDED.image_url;
 
 -- =========================================================
+-- RÉINITIALISATION DES COMMANDES
+-- =========================================================
+
+TRUNCATE TABLE customer_orders RESTART IDENTITY CASCADE;
+
+-- =========================================================
 -- COMMANDES DE DÉMONSTRATION
---
--- Les identifiants négatifs sont réservés aux données SQL.
--- Les commandes créées par Hibernate utilisent des IDs positifs.
---
--- DO NOTHING évite de réinitialiser une commande déjà payée
--- ou modifiée lors d'un redémarrage.
 -- =========================================================
 
 INSERT INTO customer_orders (
@@ -386,20 +387,12 @@ VALUES
     (
         -2,
         TIMESTAMP '2026-07-25 10:15:00',
-        1499.00,
-        200.00,
+        1299.00,
+        0.00,
         1299.00,
         'PENDING_PAYMENT',
         (SELECT id FROM users WHERE login = 'user')
-    )
-ON CONFLICT (id) DO UPDATE
-    SET
-        created_at = EXCLUDED.created_at,
-        original_price = EXCLUDED.original_price,
-        discount_amount = EXCLUDED.discount_amount,
-        total_price = EXCLUDED.total_price,
-        status = EXCLUDED.status,
-        user_id = EXCLUDED.user_id;
+    );
 
 -- =========================================================
 -- LIGNES DES COMMANDES DE DÉMONSTRATION
@@ -437,5 +430,4 @@ VALUES
         1,
         1299.00,
         1299.00
-    )
-ON CONFLICT (id) DO NOTHING;
+    );
