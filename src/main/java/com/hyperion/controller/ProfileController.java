@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -35,8 +37,8 @@ public class ProfileController {
         return "template/template";
     }
 
-        @PostMapping("/account")
-        public String updateAccount(Authentication authentication,
+    @PostMapping("/account")
+    public String updateAccount(Authentication authentication,
                                 @RequestParam String login,
                                 @RequestParam String lastName,
                                 @RequestParam String firstName,
@@ -49,6 +51,15 @@ public class ProfileController {
 
         try {
             userService.updateProfile(currentLogin, login, lastName, firstName, deliveryAddress, email, phone, secondaryPhone);
+
+            // Rafraîchit la session Spring Security avec le nouveau login
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    login,
+                    authentication.getCredentials(),
+                    authentication.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+
         } catch (IllegalArgumentException e) {
             model.addAttribute("title", "Mon compte");
             model.addAttribute("body", "/WEB-INF/jsp/account/account.jsp");
