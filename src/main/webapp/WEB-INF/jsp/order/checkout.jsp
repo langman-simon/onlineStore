@@ -55,6 +55,19 @@
                     <span>${originalPrice} €</span>
                 </p>
 
+                <p>
+                    Frais de livraison :
+                    <c:choose>
+                        <c:when test="${freeDelivery}">
+                            <span class="strikethrough">500.00 €</span>
+                            <span class="free-delivery">Offerts !</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span>${deliveryFee} €</span>
+                        </c:otherwise>
+                    </c:choose>
+                </p>
+
                 <c:if test="${discountAmount > 0}">
                     <p class="discount">
                         Réduction fidélité :

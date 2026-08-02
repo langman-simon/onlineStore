@@ -82,6 +82,10 @@ public class OrderController {
                         authenticated
                 );
 
+        BigDecimal deliveryFee = promotionService.calculateDeliveryFee(originalPrice, authenticated);
+        model.addAttribute("deliveryFee", deliveryFee);
+        model.addAttribute("freeDelivery", promotionService.isFreeDeliveryApplied(originalPrice, authenticated));
+
         model.addAttribute("cart", cart);
         model.addAttribute("originalPrice", originalPrice);
         model.addAttribute("discountAmount", discountAmount);

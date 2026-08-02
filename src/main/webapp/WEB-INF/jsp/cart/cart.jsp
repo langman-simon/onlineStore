@@ -83,13 +83,38 @@
 
         <div class="cart-summary">
             <p>
-                Nombre total d’articles :
+                Nombre total d'articles :
                 <strong>${cart.totalQuantity}</strong>
             </p>
 
             <p>
+                Sous-total :
+                <strong>${originalPrice} €</strong>
+            </p>
+
+            <p>
+                Frais de livraison :
+                <c:choose>
+                    <c:when test="${freeDelivery}">
+                        <span class="strikethrough">${standardDeliveryFee} €</span>
+                        <span class="free-delivery">Offerts !</span>
+                    </c:when>
+                    <c:otherwise>
+                        <span>${deliveryFee} €</span>
+                    </c:otherwise>
+                </c:choose>
+            </p>
+
+            <c:if test="${discountAmount > 0}">
+                <p class="discount">
+                    Réduction fidélité :
+                    <span>- ${discountAmount} €</span>
+                </p>
+            </c:if>
+
+            <p>
                 Total :
-                <strong>${cart.totalPrice} €</strong>
+                <strong>${finalPrice} €</strong>
             </p>
         </div>
 
