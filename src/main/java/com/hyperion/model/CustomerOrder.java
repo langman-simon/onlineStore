@@ -24,6 +24,17 @@ public class CustomerOrder {
     @Column(nullable = false, length = 30)
     private String status;
 
+    @Column(name = "original_price", nullable = false, precision = 12, scale = 2)
+    private BigDecimal originalPrice;
+
+    @Column(name = "discount_amount", nullable = false, precision = 12, scale = 2)
+    private BigDecimal discountAmount;
+
+    public BigDecimal getOriginalPrice() { return originalPrice; }
+    public void setOriginalPrice(BigDecimal originalPrice) { this.originalPrice = originalPrice; }
+    public BigDecimal getDiscountAmount() { return discountAmount; }
+    public void setDiscountAmount(BigDecimal discountAmount) { this.discountAmount = discountAmount; }
+
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,
@@ -34,9 +45,11 @@ public class CustomerOrder {
     public CustomerOrder() {
     }
 
-    public CustomerOrder(BigDecimal totalPrice) {
+    public CustomerOrder(BigDecimal originalPrice, BigDecimal discountAmount, BigDecimal finalPrice) {
         this.createdAt = LocalDateTime.now();
-        this.totalPrice = totalPrice;
+        this.originalPrice = originalPrice;
+        this.discountAmount = discountAmount;
+        this.totalPrice = finalPrice;
         this.status = "VALIDATED";
     }
 
@@ -64,4 +77,6 @@ public class CustomerOrder {
     public List<OrderItem> getItems() {
         return items;
     }
+
+
 }

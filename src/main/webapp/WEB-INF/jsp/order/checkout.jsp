@@ -29,8 +29,20 @@
 
     <div class="order-total">
         <p>
-            Total :
-            <strong>${cart.totalPrice} €</strong>
+            Sous-total :
+            <span>${originalPrice} €</span>
+        </p>
+
+    <c:if test="${discount > 0}">
+        <p class="discount">
+            Réduction fidélité :
+            <span>-${discount} €</span>
+        </p>
+    </c:if>
+
+        <p>
+            Total à payer :
+            <strong>${finalPrice} €</strong>
         </p>
     </div>
 

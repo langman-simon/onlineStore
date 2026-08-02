@@ -10,27 +10,37 @@ import com.hyperion.repository.WeaponRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 public class OrderService {
 
     private final WeaponRepository weaponRepository;
     private final CustomerOrderRepository customerOrderRepository;
+    private final PromotionService promotionService;
+
 
     public OrderService(
             WeaponRepository weaponRepository,
-            CustomerOrderRepository customerOrderRepository
+            CustomerOrderRepository customerOrderRepository,
+            PromotionService promotionService
     ) {
         this.weaponRepository = weaponRepository;
         this.customerOrderRepository = customerOrderRepository;
+        this.promotionService = promotionService;
     }
 
     @Transactional
-    public CustomerOrder validateOrder(Cart cart) {
+    public CustomerOrder validateOrder(Cart cart, boolean authenticated) {
         if (cart == null || cart.isEmpty()) {
             throw new IllegalArgumentException("Le panier est vide.");
         }
 
-        CustomerOrder order = new CustomerOrder(cart.getTotalPrice());
+        BigDecimal originalPrice = cart.getTotalPrice();
+        BigDecimal discountAmount = promotionService.calculateDiscount(originalPrice, authenticated);
+        BigDecimal finalPrice = promotionService.calculateFinalPrice(originalPrice, authenticated);
+
+        CustomerOrder order = new CustomerOrder(originalPrice, discountAmount, finalPrice);
 
         for (CartItem cartItem : cart.getItems()) {
             Long weaponId = cartItem.getWeapon().getId();

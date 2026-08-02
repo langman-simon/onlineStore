@@ -7,6 +7,7 @@ import com.hyperion.repository.CustomerOrderRepository;
 import com.hyperion.repository.WeaponRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -21,6 +22,7 @@ class OrderServiceTest {
     private WeaponRepository weaponRepository;
     private CustomerOrderRepository customerOrderRepository;
     private OrderService orderService;
+    private PromotionService promotionService;
 
     private Weapon weapon;
 
@@ -28,13 +30,21 @@ class OrderServiceTest {
     void setUp() {
         weaponRepository = mock(WeaponRepository.class);
         customerOrderRepository = mock(CustomerOrderRepository.class);
+        promotionService = mock(PromotionService.class);
+
+        when(promotionService.calculateDiscount(any(BigDecimal.class), anyBoolean()))
+                .thenReturn(BigDecimal.ZERO);
+        when(promotionService.calculateFinalPrice(any(BigDecimal.class), anyBoolean()))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
         orderService = new OrderService(
                 weaponRepository,
-                customerOrderRepository
+                customerOrderRepository,
+                promotionService
         );
 
         weapon = mock(Weapon.class);
+
 
         when(weapon.getId()).thenReturn(1L);
         when(weapon.getName()).thenReturn("Produit test");
@@ -55,7 +65,7 @@ class OrderServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        CustomerOrder order = orderService.validateOrder(cart);
+        CustomerOrder order = orderService.validateOrder(cart, true);
 
         // Assert
         verify(weapon).setStock(8);
@@ -75,7 +85,7 @@ class OrderServiceTest {
         Cart cart = new Cart();
 
         // Act / Assert
-        assertThatThrownBy(() -> orderService.validateOrder(cart))
+        assertThatThrownBy(() -> orderService.validateOrder(cart, true))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Le panier est vide.");
 
@@ -95,7 +105,7 @@ class OrderServiceTest {
                 .thenReturn(Optional.empty());
 
         // Act / Assert
-        assertThatThrownBy(() -> orderService.validateOrder(cart))
+        assertThatThrownBy(() -> orderService.validateOrder(cart, true))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Produit introuvable : 1");
 
@@ -123,7 +133,7 @@ class OrderServiceTest {
                 .thenReturn(Optional.of(databaseWeapon));
 
         // Act / Assert
-        assertThatThrownBy(() -> orderService.validateOrder(cart))
+        assertThatThrownBy(() -> orderService.validateOrder(cart, true ))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(
                         "Stock insuffisant pour le produit : Produit test"
@@ -160,7 +170,7 @@ class OrderServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        CustomerOrder order = orderService.validateOrder(cart);
+        CustomerOrder order = orderService.validateOrder(cart, true);
 
         // Assert
         assertThat(order.getItems()).hasSize(2);
