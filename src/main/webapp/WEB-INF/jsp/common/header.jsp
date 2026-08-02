@@ -105,6 +105,10 @@
                             ${currentLogin}
                         </p>
 
+                        <a href="<c:url value='/order'/>">
+                            Mes commandes
+                        </a>
+
                         <a href="<c:url value='/account'/>">
                             Gérer mon compte
                         </a>
