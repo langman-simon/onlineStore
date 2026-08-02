@@ -3,8 +3,9 @@ package com.hyperion.controller;
 import com.hyperion.model.CustomerOrder;
 import com.hyperion.repository.CustomerOrderRepository;
 import com.hyperion.service.OrderService;
+import com.hyperion.session.SessionCart;
 import com.hyperion.service.PromotionService;
-import com.hyperion.session.Panel;
+import org.springframework.security.access.expression.SecurityExpressionOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,30 +22,31 @@ import java.math.BigDecimal;
 public class OrderController {
 
     private final OrderService orderService;
-    private final Panel panel;
+    private final SessionCart sessionCart;
     private final CustomerOrderRepository customerOrderRepository;
     private final PromotionService promotionService;
 
     public OrderController(
             OrderService orderService,
-            Panel panel,
+            SessionCart sessionCart,
             CustomerOrderRepository customerOrderRepository,
             PromotionService promotionService
     ) {
         this.orderService = orderService;
-        this.panel = panel;
+        this.sessionCart = sessionCart;
         this.customerOrderRepository = customerOrderRepository;
         this.promotionService = promotionService;
     }
 
     @GetMapping("/checkout")
-    public String checkout(Model model, Authentication authentication) {
-        if (panel.getCart().isEmpty()) {
+     public String checkout(Model model, Authentication authentication){
+        if (sessionCart.getCart().isEmpty()) {
             return "redirect:/cart";
         }
 
+
         boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
-        BigDecimal originalPrice = panel.getCart().getTotalPrice();
+        BigDecimal originalPrice = sessionCart.getCart().getTotalPrice();
         BigDecimal discount = promotionService.calculateDiscount(originalPrice, isAuthenticated);
         BigDecimal finalPrice = promotionService.calculateFinalPrice(originalPrice, isAuthenticated);
 
@@ -52,7 +54,7 @@ public class OrderController {
         model.addAttribute("discount", discount);
         model.addAttribute("finalPrice", finalPrice);
 
-        model.addAttribute("cart", panel.getCart());
+        model.addAttribute("cart", sessionCart.getCart());
         model.addAttribute("title", "Récapitulatif de commande");
         model.addAttribute(
                 "body",
@@ -62,7 +64,7 @@ public class OrderController {
         return "template/template";
     }
 
-    @PostMapping("/orders/confirm")
+    @PostMapping("/confirm")
     public String confirmOrder(
             Authentication authentication,
             RedirectAttributes redirectAttributes
@@ -71,14 +73,14 @@ public class OrderController {
 
         try {
             CustomerOrder order =
-                    orderService.validateOrder(panel.getCart(), isAuthenticated);
+                    orderService.validateOrder(sessionCart.getCart(), isAuthenticated);
 
             redirectAttributes.addFlashAttribute(
                     "success",
                     "Commande confirmée."
             );
 
-            return "redirect:/orders/" + order.getId();
+            return "redirect:/order/" + order.getId();
 
         } catch (IllegalArgumentException exception) {
             redirectAttributes.addFlashAttribute(
