@@ -7,11 +7,6 @@
         <h1>Commande n°${order.id}</h1>
 
         <p>
-            Statut :
-            <strong>${order.status}</strong>
-        </p>
-
-        <p>
             Date :
             <strong>${order.createdAt}</strong>
         </p>
@@ -40,75 +35,97 @@
     </table>
 
     <div class="order-total">
+
         <p>
-            Total de la commande :
+            Prix initial :
+            <strong>${order.originalPrice} €</strong>
+        </p>
+
+        <c:if test="${order.discountAmount > 0}">
+            <p>
+                Réduction :
+                <strong>- ${order.discountAmount} €</strong>
+            </p>
+        </c:if>
+
+        <p>
+            Total :
             <strong>${order.totalPrice} €</strong>
         </p>
+
+        <c:choose>
+            <c:when test="${order.status == 'PAID'}">
+                <p class="success">
+                    Commande payée
+                </p>
+            </c:when>
+
+            <c:otherwise>
+                <p class="error">
+                    Paiement en attente
+                </p>
+            </c:otherwise>
+        </c:choose>
+
     </div>
 
-    <c:choose>
+    <div class="order-actions">
 
-        <c:when test="${order.status == 'PAID'}">
-            <p class="success">
-                Paiement validé.
-            </p>
-        </c:when>
+        <a class="btn"
+           href="<c:url value='/order'/>">
+            Mes commandes
+        </a>
 
-        <c:otherwise>
-            <p class="error">
-                Paiement en attente.
-            </p>
-        </c:otherwise>
+        <a class="btn"
+           href="<c:url value='/catalogue'/>">
+            Retour au catalogue
+        </a>
 
-    </c:choose>
+        <c:if test="${order.status == 'PENDING_PAYMENT'}">
 
-    <a class="btn" href="<c:url value='/catalogue'/>">
-        Retour au catalogue
-    </a>
+            <form method="post"
+                  action="${paypalSandboxUrl}">
 
-    <c:if test="${order.status == 'PENDING_PAYMENT'}">
+                <input type="hidden"
+                       name="business"
+                       value="${paypalSellerEmail}">
 
-    <form method="post"
-          action="${paypalSandboxUrl}">
+                <input type="hidden"
+                       name="cmd"
+                       value="_xclick">
 
-        <input type="hidden"
-               name="business"
-               value="${paypalSellerEmail}">
+                <input type="hidden"
+                       name="amount"
+                       value="${order.totalPrice}">
 
-        <input type="hidden"
-               name="cmd"
-               value="_xclick">
+                <input type="hidden"
+                       name="item_name"
+                       value="Commande Hyperion n°${order.id}">
 
-        <input type="hidden"
-               name="amount"
-               value="${order.totalPrice}">
+                <input type="hidden"
+                       name="currency_code"
+                       value="EUR">
 
-        <input type="hidden"
-               name="item_name"
-               value="Commande Hyperion n°${order.id}">
+                <input type="hidden"
+                       name="lc"
+                       value="FR">
 
-        <input type="hidden"
-               name="currency_code"
-               value="EUR">
+                <input type="hidden"
+                       name="return"
+                       value="${baseUrl}/order/${order.id}/payment/success">
 
-        <input type="hidden"
-               name="lc"
-               value="FR">
+                <input type="hidden"
+                       name="cancel_return"
+                       value="${baseUrl}/order/${order.id}/payment/cancel">
 
-        <input type="hidden"
-               name="return"
-               value="${baseUrl}/order/${order.id}/payment/success">
+                <button type="submit">
+                    Payer avec PayPal
+                </button>
 
-        <input type="hidden"
-               name="cancel_return"
-               value="${baseUrl}/order/${order.id}/payment/cancel">
+            </form>
 
-        <button type="submit">
-            Payer avec PayPal
-        </button>
+        </c:if>
 
-    </form>
-
-</c:if>
+    </div>
 
 </section>

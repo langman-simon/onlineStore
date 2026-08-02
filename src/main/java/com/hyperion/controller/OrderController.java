@@ -97,12 +97,11 @@ public class OrderController {
         CustomerOrder order = customerOrderRepository.findById(id)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "Commande n°" + id + " introuvable"
+                                "Commande introuvable : " + id
                         )
                 );
 
-        if (!order.getUser().getLogin()
-                .equals(authentication.getName())) {
+        if (!order.getUser().getLogin().equals(authentication.getName())) {
             throw new IllegalArgumentException(
                     "Accès interdit à cette commande."
             );
@@ -112,6 +111,7 @@ public class OrderController {
         model.addAttribute("paypalSandboxUrl", paypalSandboxUrl);
         model.addAttribute("paypalSellerEmail", paypalSellerEmail);
         model.addAttribute("baseUrl", baseUrl);
+
         model.addAttribute("title", "Commande n°" + order.getId());
         model.addAttribute(
                 "body",
@@ -124,9 +124,24 @@ public class OrderController {
     @GetMapping("/{id}/payment/success")
     public String paymentSuccess(
             @PathVariable Long id,
+            Authentication authentication,
             RedirectAttributes redirectAttributes
     ) {
         try {
+            CustomerOrder order = customerOrderRepository.findById(id)
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "Commande introuvable : " + id
+                            )
+                    );
+
+            if (!order.getUser().getLogin()
+                    .equals(authentication.getName())) {
+                throw new IllegalArgumentException(
+                        "Accès interdit à cette commande."
+                );
+            }
+
             orderService.validatePayment(id);
 
             redirectAttributes.addFlashAttribute(
@@ -134,23 +149,36 @@ public class OrderController {
                     "Paiement validé."
             );
 
-            return "redirect:/order/" + id;
-
         } catch (IllegalArgumentException exception) {
             redirectAttributes.addFlashAttribute(
                     "error",
                     exception.getMessage()
             );
-
-            return "redirect:/order/" + id;
         }
+
+        return "redirect:/order/" + id;
     }
 
     @GetMapping("/{id}/payment/cancel")
     public String paymentCancel(
             @PathVariable Long id,
+            Authentication authentication,
             RedirectAttributes redirectAttributes
     ) {
+        CustomerOrder order = customerOrderRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Commande introuvable : " + id
+                        )
+                );
+
+        if (!order.getUser().getLogin()
+                .equals(authentication.getName())) {
+            throw new IllegalArgumentException(
+                    "Accès interdit à cette commande."
+            );
+        }
+
         redirectAttributes.addFlashAttribute(
                 "error",
                 "Paiement annulé."
@@ -164,11 +192,11 @@ public class OrderController {
             Authentication authentication,
             Model model
     ) {
-        String login = authentication.getName();
-
         List<CustomerOrder> orders =
                 customerOrderRepository
-                        .findByUserLoginOrderByCreatedAtDesc(login);
+                        .findByUserLoginOrderByCreatedAtDesc(
+                                authentication.getName()
+                        );
 
         model.addAttribute("orders", orders);
         model.addAttribute("title", "Mes commandes");

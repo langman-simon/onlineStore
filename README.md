@@ -4,6 +4,11 @@ Welcome to the **Hyperion** project! Follow this guide to set up your local deve
 
 ---
 
+## sandbox paypal account
+
+E-mail : paypaltestemail@paypal.com
+Mot de passe : mdptest1
+
 ## web url (homepage)
 
 http://localhost:8080/
