@@ -1,9 +1,11 @@
 package com.hyperion.controller;
 
+import com.hyperion.cart.Cart;
 import com.hyperion.model.CustomerOrder;
 import com.hyperion.model.User;
 import com.hyperion.repository.CustomerOrderRepository;
 import com.hyperion.service.OrderService;
+import com.hyperion.service.PromotionService;
 import com.hyperion.service.UserService;
 import com.hyperion.session.SessionCart;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -26,6 +29,8 @@ public class OrderController {
     private final SessionCart sessionCart;
     private final CustomerOrderRepository customerOrderRepository;
     private final UserService userService;
+    private final PromotionService promotionService;
+
     @Value("${paypal.sandbox-url}")
     private String paypalSandboxUrl;
 
@@ -39,20 +44,50 @@ public class OrderController {
             OrderService orderService,
             SessionCart sessionCart,
             CustomerOrderRepository customerOrderRepository,
-            UserService userService) {
+            UserService userService,
+            PromotionService promotionService) {
         this.orderService = orderService;
         this.sessionCart = sessionCart;
         this.customerOrderRepository = customerOrderRepository;
         this.userService = userService;
+        this.promotionService = promotionService;
     }
 
     @GetMapping("/checkout")
-    public String checkout(Model model) {
-        if (sessionCart.getCart().isEmpty()) {
+    public String checkout(
+            Authentication authentication,
+            Model model
+    ) {
+        Cart cart = sessionCart.getCart();
+
+        if (cart == null || cart.getItems().isEmpty()) {
             return "redirect:/cart";
         }
-        model.addAttribute("cart", sessionCart.getCart());
-        model.addAttribute("title", "Récapitulatif de commande");
+
+        boolean authenticated =
+                authentication != null
+                        && authentication.isAuthenticated();
+
+        BigDecimal originalPrice = cart.getTotalPrice();
+
+        BigDecimal discountAmount =
+                promotionService.calculateDiscount(
+                        originalPrice,
+                        authenticated
+                );
+
+        BigDecimal finalPrice =
+                promotionService.calculateFinalPrice(
+                        originalPrice,
+                        authenticated
+                );
+
+        model.addAttribute("cart", cart);
+        model.addAttribute("originalPrice", originalPrice);
+        model.addAttribute("discountAmount", discountAmount);
+        model.addAttribute("finalPrice", finalPrice);
+
+        model.addAttribute("title", "Validation de la commande");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/order/checkout.jsp"

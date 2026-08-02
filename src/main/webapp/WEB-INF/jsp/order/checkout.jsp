@@ -5,67 +5,94 @@
 
     <h1>Récapitulatif de la commande</h1>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Produit</th>
-            <th>Prix unitaire</th>
-            <th>Quantité</th>
-            <th>Sous-total</th>
-        </tr>
-        </thead>
+    <c:choose>
 
-        <tbody>
-        <c:forEach var="item" items="${cart.items}">
-            <tr>
-                <td>${item.weapon.name}</td>
-                <td>${item.weapon.price} €</td>
-                <td>${item.quantity}</td>
-                <td>${item.subtotal} €</td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+        <c:when test="${empty cart.items}">
+            <p>Votre panier est vide.</p>
 
-    <div class="order-total">
-        <p>
-            Sous-total :
-            <span>${originalPrice} €</span>
-        </p>
+            <a class="btn" href="<c:url value='/catalogue'/>">
+                Retour au catalogue
+            </a>
+        </c:when>
 
-    <c:if test="${discount > 0}">
-        <p class="discount">
-            Réduction fidélité :
-            <span>-${discount} €</span>
-        </p>
-    </c:if>
+        <c:otherwise>
 
-        <p>
-            Total à payer :
-            <strong>${finalPrice} €</strong>
-        </p>
-    </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix unitaire</th>
+                    <th>Quantité</th>
+                    <th>Sous-total</th>
+                </tr>
+                </thead>
 
-    <div class="checkout-actions">
+                <tbody>
+                <c:forEach var="item" items="${cart.items}">
+                    <tr>
+                        <td>${item.weapon.name}</td>
 
-        <form method="post"
-              action="<c:url value='/order/confirm'/>">
+                        <td>
+                            ${item.weapon.price} €
+                        </td>
 
-            <sec:csrfInput/>
+                        <td>
+                            ${item.quantity}
+                        </td>
 
-            <button type="submit">
-                Confirmer la commande
-            </button>
-        </form>
+                        <td>
+                            ${item.subtotal} €
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
 
-        <a class="btn" href="<c:url value='/cart'/>">
-            Retour au panier
-        </a>
+            <div class="order-total">
 
-        <a class="btn" href="<c:url value='/catalogue'/>">
-            Retour au catalogue
-        </a>
+                <p>
+                    Sous-total :
+                    <span>${originalPrice} €</span>
+                </p>
 
-    </div>
+                <c:if test="${discountAmount > 0}">
+                    <p class="discount">
+                        Réduction fidélité :
+                        <span>- ${discountAmount} €</span>
+                    </p>
+                </c:if>
+
+                <p>
+                    Total à payer :
+                    <strong>${finalPrice} €</strong>
+                </p>
+
+            </div>
+
+            <div class="checkout-actions">
+
+                <form method="post"
+                      action="<c:url value='/order/confirm'/>">
+
+                    <sec:csrfInput/>
+
+                    <button type="submit">
+                        Confirmer la commande
+                    </button>
+                </form>
+
+                <a class="btn" href="<c:url value='/cart'/>">
+                    Retour au panier
+                </a>
+
+                <a class="btn" href="<c:url value='/catalogue'/>">
+                    Retour au catalogue
+                </a>
+
+            </div>
+
+        </c:otherwise>
+
+    </c:choose>
 
 </section>
