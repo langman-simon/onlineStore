@@ -4,6 +4,7 @@ import com.hyperion.cart.Cart;
 import com.hyperion.cart.CartItem;
 import com.hyperion.model.CustomerOrder;
 import com.hyperion.model.OrderItem;
+import com.hyperion.model.User;
 import com.hyperion.model.Weapon;
 import com.hyperion.repository.CustomerOrderRepository;
 import com.hyperion.repository.WeaponRepository;
@@ -25,12 +26,17 @@ public class OrderService {
     }
 
     @Transactional
-    public CustomerOrder validateOrder(Cart cart) {
+    public CustomerOrder validateOrder(Cart cart, User user) {
         if (cart == null || cart.isEmpty()) {
             throw new IllegalArgumentException("Le panier est vide.");
         }
 
+        if (user == null) {
+            throw new IllegalArgumentException("Utilisateur introuvable.");
+        }
+
         CustomerOrder order = new CustomerOrder(cart.getTotalPrice());
+        order.setUser(user);
 
         for (CartItem cartItem : cart.getItems()) {
             Long weaponId = cartItem.getWeapon().getId();
