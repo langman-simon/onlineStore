@@ -66,4 +66,5 @@ public class OrderItem {
     public BigDecimal getSubtotal() {
         return subtotal;
     }
+
 }

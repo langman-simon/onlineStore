@@ -51,18 +51,46 @@ ON CONFLICT (login) DO UPDATE
 -- CATÉGORIES
 -- =========================================================
 
-INSERT INTO categories (name, description)
+INSERT INTO categories (
+    name,
+    description
+)
 VALUES
-    ('Armes de poing', 'Pistolets et armes compactes'),
-    ('Fusils', 'Fusils classiques, automatiques et armes longues'),
-    ('Pistolets-mitrailleurs', 'Armes automatiques compactes'),
-    ('Armes de précision', 'Fusils de précision et armes à longue portée'),
-    ('Lanceurs', 'Lance-roquettes et lance-missiles'),
-    ('Munitions et explosifs', 'Munitions, grenades et charges explosives'),
-    ('Protections', 'Équipements de protection individuelle'),
-    ('Équipements maritimes', 'Sous-marins, croiseurs et bâtiments militaires')
-ON CONFLICT (name) DO UPDATE SET description = EXCLUDED.description;
-
+    (
+        'Armes de poing',
+        'Pistolets et armes compactes'
+    ),
+    (
+        'Fusils',
+        'Fusils classiques, automatiques et armes longues'
+    ),
+    (
+        'Pistolets-mitrailleurs',
+        'Armes automatiques compactes'
+    ),
+    (
+        'Armes de précision',
+        'Fusils de précision et armes à longue portée'
+    ),
+    (
+        'Lanceurs',
+        'Lance-roquettes et lance-missiles'
+    ),
+    (
+        'Munitions et explosifs',
+        'Munitions, grenades et charges explosives'
+    ),
+    (
+        'Protections',
+        'Équipements de protection individuelle'
+    ),
+    (
+        'Équipements maritimes',
+        'Sous-marins, croiseurs et bâtiments militaires'
+    )
+ON CONFLICT (name) DO UPDATE
+    SET
+        description = EXCLUDED.description;
 
 -- =========================================================
 -- PRODUITS
@@ -124,7 +152,11 @@ VALUES
         'Arme automatique compacte adaptée aux combats rapprochés.',
         1499.00,
         10,
-        (SELECT id FROM categories WHERE name = 'Pistolets-mitrailleurs'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Pistolets-mitrailleurs'
+        ),
         'Hyperion Tactical',
         'HYP-005',
         '/images/submachinesgun.webp'
@@ -134,7 +166,11 @@ VALUES
         'Fusil de précision conçu pour les tirs à longue distance.',
         3299.00,
         5,
-        (SELECT id FROM categories WHERE name = 'Armes de précision'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Armes de précision'
+        ),
         'Hyperion Precision',
         'HYP-006',
         '/images/sniper.jpg'
@@ -164,7 +200,11 @@ VALUES
         'Caisse de munitions compatible avec le fusil AK-47.',
         199.99,
         50,
-        (SELECT id FROM categories WHERE name = 'Munitions et explosifs'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Munitions et explosifs'
+        ),
         'Hyperion Ammunition',
         'HYP-009',
         '/images/ak_47_ammo.webp'
@@ -174,7 +214,11 @@ VALUES
         'Charge explosive compacte à déclenchement contrôlé.',
         799.99,
         20,
-        (SELECT id FROM categories WHERE name = 'Munitions et explosifs'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Munitions et explosifs'
+        ),
         'Hyperion Explosives',
         'HYP-010',
         '/images/c4.webp'
@@ -184,7 +228,11 @@ VALUES
         'Grenade expérimentale développée par Hyperion.',
         349.99,
         30,
-        (SELECT id FROM categories WHERE name = 'Munitions et explosifs'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Munitions et explosifs'
+        ),
         'Hyperion Explosives',
         'HYP-011',
         '/images/grenamon.webp'
@@ -204,7 +252,11 @@ VALUES
         'Sous-marin militaire destiné aux opérations en eaux profondes.',
         2500000.00,
         2,
-        (SELECT id FROM categories WHERE name = 'Équipements maritimes'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Équipements maritimes'
+        ),
         'Hyperion Naval Systems',
         'HYP-013',
         '/images/usa_submarines.webp'
@@ -214,7 +266,11 @@ VALUES
         'Croiseur militaire moderne équipé de systèmes avancés.',
         4750000.00,
         3,
-        (SELECT id FROM categories WHERE name = 'Équipements maritimes'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Équipements maritimes'
+        ),
         'Hyperion Naval Systems',
         'HYP-014',
         '/images/modern_cruiser.webp'
@@ -224,7 +280,11 @@ VALUES
         'Croiseur lourd conçu pour les affrontements navals.',
         6250000.00,
         2,
-        (SELECT id FROM categories WHERE name = 'Équipements maritimes'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Équipements maritimes'
+        ),
         'Hyperion Naval Systems',
         'HYP-015',
         '/images/modern_battle_cruiser.webp'
@@ -234,7 +294,11 @@ VALUES
         'Bâtiment militaire expérimental équipé de technologies avancées.',
         8500000.00,
         1,
-        (SELECT id FROM categories WHERE name = 'Équipements maritimes'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Équipements maritimes'
+        ),
         'Hyperion Future Systems',
         'HYP-016',
         '/images/futurist_cruiser.webp'
@@ -244,17 +308,25 @@ VALUES
         'Navire de guerre lourd disposant d’une puissance de feu considérable.',
         10000000.00,
         1,
-        (SELECT id FROM categories WHERE name = 'Équipements maritimes'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Équipements maritimes'
+        ),
         'Hyperion Naval Systems',
         'HYP-017',
         '/images/dreadnought.webp'
     ),
     (
-        'explosif humain',
+        'Explosif humain',
         'Petite unité explosive mobile à usage unique.',
         1499.00,
         7,
-        (SELECT id FROM categories WHERE name = 'Munitions et explosifs'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Munitions et explosifs'
+        ),
         'Hyperion Experimental',
         'HYP-018',
         '/images/human_bomb_2.webp'
@@ -264,7 +336,11 @@ VALUES
         'Unité explosive mobile lourde à usage unique.',
         2999.00,
         4,
-        (SELECT id FROM categories WHERE name = 'Munitions et explosifs'),
+        (
+            SELECT id
+            FROM categories
+            WHERE name = 'Munitions et explosifs'
+        ),
         'Hyperion Experimental',
         'HYP-019',
         '/images/human_bomb.webp'
@@ -279,25 +355,74 @@ ON CONFLICT (reference) DO UPDATE
         image_url = EXCLUDED.image_url;
 
 -- =========================================================
--- RÉINITIALISATION DES STOCKS AU DÉMARRAGE
+-- COMMANDES DE DÉMONSTRATION
+--
+-- Les identifiants négatifs sont réservés aux données SQL.
+-- Les commandes créées par Hibernate utilisent des IDs positifs.
+--
+-- DO NOTHING évite de réinitialiser une commande déjà payée
+-- ou modifiée lors d'un redémarrage.
 -- =========================================================
 
-UPDATE weapons SET stock = 8  WHERE reference = 'HYP-001';
-UPDATE weapons SET stock = 6  WHERE reference = 'HYP-002';
-UPDATE weapons SET stock = 12 WHERE reference = 'HYP-003';
-UPDATE weapons SET stock = 15 WHERE reference = 'HYP-004';
-UPDATE weapons SET stock = 10 WHERE reference = 'HYP-005';
-UPDATE weapons SET stock = 5  WHERE reference = 'HYP-006';
-UPDATE weapons SET stock = 4  WHERE reference = 'HYP-007';
-UPDATE weapons SET stock = 3  WHERE reference = 'HYP-008';
-UPDATE weapons SET stock = 50 WHERE reference = 'HYP-009';
-UPDATE weapons SET stock = 20 WHERE reference = 'HYP-010';
-UPDATE weapons SET stock = 30 WHERE reference = 'HYP-011';
-UPDATE weapons SET stock = 14 WHERE reference = 'HYP-012';
-UPDATE weapons SET stock = 2  WHERE reference = 'HYP-013';
-UPDATE weapons SET stock = 3  WHERE reference = 'HYP-014';
-UPDATE weapons SET stock = 2  WHERE reference = 'HYP-015';
-UPDATE weapons SET stock = 1  WHERE reference = 'HYP-016';
-UPDATE weapons SET stock = 1  WHERE reference = 'HYP-017';
-UPDATE weapons SET stock = 7  WHERE reference = 'HYP-018';
-UPDATE weapons SET stock = 4  WHERE reference = 'HYP-019';
+INSERT INTO customer_orders (
+    id,
+    created_at,
+    total_price,
+    status,
+    user_id
+)
+VALUES
+    (
+        -1,
+        TIMESTAMP '2026-07-20 14:30:00',
+        1899.95,
+        'PAID',
+        (SELECT id FROM users WHERE login = 'user')
+    ),
+    (
+        -2,
+        TIMESTAMP '2026-07-25 10:15:00',
+        1299.00,
+        'PENDING_PAYMENT',
+        (SELECT id FROM users WHERE login = 'user')
+    )
+ON CONFLICT (id) DO NOTHING;
+
+-- =========================================================
+-- LIGNES DES COMMANDES DE DÉMONSTRATION
+-- =========================================================
+
+INSERT INTO order_items (
+    id,
+    order_id,
+    weapon_id,
+    quantity,
+    unit_price,
+    subtotal
+)
+VALUES
+    (
+        -1,
+        -1,
+        (SELECT id FROM weapons WHERE reference = 'HYP-001'),
+        2,
+        649.99,
+        1299.98
+    ),
+    (
+        -2,
+        -1,
+        (SELECT id FROM weapons WHERE reference = 'HYP-009'),
+        3,
+        199.99,
+        599.97
+    ),
+    (
+        -3,
+        -2,
+        (SELECT id FROM weapons WHERE reference = 'HYP-012'),
+        1,
+        1299.00,
+        1299.00
+    )
+ON CONFLICT (id) DO NOTHING;

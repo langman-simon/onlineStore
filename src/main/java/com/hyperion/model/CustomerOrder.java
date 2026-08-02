@@ -24,16 +24,9 @@ public class CustomerOrder {
     @Column(nullable = false, length = 30)
     private String status;
 
-    @Column(name = "original_price", nullable = false, precision = 12, scale = 2)
-    private BigDecimal originalPrice;
-
-    @Column(name = "discount_amount", nullable = false, precision = 12, scale = 2)
-    private BigDecimal discountAmount;
-
-    public BigDecimal getOriginalPrice() { return originalPrice; }
-    public void setOriginalPrice(BigDecimal originalPrice) { this.originalPrice = originalPrice; }
-    public BigDecimal getDiscountAmount() { return discountAmount; }
-    public void setDiscountAmount(BigDecimal discountAmount) { this.discountAmount = discountAmount; }
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @OneToMany(
             mappedBy = "order",
@@ -45,12 +38,10 @@ public class CustomerOrder {
     public CustomerOrder() {
     }
 
-    public CustomerOrder(BigDecimal originalPrice, BigDecimal discountAmount, BigDecimal finalPrice) {
+    public CustomerOrder(BigDecimal totalPrice) {
         this.createdAt = LocalDateTime.now();
-        this.originalPrice = originalPrice;
-        this.discountAmount = discountAmount;
-        this.totalPrice = finalPrice;
-        this.status = "VALIDATED";
+        this.totalPrice = totalPrice;
+        this.status = "PENDING_PAYMENT";
     }
 
     public void addItem(OrderItem item) {
@@ -74,9 +65,20 @@ public class CustomerOrder {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public List<OrderItem> getItems() {
         return items;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
 }

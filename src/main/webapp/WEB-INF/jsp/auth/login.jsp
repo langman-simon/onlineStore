@@ -15,7 +15,8 @@
                 <input id="username"
                        type="text"
                        name="username"
-                       required>
+                       required
+                       autofocus>
             </div>
 
             <div class="form-group">
