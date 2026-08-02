@@ -521,24 +521,24 @@ Chaque page doit proposer au minimum :
 
 # 🏷️ Promotions
 
-- [ ] Proposer au moins un système de promotion
-- [ ] Définir les règles de promotion
+- ✅ Proposer au moins un système de promotion
+- ✅ Définir les règles de promotion
 - [ ] Faire preuve d’originalité dans les promotions
-- [ ] Créer un service métier pour calculer les promotions
-- [ ] Ne pas calculer les promotions directement dans la JSP
-- [ ] Ne pas calculer les promotions directement dans le contrôleur
-- [ ] Appliquer les promotions dans la couche business
-- [ ] Afficher clairement le prix initial
-- [ ] Afficher clairement la réduction
-- [ ] Afficher clairement le prix final
-- [ ] Intégrer la réduction au calcul du panier
-- [ ] Intégrer la réduction au calcul de la commande
-- [ ] Enregistrer le montant réellement facturé
-- [ ] Empêcher un montant négatif
-- [ ] Tester les promotions avec plusieurs cas
-- [ ] Tester un panier sans promotion
-- [ ] Tester un panier avec promotion
-- [ ] Tester les limites des promotions
+- ✅ Créer un service métier pour calculer les promotions
+- ✅ Ne pas calculer les promotions directement dans la JSP
+- ✅ Ne pas calculer les promotions directement dans le contrôleur
+- ✅ Appliquer les promotions dans la couche business
+- ✅ Afficher clairement le prix initial
+- ✅ Afficher clairement la réduction
+- ✅ Afficher clairement le prix final
+- ✅ Intégrer la réduction au calcul du panier
+- ✅ Intégrer la réduction au calcul de la commande
+- ✅ Enregistrer le montant réellement facturé
+- ✅ Empêcher un montant négatif
+- ✅ Tester les promotions avec plusieurs cas
+- ✅ Tester un panier sans promotion
+- ✅ Tester un panier avec promotion
+- ✅ Tester les limites des promotions
 - [ ] Traduire les messages liés aux promotions
 
 Exemples possibles :
