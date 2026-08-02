@@ -24,6 +24,10 @@ public class CustomerOrder {
     @Column(nullable = false, length = 30)
     private String status;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,
@@ -68,4 +72,13 @@ public class CustomerOrder {
     public List<OrderItem> getItems() {
         return items;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }
