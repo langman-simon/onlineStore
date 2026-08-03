@@ -340,3 +340,87 @@ p { color: var(--text); }
         animation: none;
     }
 }
+
+.global-banner--success {
+    border-color: #c49a3a;
+}
+
+.global-banner--success .global-banner__icon {
+    color: #1c1c1c;
+    background: linear-gradient(
+            135deg,
+            #d8b45a,
+            #c49a3a
+    );
+}
+
+.global-banner--success .global-banner__timer {
+    background: linear-gradient(
+            to right,
+            #c49a3a,
+            #e2c477
+    );
+}
+
+.global-banner--error {
+    border-color: #b33a3a;
+}
+
+.global-banner--error .global-banner__icon {
+    color: white;
+    background: linear-gradient(
+            135deg,
+            #c94b4b,
+            #8b2f2f
+    );
+}
+
+.global-banner--error .global-banner__timer {
+    background: linear-gradient(
+            to right,
+            #8b2f2f,
+            #d95a5a
+    );
+}
+
+.global-banner--warning {
+    border-color: #d08a28;
+}
+
+.global-banner--warning .global-banner__icon {
+    color: #1c1c1c;
+    background: linear-gradient(
+            135deg,
+            #f0b454,
+            #d08a28
+    );
+}
+
+.global-banner--warning .global-banner__timer {
+    background: linear-gradient(
+            to right,
+            #d08a28,
+            #f0b454
+    );
+}
+
+.global-banner--info {
+    border-color: #607d9b;
+}
+
+.global-banner--info .global-banner__icon {
+    color: white;
+    background: linear-gradient(
+            135deg,
+            #7895b2,
+            #506d89
+    );
+}
+
+.global-banner--info .global-banner__timer {
+    background: linear-gradient(
+            to right,
+            #506d89,
+            #8ba6c0
+    );
+}

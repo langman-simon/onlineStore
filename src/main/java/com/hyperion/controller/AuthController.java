@@ -1,5 +1,6 @@
 package com.hyperion.controller;
 
+import com.hyperion.service.GlobalBannerService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -13,8 +14,6 @@ import com.hyperion.dto.RegistrationForm;
 import com.hyperion.model.User;
 import com.hyperion.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,24 +25,24 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
+    private final GlobalBannerService globalBannerService;
 
     public AuthController(
             UserService userService,
             AuthenticationManager authenticationManager,
-            SecurityContextRepository securityContextRepository
+            SecurityContextRepository securityContextRepository,
+            GlobalBannerService globalBannerService
     ) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.securityContextRepository = securityContextRepository;
+        this.globalBannerService = globalBannerService;
     }
 
     @GetMapping("/login")
-    public String login(@RequestParam(required = false) String error, Model model) {
+    public String login(Model model) {
         model.addAttribute("title", "Connexion");
         model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
-        if (error != null) {
-            model.addAttribute("error", "Identifiant ou mot de passe incorrect.");
-        }
         return "template/template";
     }
 
@@ -117,10 +116,6 @@ public class AuthController {
                 form.getPassword()
         );
 
-        /*
-         * Authentifie immédiatement l’utilisateur avec le pseudo
-         * et le mot de passe fournis lors de l’inscription.
-         */
         Authentication authentication =
                 authenticationManager.authenticate(
                         UsernamePasswordAuthenticationToken
@@ -130,9 +125,6 @@ public class AuthController {
                                 )
                 );
 
-        /*
-         * Crée le contexte de sécurité de l’utilisateur connecté.
-         */
         SecurityContext securityContext =
                 SecurityContextHolder.createEmptyContext();
 
@@ -140,24 +132,15 @@ public class AuthController {
 
         SecurityContextHolder.setContext(securityContext);
 
-        /*
-         * Sauvegarde le contexte dans la session afin que
-         * l’utilisateur reste connecté après la redirection.
-         */
         securityContextRepository.saveContext(
                 securityContext,
                 request,
                 response
         );
 
-        session.setAttribute(
-                "globalBannerMessage",
-                "Compte créé, bienvenue " + user.getLogin()
-        );
-
-        session.setAttribute(
-                "globalBannerType",
-                "success"
+        globalBannerService.success(
+                session,
+                "Compte créé, bienvenue " + user.getLogin() + "."
         );
 
         return "redirect:/";

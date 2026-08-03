@@ -81,7 +81,25 @@
 
         <span class="global-banner__icon"
               aria-hidden="true">
-            ✓
+
+            <c:choose>
+                <c:when test="${sessionScope.globalBannerType == 'success'}">
+                    ✓
+                </c:when>
+
+                <c:when test="${sessionScope.globalBannerType == 'error'}">
+                    !
+                </c:when>
+
+                <c:when test="${sessionScope.globalBannerType == 'warning'}">
+                    !
+                </c:when>
+
+                <c:otherwise>
+                    i
+                </c:otherwise>
+            </c:choose>
+
         </span>
 
         <span class="global-banner__message">

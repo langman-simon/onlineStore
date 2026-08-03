@@ -15,11 +15,17 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final LoginSuccessHandler loginSuccessHandler;
+    private final LogoutSuccessHandler logoutSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
 
     public SecurityConfig(
-            LoginSuccessHandler loginSuccessHandler
+            LoginSuccessHandler loginSuccessHandler,
+            LogoutSuccessHandler logoutSuccessHandler,
+            LoginFailureHandler loginFailureHandler
     ) {
         this.loginSuccessHandler = loginSuccessHandler;
+        this.logoutSuccessHandler = logoutSuccessHandler;
+        this.loginFailureHandler = loginFailureHandler;
     }
 
     @Bean
@@ -64,12 +70,12 @@ public class SecurityConfig {
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .successHandler(loginSuccessHandler)
-                        .failureUrl("/login?error")
+                        .failureHandler(loginFailureHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessHandler(logoutSuccessHandler)
                         .permitAll()
                 );
 

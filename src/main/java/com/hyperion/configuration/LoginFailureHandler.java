@@ -4,42 +4,42 @@ import com.hyperion.service.GlobalBannerService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
-public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+public class LoginFailureHandler
+        extends SimpleUrlAuthenticationFailureHandler {
 
     private final GlobalBannerService globalBannerService;
 
-    public LoginSuccessHandler(
+    public LoginFailureHandler(
             GlobalBannerService globalBannerService
     ) {
         this.globalBannerService = globalBannerService;
 
-        setDefaultTargetUrl("/");
-        setAlwaysUseDefaultTargetUrl(false);
+        setDefaultFailureUrl("/login");
     }
 
     @Override
-    public void onAuthenticationSuccess(
+    public void onAuthenticationFailure(
             HttpServletRequest request,
             HttpServletResponse response,
-            Authentication authentication
+            AuthenticationException exception
     ) throws IOException, ServletException {
 
-        globalBannerService.success(
+        globalBannerService.error(
                 request.getSession(),
-                "Connexion réussie. Bienvenue " + authentication.getName() + " !"
+                "Identifiant ou mot de passe incorrect."
         );
 
-        super.onAuthenticationSuccess(
+        super.onAuthenticationFailure(
                 request,
                 response,
-                authentication
+                exception
         );
     }
 }
