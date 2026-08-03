@@ -6,38 +6,46 @@
 
         <%-- Langue fixe à gauche --%>
 
-        <div class="header-language hover-menu">
+        <div class="header-language">
 
-            <button type="button"
-                    class="language-button"
-                    aria-label="Changer de langue">
+            <div class="hover-menu">
 
-                <span aria-hidden="true">🌐</span>
-                Langue
+                <button type="button"
+                        class="language-button"
+                        aria-label="Changer de langue"
+                        title="Langue">
 
-            </button>
+                    <span aria-hidden="true">🌐</span>
 
-            <div class="hover-menu__content language-dropdown">
+                    <span class="language-button__label">
+                        Langue
+                    </span>
 
-                <c:url var="frUrl" value="">
-                    <c:param name="lang" value="fr"/>
-                </c:url>
+                </button>
 
-                <a href="${frUrl}">
-                    <img src="<c:url value='/assets/flags/fr.png'/>"
-                         alt="">
-                    Français
-                </a>
+                <div class="hover-menu__content language-dropdown">
 
-                <c:url var="enUrl" value="">
-                    <c:param name="lang" value="en"/>
-                </c:url>
+                    <c:url var="frUrl" value="">
+                        <c:param name="lang" value="fr"/>
+                    </c:url>
 
-                <a href="${enUrl}">
-                    <img src="<c:url value='/assets/flags/en.png'/>"
-                         alt="">
-                    English
-                </a>
+                    <a href="${frUrl}">
+                        <img src="<c:url value='/assets/flags/fr.png'/>"
+                             alt="">
+                        Français
+                    </a>
+
+                    <c:url var="enUrl" value="">
+                        <c:param name="lang" value="en"/>
+                    </c:url>
+
+                    <a href="${enUrl}">
+                        <img src="<c:url value='/assets/flags/en.png'/>"
+                             alt="">
+                        English
+                    </a>
+
+                </div>
 
             </div>
 
