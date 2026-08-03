@@ -142,3 +142,201 @@ p { color: var(--text); }
     background-color: #c49a3a;
     color: #1c1c1c;
 }
+
+/* =========================================================
+   LOGIN AND REGISTER MESSAGES BANNER
+========================================================= */
+
+.global-banner {
+    position: fixed;
+    top: 1.5rem;
+    left: 50%;
+    z-index: 5000;
+
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+
+    width: min(620px, calc(100% - 2rem));
+    min-height: 72px;
+    padding: 1rem 1.35rem;
+
+    color: #f7f3e8;
+    background:
+            linear-gradient(
+                    135deg,
+                    #292929,
+                    #171717
+            );
+
+    border: 1px solid #c49a3a;
+    border-radius: 14px;
+
+    box-shadow:
+            0 16px 38px rgba(0, 0, 0, 0.34),
+            0 5px 12px rgba(0, 0, 0, 0.22),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    overflow: hidden;
+    cursor: pointer;
+
+    transform: translateX(-50%);
+    animation: global-banner-enter 0.45s ease both;
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+}
+
+.global-banner:hover {
+    border-color: #d8b45a;
+
+    box-shadow:
+            0 20px 46px rgba(0, 0, 0, 0.4),
+            0 7px 16px rgba(0, 0, 0, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    transform: translateX(-50%) translateY(-2px);
+}
+
+.global-banner:focus-visible {
+    outline: 3px solid rgba(196, 154, 58, 0.45);
+    outline-offset: 3px;
+}
+
+.global-banner__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    color: #1c1c1c;
+    background:
+            linear-gradient(
+                    135deg,
+                    #d8b45a,
+                    #c49a3a
+            );
+
+    border-radius: 50%;
+
+    box-shadow:
+            0 4px 10px rgba(0, 0, 0, 0.3);
+
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.global-banner__message {
+    min-width: 0;
+
+    color: #f7f3e8;
+
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1.4;
+    letter-spacing: 0.015em;
+}
+
+.global-banner__hint {
+    color: #bdb8ac;
+
+    font-size: 0.72rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.global-banner__timer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    height: 4px;
+
+    background:
+            linear-gradient(
+                    to right,
+                    #c49a3a,
+                    #e2c477
+            );
+
+    transform-origin: left;
+    animation: global-banner-timer 5s linear forwards;
+}
+
+.global-banner--closing {
+    pointer-events: none;
+    animation: global-banner-exit 0.35s ease forwards;
+}
+
+@keyframes global-banner-enter {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -25px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+}
+
+@keyframes global-banner-exit {
+    from {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -20px) scale(0.97);
+    }
+}
+
+@keyframes global-banner-timer {
+    from {
+        transform: scaleX(1);
+    }
+
+    to {
+        transform: scaleX(0);
+    }
+}
+
+@media (max-width: 600px) {
+    .global-banner {
+        top: 0.75rem;
+
+        grid-template-columns: auto 1fr;
+
+        width: calc(100% - 1rem);
+        min-height: 64px;
+        padding: 0.85rem 1rem;
+    }
+
+    .global-banner__icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .global-banner__message {
+        font-size: 0.9rem;
+    }
+
+    .global-banner__hint {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .global-banner,
+    .global-banner__timer,
+    .global-banner--closing {
+        animation: none;
+    }
+}

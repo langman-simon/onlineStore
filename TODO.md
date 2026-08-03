@@ -40,9 +40,9 @@
 - ✅ Permettre à l’administrateur de consulter les catégories
 - ✅ Permettre à l’administrateur de consulter les produits
 - ✅ Permettre à l’administrateur d’ajouter un produit
-- [ ] Permettre à l’administrateur de modifier un produit
+- ✅ Permettre à l’administrateur de modifier un produit
 - ✅ Permettre à l’administrateur de supprimer un produit
-- [ ] Permettre à l’administrateur de gérer les stocks
+- ✅ Permettre à l’administrateur de gérer les stocks
 - [ ] Permettre à l’administrateur de gérer les promotions
 - [ ] Permettre à l’administrateur de gérer les catégories si cette fonctionnalité est prévue
 
@@ -62,15 +62,15 @@
 - ✅ Ajouter un champ mot de passe
 - ✅ Ajouter un champ confirmation du mot de passe
 - ✅ Ajouter au moins un champ facultatif
-- [ ] Identifier clairement les champs obligatoires
-- [ ] Afficher les erreurs de validation près des champs concernés
+- ✅ Identifier clairement les champs obligatoires
+- ✅ Afficher les erreurs de validation près des champs concernés
 - ✅ Conserver les valeurs valides du formulaire après une erreur
 - ✅ Enregistrer le nouvel utilisateur dans PostgreSQL
-- [ ] Refuser un login déjà existant (le duplicat n'est pas ajouté en db mais aucun message d'erreur et les champs du form sont effacés)
+- ✅ Refuser un login déjà existant (le duplicat n'est pas ajouté en db mais aucun message d'erreur et les champs du form sont effacés)
 - ✅ Hasher le mot de passe avant l’enregistrement
 - ✅ Ne jamais enregistrer le mot de passe en clair
 - ✅ Rediriger vers le login après une inscription réussie
-- [ ] Afficher un message de confirmation après inscription
+- ✅ Afficher un message de confirmation après inscription
 
 ## 🔑 Login
 

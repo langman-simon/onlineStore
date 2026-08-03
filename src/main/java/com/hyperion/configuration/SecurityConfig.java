@@ -1,5 +1,9 @@
 package com.hyperion.configuration;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,9 +14,29 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    private final LoginSuccessHandler loginSuccessHandler;
+
+    public SecurityConfig(
+            LoginSuccessHandler loginSuccessHandler
+    ) {
+        this.loginSuccessHandler = loginSuccessHandler;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration
+    ) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
     }
 
     @Bean
@@ -24,9 +48,8 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
 
                         .requestMatchers(
-                                "/checkout",
                                 "/order/**",
-                                "/account"
+                                "/account/**"
                         )
                         .authenticated()
 
@@ -40,7 +63,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/", false)
+                        .successHandler(loginSuccessHandler)
                         .failureUrl("/login?error")
                         .permitAll()
                 )
