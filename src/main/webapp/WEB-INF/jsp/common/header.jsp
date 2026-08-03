@@ -119,10 +119,6 @@
 
                     <div class="hover-menu__content user-dropdown">
 
-                        <p class="user-dropdown__login">
-                            Non connecté
-                        </p>
-
                         <a href="<c:url value='/login'/>">
                             Se connecter
                         </a>
