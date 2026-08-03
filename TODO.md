@@ -1,5 +1,9 @@
-# 🚀 Project Hyperion — Complete TODO List
+# Problème répertorié
+- home.jsp cliquer sur une catégorie proposée ramène sur "toutes les catégories" au lieu de la catégorie sélectionnée.
+- l'images dans weapon/details.jsp n'affiche rien si absence d'image.
+- manque un bouton retourner au catalogue dans weapon/details.jsp.
 
+# 🚀 Project Hyperion — Complete TODO List
 ---
 
 # 👤 Users, Roles & Access Control
@@ -268,7 +272,7 @@ Chaque page doit proposer au minimum :
 - ✅ Présenter l’activité de la société
 - ✅ Présenter les produits ou catégories principales
 - ✅ Ajouter un accès rapide au catalogue
-- [ ] Ajouter un accès rapide au panier
+- ✅ Ajouter un accès rapide au panier
 - [ ] Traduire le contenu statique de l’accueil
 
 ## 🏢 Company Page
@@ -277,7 +281,7 @@ Chaque page doit proposer au minimum :
 - ✅ Présenter l’entreprise
 - ✅ Présenter son activité
 - ✅ Présenter ses services
-- [ ] Utiliser le template général
+- ✅ Utiliser le template général
 - [ ] Traduire la page en français et en anglais
 
 ---
@@ -332,7 +336,7 @@ Chaque page doit proposer au minimum :
 - ✅ Ajouter un lien vers le détail du produit
 - ✅ Afficher l’état du stock
 - ✅ Signaler les produits en rupture de stock
-- [ ] Empêcher l’ajout au panier d’un produit sans stock
+- ✅ Empêcher l’ajout au panier d’un produit sans stock
 - [ ] Trier les produits de façon cohérente
 - [ ] Ajouter une recherche par nom
 - ✅ Ajouter un filtre par catégorie
@@ -351,7 +355,7 @@ Chaque page doit proposer au minimum :
 - ✅ Afficher la référence
 - ✅ Afficher le stock
 - ✅ Afficher l’image
-- [ ] Gérer l’absence d’image
+- ✅ Gérer l’absence d’image
 - ✅ Ajouter un champ quantité
 - ✅ Définir une quantité minimale de 1
 - ✅ Limiter la quantité au stock disponible
