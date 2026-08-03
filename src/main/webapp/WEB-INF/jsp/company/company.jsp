@@ -4,6 +4,7 @@
 <section class="company-page">
 
     <div class="company-hero">
+        <p class="eyebrow">Depuis toujours</p>
         <h1>Notre société</h1>
 
         <p>

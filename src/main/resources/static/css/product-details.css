@@ -1,1 +1,71 @@
-.product-details { display:grid; grid-template-columns:minmax(260px,1fr) 1.4fr; gap:2rem; padding:2rem; background:white; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,.08); } .product-details__image img,.image-placeholder { width:100%; min-height:320px; border-radius:6px; object-fit:cover; } .image-placeholder { display:flex; justify-content:center; align-items:center; background:#e8e8e8; color:#666; } .product-details__content h1 { margin-top:0; } .product-price { color:#8a691f; font-size:1.6rem; font-weight:700; } .product-characteristics { display:grid; grid-template-columns:140px 1fr; gap:.6rem 1rem; margin:1.5rem 0; } .product-characteristics dt { font-weight:700; } .product-characteristics dd { margin:0; } .add-to-cart-form { display:flex; align-items:end; gap:.75rem; margin-top:1.5rem; }
+.product-details {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) 1.4fr;
+    gap: 3rem;
+    padding: 2.5rem;
+    background-color: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lift);
+}
+
+.product-details__image img,
+.image-placeholder {
+    width: 100%;
+    min-height: 340px;
+    border-radius: var(--radius);
+    object-fit: cover;
+}
+
+.image-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--ink);
+    color: var(--muted-on-dark);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.product-details__content .eyebrow { display: block; }
+
+.product-details__content h1 { margin-top: 0; }
+
+.product-price {
+    color: var(--gold-deep);
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    font-weight: 600;
+}
+
+.product-details__content > p:not(.product-price):not(.error) {
+    color: var(--text-muted);
+    line-height: 1.75;
+}
+
+.product-characteristics {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 0.85rem 1rem;
+    margin: 1.75rem 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+}
+
+.product-characteristics dt {
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.product-characteristics dd { margin: 0; color: var(--text); }
+
+.add-to-cart-form {
+    display: flex;
+    align-items: end;
+    gap: 1rem;
+    margin-top: 1.75rem;
+}

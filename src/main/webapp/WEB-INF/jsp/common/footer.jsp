@@ -3,6 +3,8 @@
 
 <footer class="footer">
     <div class="container">
-        <p>&copy; 2026 Hyperion - Tous droits réservés.</p>
+        <div class="ornament-divider"><span></span></div>
+        <p class="footer-tagline">Hyperion Industries</p>
+        <p>&copy; 2026 Hyperion &mdash; Tous droits réservés.</p>
     </div>
 </footer>

@@ -1,8 +1,56 @@
-table { width: 100%; overflow: hidden; background-color: white; border-collapse: collapse; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-th, td { padding: .9rem; border-bottom: 1px solid #ddd; text-align: left; vertical-align: middle; }
-th { background-color: #1c1c1c; color: white; }
-tbody tr:hover { background-color: #f7f3e8; }
+/* =========================================================
+   TABLEAUX
+   ========================================================= */
+
+table {
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--panel);
+    border-collapse: collapse;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+}
+
+th, td {
+    padding: 1.1rem 1rem;
+    border-bottom: 1px solid rgba(38, 32, 26, 0.08);
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background-color: var(--ink);
+    color: var(--gold-on-dark);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+tbody tr:hover { background-color: var(--panel-alt); }
 tbody tr:last-child td { border-bottom: none; }
-td a { color: #8a691f; font-weight: 600; text-decoration: none; }
+
+td a {
+    color: var(--gold-deep);
+    font-weight: 600;
+    text-decoration: none;
+}
+
 td a:hover { text-decoration: underline; }
-td form { display: flex; align-items: center; gap: .5rem; }
+
+td form {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+td .success,
+td .error {
+    display: inline-block;
+    margin-bottom: 0;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.78rem;
+    white-space: nowrap;
+}

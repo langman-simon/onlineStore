@@ -4,6 +4,7 @@
 <section class="auth-page">
     <div class="auth-card">
 
+        <p class="eyebrow">Profil</p>
         <h1>Mon compte</h1>
 
         <c:if test="${not empty success}">

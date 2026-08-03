@@ -19,6 +19,7 @@
 
     <div class="product-details__content">
 
+        <p class="eyebrow">${weapon.category.name}</p>
         <h1>${weapon.name}</h1>
 
         <p class="product-price">

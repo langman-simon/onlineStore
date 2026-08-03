@@ -4,6 +4,7 @@
 <section class="auth-page">
     <div class="auth-card">
 
+        <p class="eyebrow">Accès membre</p>
         <h1>Connexion</h1>
 
         <form method="post"

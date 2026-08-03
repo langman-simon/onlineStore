@@ -4,7 +4,10 @@
 <section class="catalogue-page">
 
     <div class="catalogue-header">
-        <h1>Catalogue</h1>
+        <div>
+            <p class="eyebrow">La collection</p>
+            <h1>Catalogue</h1>
+        </div>
 
         <form method="get"
               action="<c:url value='/catalogue'/>"

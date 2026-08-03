@@ -5,6 +5,7 @@
 
     <section class="home-hero">
         <div class="home-hero-content">
+            <p class="eyebrow eyebrow--on-dark">Manufacture &amp; Maison de confiance</p>
             <h1>Hyperion Industries</h1>
 
             <p class="home-hero-subtitle">
@@ -27,6 +28,8 @@
     </section>
 
     <section class="home-section">
+        <p class="eyebrow">Savoir-faire</p>
+        <div class="ornament-divider"><span></span></div>
         <h2>Notre expertise</h2>
 
         <p>
@@ -72,6 +75,8 @@
     </section>
 
     <section class="home-section home-catalogue-preview">
+        <p class="eyebrow">Collections</p>
+        <div class="ornament-divider"><span></span></div>
         <h2>Explorer nos catégories</h2>
 
         <div class="home-category-grid">
@@ -107,6 +112,7 @@
     </section>
 
     <section class="home-section home-call-to-action">
+        <div class="ornament-divider"><span></span></div>
         <h2>Accéder au catalogue</h2>
 
         <p>

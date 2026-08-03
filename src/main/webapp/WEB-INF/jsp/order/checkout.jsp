@@ -3,6 +3,7 @@
 
 <section class="checkout-page">
 
+    <p class="eyebrow">Dernière étape</p>
     <h1>Récapitulatif de la commande</h1>
 
     <c:choose>

@@ -1,1 +1,11 @@
-.checkout-page { display:flex; flex-direction:column; gap:1.5rem; } .checkout-actions { display:flex; flex-wrap:wrap; gap:1rem; }
+.checkout-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.checkout-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}

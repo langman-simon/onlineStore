@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>${title}</title>
+    <link rel="stylesheet" href="<c:url value='/css/admin.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/base.css'/> ">
     <link rel="stylesheet" href="<c:url value='/css/layout.css'/> ">
     <link rel="stylesheet" href="<c:url value='/css/header.css'/> ">
