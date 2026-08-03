@@ -68,6 +68,8 @@
 
 <script src="<c:url value='/js/header-menu.js'/>"></script>
 
+<script src="<c:url value='/js/catalogue-explorer.js'/>"></script>
+
 <body>
 
 <header>
