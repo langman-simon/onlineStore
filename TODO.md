@@ -173,25 +173,25 @@
 - ✅ Ajouter un champ mot de passe
 - ✅ Ajouter un champ confirmation du mot de passe
 - ✅ Ajouter au moins un champ facultatif
-- [ ] Identifier clairement les champs obligatoires
-- [ ] Afficher les erreurs de validation près des champs concernés
+- ✅ Identifier clairement les champs obligatoires
+- ✅ Afficher les erreurs de validation près des champs concernés
 - ✅ Conserver les valeurs valides du formulaire après une erreur
 - ✅ Enregistrer le nouvel utilisateur dans PostgreSQL
-- [ ] Refuser un login déjà existant (le duplicat n'est pas ajouté en db mais aucun message d'erreur et les champs du form sont effacés)
+- ✅ Refuser un login déjà existant (le duplicat n'est pas ajouté en db mais aucun message d'erreur et les champs du form sont effacés)
 - ✅ Hasher le mot de passe avant l’enregistrement
 - ✅ Ne jamais enregistrer le mot de passe en clair
 - ✅ Rediriger vers le login après une inscription réussie
-- [ ] Afficher un message de confirmation après inscription
+- ✅ Afficher un message de confirmation après inscription
 
 ## 🔑 Login
 
 - ✅ Créer une page de connexion
 - ✅ Ajouter un champ login
 - ✅ Ajouter un champ mot de passe
-- [ ] Traiter l’authentification avec Spring Security
-- [ ] Charger l’utilisateur depuis PostgreSQL
-- [ ] Vérifier le mot de passe hashé avec un `PasswordEncoder`
-- [ ] Créer un `UserDetailsService`
+- ✅ Traiter l’authentification avec Spring Security
+- ✅ Charger l’utilisateur depuis PostgreSQL
+- ✅ Vérifier le mot de passe hashé avec un `PasswordEncoder`
+- ✅ Créer un `UserDetailsService`
 - ✅ Attribuer le rôle `USER` aux clients
 - ✅ Attribuer le rôle `ADMIN` aux administrateurs
 - ✅ Afficher un message en cas d’identifiants incorrects
@@ -203,7 +203,7 @@
 
 - ✅ Ajouter un bouton de déconnexion
 - ✅ Afficher ce bouton uniquement aux utilisateurs connectés
-- [ ] Envoyer la déconnexion en `POST`
+- ✅ Envoyer la déconnexion en `POST`
 - ✅ Ajouter le token CSRF au formulaire de déconnexion
 - ✅ Invalider la session après déconnexion
 - ✅ Supprimer le contexte de sécurité
@@ -237,7 +237,7 @@
 - ✅ Utiliser le template sur toutes les pages
 - ✅ Éviter de dupliquer le header et le footer
 - ✅ Centraliser les imports JSTL
-- [ ] Centraliser les imports Spring Security JSP
+- ✅ Centraliser les imports Spring Security JSP
 - ✅ Configurer l’encodage UTF-8
 - ✅ Utiliser les routes générées avec `<c:url>`
 
@@ -256,7 +256,7 @@ Chaque page doit proposer au minimum :
 - ✅ Un lien vers le compte utilisateur pour un utilisateur authentifié
 - ✅ Un choix de langue
 - ✅ Un lien vers l’administration pour un administrateur
-- [ ] Un message personnalisé pour un utilisateur connecté
+- ✅ Un message personnalisé pour un utilisateur connecté
 
 ---
 

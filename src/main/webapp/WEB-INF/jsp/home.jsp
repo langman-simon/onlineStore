@@ -14,14 +14,16 @@
             </p>
 
             <div class="home-actions">
+                <a href="<c:url value='/company'/>"
+                   class="btn btn-secondary">
+                    Notre société
+                </a>
                 <a href="<c:url value='/catalogue'/>"
                    class="btn">
                     Découvrir le catalogue
                 </a>
-
-                <a href="<c:url value='/company'/>"
-                   class="btn btn-secondary">
-                    Notre société
+                <a class="btn btn-secondary" href="<c:url value='/cart'/>">
+                    Accéder à votre panier
                 </a>
             </div>
         </div>
