@@ -123,7 +123,7 @@ public class OrderController {
                     exception.getMessage()
             );
 
-            return "redirect:/checkout";
+            return "redirect:/order/checkout";
         }
     }
 

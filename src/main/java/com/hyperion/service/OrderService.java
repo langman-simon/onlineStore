@@ -32,16 +32,42 @@ public class OrderService {
     }
 
     @Transactional
-    public CustomerOrder validateOrder(Cart cart, User user, boolean authenticated) {
+    public CustomerOrder validateOrder(
+            Cart cart,
+            User user,
+            boolean authenticated
+    ) {
         if (cart == null || cart.isEmpty()) {
             throw new IllegalArgumentException("Le panier est vide.");
         }
 
-        BigDecimal originalPrice = cart.getTotalPrice();
-        BigDecimal discountAmount = promotionService.calculateDiscount(originalPrice, authenticated);
-        BigDecimal finalPrice = promotionService.calculateFinalPrice(originalPrice, authenticated);
+        if (user == null) {
+            throw new IllegalArgumentException(
+                    "L’utilisateur de la commande est obligatoire."
+            );
+        }
 
-        CustomerOrder order = new CustomerOrder(originalPrice, discountAmount, finalPrice);
+        BigDecimal originalPrice = cart.getTotalPrice();
+
+        BigDecimal discountAmount =
+                promotionService.calculateDiscount(
+                        originalPrice,
+                        authenticated
+                );
+
+        BigDecimal finalPrice =
+                promotionService.calculateFinalPrice(
+                        originalPrice,
+                        authenticated
+                );
+
+        CustomerOrder order = new CustomerOrder(
+                originalPrice,
+                discountAmount,
+                finalPrice
+        );
+
+        order.setUser(user);
 
         for (CartItem cartItem : cart.getItems()) {
             Long weaponId = cartItem.getWeapon().getId();
@@ -69,13 +95,18 @@ public class OrderService {
                 );
             }
 
-            OrderItem orderItem = new OrderItem(weapon, quantity);
+            OrderItem orderItem = new OrderItem(
+                    weapon,
+                    quantity
+            );
+
             order.addItem(orderItem);
         }
 
-        CustomerOrder savedOrder = customerOrderRepository.save(order);
+        CustomerOrder savedOrder =
+                customerOrderRepository.save(order);
+
         cart.clear();
-        order.setUser(user);
 
         return savedOrder;
     }
