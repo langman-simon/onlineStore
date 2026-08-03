@@ -1,72 +1,113 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/include/importTags.jsp" %>
-
 <header class="navbar">
 
-    <div class="container">
+    <div class="container navbar__container">
 
-        <h1 class="logo">Hyperion</h1>
+        <%-- Langue fixe à gauche --%>
 
-        <nav>
+        <div class="header-language hover-menu">
 
-            <a href="<c:url value='/'/>">
-                Accueil
-            </a>
+            <button type="button"
+                    class="language-button"
+                    aria-label="Changer de langue">
 
-            <sec:authorize access="hasRole('ADMIN')">
-                <a href="<c:url value='/admin'/>">
-                    Gestion Stock
+                <span aria-hidden="true">🌐</span>
+                Langue
+
+            </button>
+
+            <div class="hover-menu__content language-dropdown">
+
+                <c:url var="frUrl" value="">
+                    <c:param name="lang" value="fr"/>
+                </c:url>
+
+                <a href="${frUrl}">
+                    <img src="<c:url value='/assets/flags/fr.png'/>"
+                         alt="">
+                    Français
                 </a>
-            </sec:authorize>
 
-            <a href="<c:url value='/catalogue'/>">
-                Catalogue
-            </a>
+                <c:url var="enUrl" value="">
+                    <c:param name="lang" value="en"/>
+                </c:url>
 
-            <a href="<c:url value='/company'/>">
-                Notre société
-            </a>
-
-            <a href="<c:url value='/cart'/>">
-                Panier (${sessionCart.cart.totalQuantity})
-            </a>
-
-            <div class="hover-menu">
-
-                <div class="hover-menu__content language-dropdown">
-
-                    <c:url var="frUrl" value="">
-                        <c:param name="lang" value="fr"/>
-                    </c:url>
-
-                    <a href="${frUrl}">
-                        <img src="<c:url value='/assets/flags/fr.png'/>"
-                             alt="Français">
-                        Français
-                    </a>
-
-                    <c:url var="enUrl" value="">
-                        <c:param name="lang" value="en"/>
-                    </c:url>
-
-                    <a href="${enUrl}">
-                        <img src="<c:url value='/assets/flags/en.png'/>"
-                             alt="English">
-                        English
-                    </a>
-
-                </div>
+                <a href="${enUrl}">
+                    <img src="<c:url value='/assets/flags/en.png'/>"
+                         alt="">
+                    English
+                </a>
 
             </div>
+
+        </div>
+
+        <%-- Navigation centrale animée --%>
+
+        <div class="header-navigation"
+             id="headerNavigation">
+
+            <a href="<c:url value='/'/>"
+               class="header-brand"
+               aria-label="Accueil Hyperion">
+                Hyperion
+            </a>
+
+            <nav class="header-links"
+                 aria-label="Navigation principale">
+
+                <a href="<c:url value='/'/>">
+                    Accueil
+                </a>
+
+                <a href="<c:url value='/catalogue'/>">
+                    Catalogue
+                </a>
+
+                <a href="<c:url value='/company'/>">
+                    Notre société
+                </a>
+
+                <a href="<c:url value='/cart'/>"
+                   class="header-cart-link">
+
+                    Panier
+
+                    <span class="header-cart-count">
+                        ${sessionCart.cart.totalQuantity}
+                    </span>
+                </a>
+
+                <sec:authorize access="isAuthenticated()">
+                    <a href="<c:url value='/order'/>">
+                        Mes commandes
+                    </a>
+                </sec:authorize>
+
+                <sec:authorize access="hasRole('ADMIN')">
+                    <a href="<c:url value='/admin'/>">
+                        Administration
+                    </a>
+                </sec:authorize>
+
+            </nav>
+
+        </div>
+
+        <%-- Utilisateur fixe à droite --%>
+
+        <div class="header-user">
 
             <sec:authorize access="isAnonymous()">
 
                 <div class="hover-menu">
 
-                    <div class="user-avatar user-avatar--anonymous"
-                         title="Non connecté">
+                    <button type="button"
+                            class="user-avatar user-avatar--anonymous"
+                            aria-label="Menu utilisateur non connecté">
                         ?
-                    </div>
+                    </button>
 
                     <div class="hover-menu__content user-dropdown">
 
@@ -90,19 +131,25 @@
 
             <sec:authorize access="isAuthenticated()">
 
-                <sec:authentication property="name" var="currentLogin"/>
+                <sec:authentication property="name"
+                                    var="currentLogin"/>
 
                 <div class="hover-menu">
 
-                    <div class="user-avatar"
-                         title="${currentLogin}">
-                        ${fn:toUpperCase(fn:substring(currentLogin, 0, 1))}
-                    </div>
+                    <button type="button"
+                            class="user-avatar"
+                            aria-label="Menu de ${currentLogin}">
+
+                            ${fn:toUpperCase(
+                                    fn:substring(currentLogin, 0, 1)
+                                    )}
+
+                    </button>
 
                     <div class="hover-menu__content user-dropdown">
 
                         <p class="user-dropdown__login">
-                            ${currentLogin}
+                                ${currentLogin}
                         </p>
 
                         <a href="<c:url value='/order'/>">
@@ -112,6 +159,12 @@
                         <a href="<c:url value='/account'/>">
                             Gérer mon compte
                         </a>
+
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <a href="<c:url value='/admin'/>">
+                                Administration
+                            </a>
+                        </sec:authorize>
 
                         <form method="post"
                               action="<c:url value='/logout'/>">
@@ -130,7 +183,7 @@
 
             </sec:authorize>
 
-        </nav>
+        </div>
 
     </div>
 

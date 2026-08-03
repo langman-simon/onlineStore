@@ -64,6 +64,8 @@
     });
 </script>
 
+<script src="<c:url value='/js/header-menu.js'/>"></script>
+
 <body>
 
 <header>
