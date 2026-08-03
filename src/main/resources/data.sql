@@ -356,12 +356,6 @@ ON CONFLICT (reference) DO UPDATE
         image_url = EXCLUDED.image_url;
 
 -- =========================================================
--- RÉINITIALISATION DES COMMANDES
--- =========================================================
-
-TRUNCATE TABLE customer_orders RESTART IDENTITY CASCADE;
-
--- =========================================================
 -- COMMANDES DE DÉMONSTRATION
 -- =========================================================
 
