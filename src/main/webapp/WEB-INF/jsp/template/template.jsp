@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="<c:url value='/css/company.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/order.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/responsive.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/auth.css'/>">
 </head>
 
 <script>

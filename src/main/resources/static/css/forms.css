@@ -2,109 +2,73 @@
    FORMULAIRES
    ========================================================= */
 
-form { margin: 0; }
+form {
+    margin: 0;
+}
 
 label {
     display: inline-block;
     margin-bottom: 0.45rem;
+
+    color: var(--text-muted);
+
     font-family: var(--font-body);
     font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.04em;
-    color: var(--text-muted);
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
     padding: 0.75rem 0.85rem;
-    background-color: var(--panel);
+
     color: var(--text);
+    background-color: var(--panel);
+
     border: 1px solid rgba(38, 32, 26, 0.18);
     border-radius: var(--radius);
+
     font: inherit;
-    transition: border-color .2s ease, box-shadow .2s ease;
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
     outline: none;
+
     border-color: var(--gold);
-    box-shadow: 0 0 0 3px var(--rule-soft);
+
+    box-shadow:
+            0 0 0 3px var(--rule-soft);
 }
 
-input[type="number"] { width: 100px; }
+input[type="number"] {
+    width: 100px;
+}
 
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+
     margin-bottom: 1.25rem;
 }
 
-.product-card__form { display: contents; }
+.product-card__form {
+    display: contents;
+}
 
 .product-card--add input,
 .product-card--add select,
-.product-card--add textarea { width: 100%; }
-
-.product-card--add textarea { resize: vertical; }
-
-/* =========================================================
-   CONNEXION / INSCRIPTION / COMPTE
-   ========================================================= */
-
-.auth-page {
-    display: flex;
-    justify-content: center;
-    padding: 1rem 0 2rem;
-}
-
-.auth-card {
-    width: min(480px, 100%);
-    padding: 2.75rem 2.5rem;
-
-    background-color: var(--panel);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lift);
-    position: relative;
-}
-
-.auth-card::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 2.5rem; right: 2.5rem;
-    height: 3px;
-    background: linear-gradient(to right, transparent, var(--gold), transparent);
-}
-
-.auth-card .eyebrow {
-    display: block;
-    text-align: center;
-}
-
-.auth-card h1 {
-    margin-bottom: 1.75rem;
-    text-align: center;
-}
-
-.auth-form { display: flex; flex-direction: column; }
-
-.auth-form button {
-    margin-top: 0.5rem;
+.product-card--add textarea {
     width: 100%;
 }
 
-.auth-card > p {
-    margin: 1.75rem 0 0;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.92rem;
+.product-card--add textarea {
+    resize: vertical;
 }
-
-.auth-card > p a {
-    color: var(--gold-deep);
-    font-weight: 600;
-    text-decoration: none;
-    border-bottom: 1px solid var(--rule);
-}
-
-.auth-card > p a:hover { color: var(--gold); }
