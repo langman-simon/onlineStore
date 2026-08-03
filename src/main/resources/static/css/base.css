@@ -137,3 +137,13 @@ p { color: var(--text); }
 
 .success { background-color: #e4f1e6; color: #24522d; border-left-color: #3f7a49; }
 .error   { background-color: var(--wine-pale); color: #6b1f1f; border-left-color: var(--wine); }
+
+::selection {
+    background-color: #c49a3a;
+    color: #1c1c1c;
+}
+
+::-moz-selection {
+    background-color: #c49a3a;
+    color: #1c1c1c;
+}
