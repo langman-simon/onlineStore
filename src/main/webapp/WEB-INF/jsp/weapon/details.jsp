@@ -68,6 +68,10 @@
                         Ajouter au panier
                     </button>
 
+                    <a class="btn" href="<c:url value='/catalogue'/>">
+                        Retour au catalogue
+                    </a>
+
                 </form>
             </c:when>
 
