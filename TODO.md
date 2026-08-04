@@ -1,7 +1,10 @@
-# Problème répertorié
+# Problème répertoriés
 - home.jsp cliquer sur une catégorie proposée ramène sur "toutes les catégories" au lieu de la catégorie sélectionnée.
 - l'images dans weapon/details.jsp n'affiche rien si absence d'image.
 - manque un bouton retourner au catalogue dans weapon/details.jsp.
+- user non enregsitré au register quand on tape "Enter" au lieu du bouton créer un compte.
+- copier coller l'url d'une commande d'un autre user pour la réutiliser sur un nouvel user renvoie sur une page d'erreur classique, gérer cela.
+- refaire la page "mon compte"
 
 # 🚀 Project Hyperion — Complete TODO List
 ---
@@ -1245,20 +1248,20 @@ Chaque page doit proposer au minimum :
 - ✅ Enregistrer les lignes de commande
 - ✅ Enregistrer le produit commandé
 - ✅ Enregistrer la quantité commandée
-- [ ] Enregistrer le prix appliqué au moment de la commande
-- [ ] Enregistrer la commande avant le paiement
-- [ ] Enregistrer toutes les lignes avant le paiement
-- [ ] Utiliser une transaction pour valider la commande
-- [ ] Vérifier le stock avant validation
-- [ ] Réduire le stock après confirmation
-- [ ] Annuler toute l’opération en cas d’erreur
-- [ ] Vider le panier uniquement après une validation réussie
-- [ ] Ne pas vider le panier si la commande échoue
-- [ ] Rediriger vers la page de détail de la commande
-- [ ] Afficher le numéro de commande
-- [ ] Afficher toutes les lignes de la commande
-- [ ] Afficher le montant total
-- [ ] Afficher le statut payé/non payé
+- ✅ Enregistrer le prix appliqué au moment de la commande
+- ✅ Enregistrer la commande avant le paiement
+- ✅ Enregistrer toutes les lignes avant le paiement
+- ✅ Utiliser une transaction pour valider la commande
+- ✅ Vérifier le stock avant validation
+- ✅ Réduire le stock après confirmation
+- ✅ Annuler toute l’opération en cas d’erreur
+- ✅ Vider le panier uniquement après une validation réussie
+- ✅ Ne pas vider le panier si la commande échoue
+- ✅ Rediriger vers la page de détail de la commande
+- ✅ Afficher le numéro de commande
+- ✅ Afficher toutes les lignes de la commande
+- ✅ Afficher le montant total
+- ✅ Afficher le statut payé/non payé
 - [ ] Empêcher un utilisateur d’accéder à la commande d’un autre client
 
 ---

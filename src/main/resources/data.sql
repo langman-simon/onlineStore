@@ -106,32 +106,6 @@ INSERT INTO weapons (
     stock,
     category_id,
     manufacturer,
-    reference
-)
-VALUES (
-    'Homme invisible',
-    'On ne le voit pas, mais lui nous vois',
-    789.56,
-    1,
-    (SELECT id FROM categories WHERE name = 'Bizarrerie'),
-    'Krupp',
-    'HYP-020'
-) ON CONFLICT (reference) DO UPDATE
-    SET
-        name = EXCLUDED.name,
-        description = EXCLUDED.description,
-        price = EXCLUDED.price,
-        stock = EXCLUDED.stock,
-        category_id = EXCLUDED.category_id,
-        manufacturer = EXCLUDED.manufacturer;
-
-INSERT INTO weapons (
-    name,
-    description,
-    price,
-    stock,
-    category_id,
-    manufacturer,
     reference,
     image_url
 )
@@ -139,7 +113,7 @@ VALUES
     (
         'Pistolet 1884',
         'Pistolet historique fabriqué selon un modèle datant de 1884.',
-        649.99,
+        49.99,
         8,
         (SELECT id FROM categories WHERE name = 'Armes de poing'),
         'Hyperion Heritage',
@@ -149,7 +123,7 @@ VALUES
     (
         'Fusil à poudre',
         'Fusil traditionnel utilisant une charge de poudre.',
-        899.99,
+        89.99,
         6,
         (SELECT id FROM categories WHERE name = 'Fusils'),
         'Hyperion Heritage',
@@ -159,7 +133,7 @@ VALUES
     (
         'Fusil automatique moderne',
         'Fusil automatique moderne destiné aux opérations terrestres.',
-        2199.00,
+        219.00,
         12,
         (SELECT id FROM categories WHERE name = 'Fusils'),
         'Hyperion Defence',
@@ -169,7 +143,7 @@ VALUES
     (
         'AK-47',
         'Fusil automatique robuste et polyvalent.',
-        1899.00,
+        189.00,
         15,
         (SELECT id FROM categories WHERE name = 'Fusils'),
         'Hyperion Defence',
@@ -179,7 +153,7 @@ VALUES
     (
         'Pistolet-mitrailleur',
         'Arme automatique compacte adaptée aux combats rapprochés.',
-        1499.00,
+        199.00,
         10,
         (
             SELECT id
@@ -193,7 +167,7 @@ VALUES
     (
         'Fusil de précision',
         'Fusil de précision conçu pour les tirs à longue distance.',
-        3299.00,
+        329.00,
         5,
         (
             SELECT id
@@ -207,7 +181,7 @@ VALUES
     (
         'RPG-47',
         'Lance-roquettes portable destiné aux cibles blindées.',
-        4499.00,
+        449.00,
         4,
         (SELECT id FROM categories WHERE name = 'Lanceurs'),
         'Hyperion Heavy Weapons',
@@ -217,7 +191,7 @@ VALUES
     (
         'Lance-missiles',
         'Système de lancement de missiles à longue portée.',
-        12500.00,
+        1250.00,
         3,
         (SELECT id FROM categories WHERE name = 'Lanceurs'),
         'Hyperion Heavy Weapons',
@@ -279,7 +253,7 @@ VALUES
     (
         'Sous-marin américain',
         'Sous-marin militaire destiné aux opérations en eaux profondes.',
-        2500000.00,
+        2500.00,
         2,
         (
             SELECT id
@@ -293,7 +267,7 @@ VALUES
     (
         'Croiseur moderne',
         'Croiseur militaire moderne équipé de systèmes avancés.',
-        4750000.00,
+        4750.00,
         3,
         (
             SELECT id
@@ -307,7 +281,7 @@ VALUES
     (
         'Croiseur de bataille moderne',
         'Croiseur lourd conçu pour les affrontements navals.',
-        6250000.00,
+        6200.00,
         2,
         (
             SELECT id
@@ -321,7 +295,7 @@ VALUES
     (
         'Croiseur futuriste',
         'Bâtiment militaire expérimental équipé de technologies avancées.',
-        8500000.00,
+        8500.00,
         1,
         (
             SELECT id
@@ -335,7 +309,7 @@ VALUES
     (
         'Dreadnought',
         'Navire de guerre lourd disposant d’une puissance de feu considérable.',
-        10000000.00,
+        2000.00,
         1,
         (
             SELECT id
@@ -363,7 +337,7 @@ VALUES
     (
         'Bombe humaine',
         'Unité explosive mobile lourde à usage unique.',
-        2999.00,
+        1444.00,
         4,
         (
             SELECT id
@@ -373,7 +347,19 @@ VALUES
         'Hyperion Experimental',
         'HYP-019',
         '/images/human_bomb.webp'
-    )
+    ),
+    (
+    'Homme invisible',
+    'On ne le voit pas, mais lui nous voit',
+    789.56,
+    1,
+    (
+    SELECT id FROM categories WHERE name = 'Bizarrerie'
+    ),
+    'Krupp',
+    'HYP-020',
+    NULL
+)
 ON CONFLICT (reference) DO UPDATE
     SET
         name = EXCLUDED.name,
@@ -415,7 +401,15 @@ VALUES
         1299.00,
         'PENDING_PAYMENT',
         (SELECT id FROM users WHERE login = 'user')
-    );
+    )
+ON CONFLICT (id) DO UPDATE
+    SET
+        created_at = EXCLUDED.created_at,
+        original_price = EXCLUDED.original_price,
+        discount_amount = EXCLUDED.discount_amount,
+        total_price = EXCLUDED.total_price,
+        status = EXCLUDED.status,
+        user_id = EXCLUDED.user_id;
 
 -- =========================================================
 -- LIGNES DES COMMANDES DE DÉMONSTRATION
@@ -453,4 +447,11 @@ VALUES
         1,
         1299.00,
         1299.00
-    );
+    )
+ON CONFLICT (id) DO UPDATE
+    SET
+        order_id = EXCLUDED.order_id,
+        weapon_id = EXCLUDED.weapon_id,
+        quantity = EXCLUDED.quantity,
+        unit_price = EXCLUDED.unit_price,
+        subtotal = EXCLUDED.subtotal;
