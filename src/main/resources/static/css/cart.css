@@ -1,1 +1,54 @@
-.cart-page h1 { margin-top:0; } .cart-empty { padding:1.5rem; background:white; border-radius:6px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.08); } .cart-summary { display:flex; justify-content:flex-end; gap:2rem; margin-top:1.5rem; padding:1rem; background:white; border-radius:6px; } .cart-summary p { margin:0; } .cart-actions { display:flex; justify-content:flex-end; gap:1rem; margin-top:1rem; } .cart-clear-form { display:flex; justify-content:flex-end; margin-top:1rem; }
+.cart-page h1 { margin-top: 0; }
+
+.cart-empty {
+    padding: 2.5rem;
+    background-color: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.cart-summary {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1.75rem;
+    padding: 1.5rem 1.75rem;
+    background-color: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+}
+
+.cart-summary p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+.cart-summary p strong {
+    display: block;
+    margin-top: 0.2rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--text);
+}
+
+.cart-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.cart-clear-form {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.free-delivery { color: #2f6b3b; font-weight: 600; }
+.strikethrough { text-decoration: line-through; color: var(--text-muted); margin-right: 0.4rem; }
+.discount span { color: var(--wine); font-weight: 600; }

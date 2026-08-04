@@ -3,6 +3,7 @@
 
 <section class="cart-page">
 
+    <p class="eyebrow">Votre sélection</p>
     <h1>Votre panier</h1>
 
     <c:if test="${empty cart.items}">
@@ -117,7 +118,6 @@
                 <strong>${finalPrice} €</strong>
             </p>
         </div>
-
 
         <div class="cart-actions">
 

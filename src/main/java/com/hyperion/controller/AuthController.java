@@ -1,39 +1,48 @@
 package com.hyperion.controller;
 
+import com.hyperion.service.GlobalBannerService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.SecurityContextRepository;
 import com.hyperion.dto.RegistrationForm;
 import com.hyperion.model.User;
 import com.hyperion.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @Controller
 public class AuthController {
 
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository;
+    private final GlobalBannerService globalBannerService;
 
-    public AuthController(UserService userService) {
+    public AuthController(
+            UserService userService,
+            AuthenticationManager authenticationManager,
+            SecurityContextRepository securityContextRepository,
+            GlobalBannerService globalBannerService
+    ) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.securityContextRepository = securityContextRepository;
+        this.globalBannerService = globalBannerService;
     }
 
     @GetMapping("/login")
-    public String login(@RequestParam(required = false) String error, Model model) {
+    public String login(Model model) {
         model.addAttribute("title", "Connexion");
         model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
-        if (error != null) {
-            model.addAttribute("error", "Identifiant ou mot de passe incorrect.");
-        }
         return "template/template";
     }
 
@@ -45,40 +54,104 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String processRegister(@Valid @ModelAttribute RegistrationForm form,
-                                  BindingResult result,
-                                  Model model) {
+    public String processRegister(
+            @Valid @ModelAttribute RegistrationForm form,
+            BindingResult result,
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            HttpSession session
+    ) {
         if (result.hasErrors()) {
-            model.addAttribute("title", "Inscription");
-            model.addAttribute("body", "/WEB-INF/jsp/auth/register.jsp");
+            prepareRegisterPage(model);
             return "template/template";
         }
 
-        if (!form.getPassword().equals(form.getPasswordConfirmation())) {
-            model.addAttribute("title", "Inscription");
-            model.addAttribute("body", "/WEB-INF/jsp/auth/register.jsp");
-            model.addAttribute("error", "Passwords do not match");
+        if (!form.getPassword()
+                .equals(form.getPasswordConfirmation())) {
+
+            prepareRegisterPage(model);
+
+            model.addAttribute(
+                    "error",
+                    "Les mots de passe ne correspondent pas."
+            );
+
             return "template/template";
         }
 
         if (userService.loginExists(form.getUsername())) {
-            model.addAttribute("title", "Inscription");
-            model.addAttribute("body", "/WEB-INF/jsp/auth/register.jsp");
-            model.addAttribute("error", "Username already exists");
+            prepareRegisterPage(model);
+
+            model.addAttribute(
+                    "error",
+                    "Ce pseudo est déjà utilisé."
+            );
+
             return "template/template";
         }
 
         User user = new User();
-        user.setLastName(form.getLastName());
-        user.setFirstName(form.getFirstName());
-        user.setDeliveryAddress(form.getDeliveryAddress());
-        user.setEmail(form.getEmail());
-        user.setPhone(form.getPhone());
-        user.setLogin(form.getUsername());
-        user.setSecondaryPhone(form.getSecondaryPhone());
 
-        userService.register(user, form.getPassword());
+        user.setLastName(form.getLastName().trim());
+        user.setFirstName(form.getFirstName().trim());
+        user.setDeliveryAddress(form.getDeliveryAddress().trim());
+        user.setEmail(form.getEmail().trim());
+        user.setPhone(form.getPhone().trim());
+        user.setLogin(form.getUsername().trim());
 
-        return "redirect:/login";
+        if (form.getSecondaryPhone() == null
+                || form.getSecondaryPhone().isBlank()) {
+
+            user.setSecondaryPhone(null);
+
+        } else {
+            user.setSecondaryPhone(
+                    form.getSecondaryPhone().trim()
+            );
+        }
+
+        userService.register(
+                user,
+                form.getPassword()
+        );
+
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        UsernamePasswordAuthenticationToken
+                                .unauthenticated(
+                                        user.getLogin(),
+                                        form.getPassword()
+                                )
+                );
+
+        SecurityContext securityContext =
+                SecurityContextHolder.createEmptyContext();
+
+        securityContext.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+
+        securityContextRepository.saveContext(
+                securityContext,
+                request,
+                response
+        );
+
+        globalBannerService.success(
+                session,
+                "Compte créé, bienvenue " + user.getLogin() + "."
+        );
+
+        return "redirect:/";
     }
+
+    private void prepareRegisterPage(Model model) {
+        model.addAttribute("title", "Inscription");
+        model.addAttribute(
+                "body",
+                "/WEB-INF/jsp/auth/register.jsp"
+        );
+    }
+
 }

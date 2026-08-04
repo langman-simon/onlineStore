@@ -1,1 +1,66 @@
-.company-page { display:flex; flex-direction:column; gap:2rem; } .company-hero { padding:3rem 2rem; background:#1c1c1c; color:white; text-align:center; border-radius:8px; border-bottom:4px solid #c49a3a; } .company-hero h1 { margin:0 0 1rem; color:#c49a3a; } .company-hero p { max-width:750px; margin:0 auto; line-height:1.6; } .company-content { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; } .company-card { padding:1.5rem; background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.08); } .company-card h2 { margin-top:0; color:#8a691f; } .company-card p { margin-bottom:0; line-height:1.6; }
+.company-page {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.company-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 4rem 2rem;
+    background-color: var(--ink);
+    background-image:
+        radial-gradient(ellipse at 50% -10%, rgba(216, 178, 111, 0.16), transparent 60%),
+        linear-gradient(180deg, #17130f, var(--ink));
+    color: var(--cream);
+    text-align: center;
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-lg);
+}
+
+.company-hero .eyebrow { color: var(--gold-on-dark); }
+
+.company-hero h1 {
+    margin: 0 0 1.25rem;
+    color: var(--gold-on-dark);
+}
+
+.company-hero p {
+    max-width: 750px;
+    margin: 0 auto;
+    color: var(--muted-on-dark);
+    line-height: 1.75;
+}
+
+.company-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+}
+
+.company-card {
+    padding: 1.85rem;
+    background-color: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.company-card:hover {
+    border-color: var(--gold);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-3px);
+}
+
+.company-card h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: var(--gold-deep);
+}
+
+.company-card p {
+    margin-bottom: 0;
+    color: var(--text-muted);
+    line-height: 1.7;
+}

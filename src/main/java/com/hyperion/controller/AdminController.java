@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -36,9 +37,6 @@ public class AdminController {
         this.imageStorageService = imageStorageService;
     }
 
-    /*
-     * Affiche le catalogue administrateur.
-     */
     @GetMapping
     public String catalogue(
             @RequestParam(required = false) Long categoryId,
@@ -58,8 +56,10 @@ public class AdminController {
         model.addAttribute("weapons", weapons);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategoryId", categoryId);
-        model.addAttribute("title", "Administration du catalogue");
-
+        model.addAttribute(
+                "title",
+                "Administration du catalogue"
+        );
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/admin/admin.jsp"
@@ -68,9 +68,6 @@ public class AdminController {
         return "template/template";
     }
 
-    /*
-     * Ajoute une nouvelle arme au catalogue.
-     */
     @PostMapping("/weapons/add")
     public String addWeapon(
             @RequestParam String name,
@@ -90,25 +87,24 @@ public class AdminController {
                     price,
                     stock,
                     reference,
-                    manufacturer,
-                    image
+                    manufacturer
             );
 
-            if (weaponRepository.findByReference(reference).isPresent()) {
-                redirectAttributes.addFlashAttribute(
-                        "error",
-                        "Une arme possède déjà la référence " + reference + "."
-                );
+            validateRequiredImage(image);
 
-                return "redirect:/admin";
+            String normalizedReference = reference.trim();
+
+            if (weaponRepository
+                    .findByReference(normalizedReference)
+                    .isPresent()) {
+
+                throw new IllegalArgumentException(
+                        "Une arme possède déjà la référence "
+                                + normalizedReference + "."
+                );
             }
 
-            Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "La catégorie sélectionnée n’existe pas."
-                            )
-                    );
+            Category category = findCategory(categoryId);
 
             String imageUrl =
                     imageStorageService.saveWeaponImage(image);
@@ -119,7 +115,7 @@ public class AdminController {
             weapon.setDescription(description.trim());
             weapon.setPrice(price);
             weapon.setStock(stock);
-            weapon.setReference(reference.trim());
+            weapon.setReference(normalizedReference);
             weapon.setManufacturer(manufacturer.trim());
             weapon.setCategory(category);
             weapon.setImageUrl(imageUrl);
@@ -141,22 +137,148 @@ public class AdminController {
         } catch (Exception exception) {
             redirectAttributes.addFlashAttribute(
                     "error",
-                    "Une erreur est survenue pendant l’ajout du produit."
+                    "Une erreur est survenue pendant "
+                            + "l’ajout du produit."
             );
         }
 
         return "redirect:/admin";
     }
 
-    /*
-     * Supprime une arme du catalogue.
-     */
+    @PostMapping("/weapons/update/{weaponId}")
+    public String updateWeapon(
+            @PathVariable Long weaponId,
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam BigDecimal price,
+            @RequestParam int stock,
+            @RequestParam String reference,
+            @RequestParam String manufacturer,
+            @RequestParam Long categoryId,
+            @RequestParam(required = false) MultipartFile image,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            validateWeaponData(
+                    name,
+                    description,
+                    price,
+                    stock,
+                    reference,
+                    manufacturer
+            );
+
+            Weapon weapon = findWeapon(weaponId);
+            Category category = findCategory(categoryId);
+
+            String normalizedReference = reference.trim();
+
+            Optional<Weapon> weaponWithSameReference =
+                    weaponRepository.findByReference(
+                            normalizedReference
+                    );
+
+            if (weaponWithSameReference.isPresent()
+                    && !weaponWithSameReference
+                    .get()
+                    .getId()
+                    .equals(weaponId)) {
+
+                throw new IllegalArgumentException(
+                        "Une autre arme possède déjà la référence "
+                                + normalizedReference + "."
+                );
+            }
+
+            weapon.setName(name.trim());
+            weapon.setDescription(description.trim());
+            weapon.setPrice(price);
+            weapon.setStock(stock);
+            weapon.setReference(normalizedReference);
+            weapon.setManufacturer(manufacturer.trim());
+            weapon.setCategory(category);
+
+            if (image != null && !image.isEmpty()) {
+                String imageUrl =
+                        imageStorageService.saveWeaponImage(image);
+
+                weapon.setImageUrl(imageUrl);
+            }
+
+            weaponRepository.save(weapon);
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Le produit \"" + weapon.getName()
+                            + "\" a été modifié."
+            );
+
+        } catch (IllegalArgumentException exception) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    exception.getMessage()
+            );
+
+        } catch (Exception exception) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Une erreur est survenue pendant "
+                            + "la modification du produit."
+            );
+        }
+
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/weapons/stock/{weaponId}")
+    public String updateStock(
+            @PathVariable Long weaponId,
+            @RequestParam int stock,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            if (stock < 0) {
+                throw new IllegalArgumentException(
+                        "Le stock ne peut pas être négatif."
+                );
+            }
+
+            Weapon weapon = findWeapon(weaponId);
+
+            weapon.setStock(stock);
+            weaponRepository.save(weapon);
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Le stock du produit \""
+                            + weapon.getName()
+                            + "\" a été mis à jour."
+            );
+
+        } catch (IllegalArgumentException exception) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    exception.getMessage()
+            );
+
+        } catch (Exception exception) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Une erreur est survenue pendant "
+                            + "la modification du stock."
+            );
+        }
+
+        return "redirect:/admin";
+    }
+
     @PostMapping("/remove/{weaponId}")
     public String removeWeapon(
             @PathVariable Long weaponId,
             RedirectAttributes redirectAttributes
     ) {
-        Weapon weapon = weaponRepository.findById(weaponId)
+        Weapon weapon = weaponRepository
+                .findById(weaponId)
                 .orElse(null);
 
         if (weapon == null) {
@@ -181,28 +303,51 @@ public class AdminController {
             redirectAttributes.addFlashAttribute(
                     "error",
                     "Impossible de supprimer ce produit. "
-                            + "Il est peut-être utilisé dans une commande."
+                            + "Il est peut-être utilisé "
+                            + "dans une commande."
             );
         }
 
         return "redirect:/admin";
     }
 
-    /*
-     * Vérifie les données reçues depuis le formulaire.
-     */
+    private Weapon findWeapon(Long weaponId) {
+        return weaponRepository.findById(weaponId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Le produit demandé n’existe pas."
+                        )
+                );
+    }
+
+    private Category findCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "La catégorie sélectionnée "
+                                        + "n’existe pas."
+                        )
+                );
+    }
+
     private void validateWeaponData(
             String name,
             String description,
             BigDecimal price,
             int stock,
             String reference,
-            String manufacturer,
-            MultipartFile image
+            String manufacturer
     ) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(
                     "Le nom du produit est obligatoire."
+            );
+        }
+
+        if (name.trim().length() > 150) {
+            throw new IllegalArgumentException(
+                    "Le nom du produit ne peut pas dépasser "
+                            + "150 caractères."
             );
         }
 
@@ -212,7 +357,16 @@ public class AdminController {
             );
         }
 
-        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+        if (description.trim().length() > 1000) {
+            throw new IllegalArgumentException(
+                    "La description ne peut pas dépasser "
+                            + "1000 caractères."
+            );
+        }
+
+        if (price == null
+                || price.compareTo(BigDecimal.ZERO) < 0) {
+
             throw new IllegalArgumentException(
                     "Le prix ne peut pas être négatif."
             );
@@ -230,12 +384,28 @@ public class AdminController {
             );
         }
 
+        if (reference.trim().length() > 100) {
+            throw new IllegalArgumentException(
+                    "La référence ne peut pas dépasser "
+                            + "100 caractères."
+            );
+        }
+
         if (manufacturer == null || manufacturer.isBlank()) {
             throw new IllegalArgumentException(
                     "Le fabricant est obligatoire."
             );
         }
 
+        if (manufacturer.trim().length() > 100) {
+            throw new IllegalArgumentException(
+                    "Le fabricant ne peut pas dépasser "
+                            + "100 caractères."
+            );
+        }
+    }
+
+    private void validateRequiredImage(MultipartFile image) {
         if (image == null || image.isEmpty()) {
             throw new IllegalArgumentException(
                     "Une image est obligatoire."

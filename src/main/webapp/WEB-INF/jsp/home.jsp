@@ -5,6 +5,7 @@
 
     <section class="home-hero">
         <div class="home-hero-content">
+            <p class="eyebrow eyebrow--on-dark">Manufacture &amp; Maison de confiance</p>
             <h1>Hyperion Industries</h1>
 
             <p class="home-hero-subtitle">
@@ -13,20 +14,24 @@
             </p>
 
             <div class="home-actions">
+                <a href="<c:url value='/company'/>"
+                   class="btn btn-secondary">
+                    Notre société
+                </a>
                 <a href="<c:url value='/catalogue'/>"
                    class="btn">
                     Découvrir le catalogue
                 </a>
-
-                <a href="<c:url value='/company'/>"
-                   class="btn btn-secondary">
-                    Notre société
+                <a class="btn btn-secondary" href="<c:url value='/cart'/>">
+                    Accéder à votre panier
                 </a>
             </div>
         </div>
     </section>
 
     <section class="home-section">
+        <p class="eyebrow">Savoir-faire</p>
+        <div class="ornament-divider"><span></span></div>
         <h2>Notre expertise</h2>
 
         <p>
@@ -72,6 +77,8 @@
     </section>
 
     <section class="home-section home-catalogue-preview">
+        <p class="eyebrow">Collections</p>
+        <div class="ornament-divider"><span></span></div>
         <h2>Explorer nos catégories</h2>
 
         <div class="home-category-grid">
@@ -107,6 +114,7 @@
     </section>
 
     <section class="home-section home-call-to-action">
+        <div class="ornament-divider"><span></span></div>
         <h2>Accéder au catalogue</h2>
 
         <p>

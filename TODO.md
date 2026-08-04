@@ -1,5 +1,9 @@
-# 🚀 Project Hyperion — Complete TODO List
+# Problème répertorié
+- home.jsp cliquer sur une catégorie proposée ramène sur "toutes les catégories" au lieu de la catégorie sélectionnée.
+- l'images dans weapon/details.jsp n'affiche rien si absence d'image.
+- manque un bouton retourner au catalogue dans weapon/details.jsp.
 
+# 🚀 Project Hyperion — Complete TODO List
 ---
 
 # 👤 Users, Roles & Access Control
@@ -25,7 +29,7 @@
 
 - ✅ Permettre à un client authentifié d’utiliser toutes les fonctionnalités publiques
 - ✅ Permettre à un client authentifié de passer commande
-- [ ] Permettre à un client authentifié de payer une commande
+- ✅ Permettre à un client authentifié de payer une commande
 - ✅ Afficher un message personnalisé dans la bannière
 - ✅ Afficher le login de l’utilisateur connecté
 - ✅ Permettre au client de modifier son compte
@@ -40,9 +44,9 @@
 - ✅ Permettre à l’administrateur de consulter les catégories
 - ✅ Permettre à l’administrateur de consulter les produits
 - ✅ Permettre à l’administrateur d’ajouter un produit
-- [ ] Permettre à l’administrateur de modifier un produit
+- ✅ Permettre à l’administrateur de modifier un produit
 - ✅ Permettre à l’administrateur de supprimer un produit
-- [ ] Permettre à l’administrateur de gérer les stocks
+- ✅ Permettre à l’administrateur de gérer les stocks
 - [ ] Permettre à l’administrateur de gérer les promotions
 - [ ] Permettre à l’administrateur de gérer les catégories si cette fonctionnalité est prévue
 
@@ -62,15 +66,15 @@
 - ✅ Ajouter un champ mot de passe
 - ✅ Ajouter un champ confirmation du mot de passe
 - ✅ Ajouter au moins un champ facultatif
-- [ ] Identifier clairement les champs obligatoires
-- [ ] Afficher les erreurs de validation près des champs concernés
+- ✅ Identifier clairement les champs obligatoires
+- ✅ Afficher les erreurs de validation près des champs concernés
 - ✅ Conserver les valeurs valides du formulaire après une erreur
 - ✅ Enregistrer le nouvel utilisateur dans PostgreSQL
-- [ ] Refuser un login déjà existant (le duplicat n'est pas ajouté en db mais aucun message d'erreur et les champs du form sont effacés)
+- ✅ Refuser un login déjà existant (le duplicat n'est pas ajouté en db mais aucun message d'erreur et les champs du form sont effacés)
 - ✅ Hasher le mot de passe avant l’enregistrement
 - ✅ Ne jamais enregistrer le mot de passe en clair
 - ✅ Rediriger vers le login après une inscription réussie
-- [ ] Afficher un message de confirmation après inscription
+- ✅ Afficher un message de confirmation après inscription
 
 ## 🔑 Login
 
@@ -173,25 +177,25 @@
 - ✅ Ajouter un champ mot de passe
 - ✅ Ajouter un champ confirmation du mot de passe
 - ✅ Ajouter au moins un champ facultatif
-- [ ] Identifier clairement les champs obligatoires
-- [ ] Afficher les erreurs de validation près des champs concernés
+- ✅ Identifier clairement les champs obligatoires
+- ✅ Afficher les erreurs de validation près des champs concernés
 - ✅ Conserver les valeurs valides du formulaire après une erreur
 - ✅ Enregistrer le nouvel utilisateur dans PostgreSQL
-- [ ] Refuser un login déjà existant (le duplicat n'est pas ajouté en db mais aucun message d'erreur et les champs du form sont effacés)
+- ✅ Refuser un login déjà existant (le duplicat n'est pas ajouté en db mais aucun message d'erreur et les champs du form sont effacés)
 - ✅ Hasher le mot de passe avant l’enregistrement
 - ✅ Ne jamais enregistrer le mot de passe en clair
 - ✅ Rediriger vers le login après une inscription réussie
-- [ ] Afficher un message de confirmation après inscription
+- ✅ Afficher un message de confirmation après inscription
 
 ## 🔑 Login
 
 - ✅ Créer une page de connexion
 - ✅ Ajouter un champ login
 - ✅ Ajouter un champ mot de passe
-- [ ] Traiter l’authentification avec Spring Security
-- [ ] Charger l’utilisateur depuis PostgreSQL
-- [ ] Vérifier le mot de passe hashé avec un `PasswordEncoder`
-- [ ] Créer un `UserDetailsService`
+- ✅ Traiter l’authentification avec Spring Security
+- ✅ Charger l’utilisateur depuis PostgreSQL
+- ✅ Vérifier le mot de passe hashé avec un `PasswordEncoder`
+- ✅ Créer un `UserDetailsService`
 - ✅ Attribuer le rôle `USER` aux clients
 - ✅ Attribuer le rôle `ADMIN` aux administrateurs
 - ✅ Afficher un message en cas d’identifiants incorrects
@@ -203,7 +207,7 @@
 
 - ✅ Ajouter un bouton de déconnexion
 - ✅ Afficher ce bouton uniquement aux utilisateurs connectés
-- [ ] Envoyer la déconnexion en `POST`
+- ✅ Envoyer la déconnexion en `POST`
 - ✅ Ajouter le token CSRF au formulaire de déconnexion
 - ✅ Invalider la session après déconnexion
 - ✅ Supprimer le contexte de sécurité
@@ -237,7 +241,7 @@
 - ✅ Utiliser le template sur toutes les pages
 - ✅ Éviter de dupliquer le header et le footer
 - ✅ Centraliser les imports JSTL
-- [ ] Centraliser les imports Spring Security JSP
+- ✅ Centraliser les imports Spring Security JSP
 - ✅ Configurer l’encodage UTF-8
 - ✅ Utiliser les routes générées avec `<c:url>`
 
@@ -256,7 +260,7 @@ Chaque page doit proposer au minimum :
 - ✅ Un lien vers le compte utilisateur pour un utilisateur authentifié
 - ✅ Un choix de langue
 - ✅ Un lien vers l’administration pour un administrateur
-- [ ] Un message personnalisé pour un utilisateur connecté
+- ✅ Un message personnalisé pour un utilisateur connecté
 
 ---
 
@@ -268,7 +272,7 @@ Chaque page doit proposer au minimum :
 - ✅ Présenter l’activité de la société
 - ✅ Présenter les produits ou catégories principales
 - ✅ Ajouter un accès rapide au catalogue
-- [ ] Ajouter un accès rapide au panier
+- ✅ Ajouter un accès rapide au panier
 - [ ] Traduire le contenu statique de l’accueil
 
 ## 🏢 Company Page
@@ -277,7 +281,7 @@ Chaque page doit proposer au minimum :
 - ✅ Présenter l’entreprise
 - ✅ Présenter son activité
 - ✅ Présenter ses services
-- [ ] Utiliser le template général
+- ✅ Utiliser le template général
 - [ ] Traduire la page en français et en anglais
 
 ---
@@ -332,7 +336,7 @@ Chaque page doit proposer au minimum :
 - ✅ Ajouter un lien vers le détail du produit
 - ✅ Afficher l’état du stock
 - ✅ Signaler les produits en rupture de stock
-- [ ] Empêcher l’ajout au panier d’un produit sans stock
+- ✅ Empêcher l’ajout au panier d’un produit sans stock
 - [ ] Trier les produits de façon cohérente
 - [ ] Ajouter une recherche par nom
 - ✅ Ajouter un filtre par catégorie
@@ -351,7 +355,7 @@ Chaque page doit proposer au minimum :
 - ✅ Afficher la référence
 - ✅ Afficher le stock
 - ✅ Afficher l’image
-- [ ] Gérer l’absence d’image
+- ✅ Gérer l’absence d’image
 - ✅ Ajouter un champ quantité
 - ✅ Définir une quantité minimale de 1
 - ✅ Limiter la quantité au stock disponible

@@ -87,6 +87,10 @@ VALUES
     (
         'Équipements maritimes',
         'Sous-marins, croiseurs et bâtiments militaires'
+    ),
+    (
+        'Bizarrerie',
+        'Matériels en développement ou absurde, ou les deux'
     )
 ON CONFLICT (name) DO UPDATE
     SET
@@ -95,6 +99,31 @@ ON CONFLICT (name) DO UPDATE
 -- =========================================================
 -- PRODUITS
 -- =========================================================
+INSERT INTO weapons (
+    name,
+    description,
+    price,
+    stock,
+    category_id,
+    manufacturer,
+    reference
+)
+VALUES (
+    'Homme invisible',
+    'On ne le voit pas, mais lui nous vois',
+    789.56,
+    1,
+    (SELECT id FROM categories WHERE name = 'Bizarrerie'),
+    'Krupp',
+    'HYP-020'
+) ON CONFLICT (reference) DO UPDATE
+    SET
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        price = EXCLUDED.price,
+        stock = EXCLUDED.stock,
+        category_id = EXCLUDED.category_id,
+        manufacturer = EXCLUDED.manufacturer;
 
 INSERT INTO weapons (
     name,
@@ -354,12 +383,6 @@ ON CONFLICT (reference) DO UPDATE
         category_id = EXCLUDED.category_id,
         manufacturer = EXCLUDED.manufacturer,
         image_url = EXCLUDED.image_url;
-
--- =========================================================
--- RÉINITIALISATION DES COMMANDES
--- =========================================================
-
-TRUNCATE TABLE customer_orders RESTART IDENTITY CASCADE;
 
 -- =========================================================
 -- COMMANDES DE DÉMONSTRATION

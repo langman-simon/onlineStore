@@ -4,11 +4,12 @@
 <section class="order-details">
 
     <div class="order-header">
+        <p class="eyebrow">Détail de commande</p>
         <h1>Commande n°${order.id}</h1>
 
         <p>
             Date :
-            <strong>${order.createdAt}</strong>
+            <strong><fmt:formatNumber value="${order.createdAt.dayOfMonth}" pattern="00"/>/<fmt:formatNumber value="${order.createdAt.monthValue}" pattern="00"/>/${order.createdAt.year} à <fmt:formatNumber value="${order.createdAt.hour}" pattern="00"/>:<fmt:formatNumber value="${order.createdAt.minute}" pattern="00"/></strong>
         </p>
     </div>
 

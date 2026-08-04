@@ -4,10 +4,12 @@ import com.hyperion.cart.Cart;
 import com.hyperion.model.CustomerOrder;
 import com.hyperion.model.User;
 import com.hyperion.repository.CustomerOrderRepository;
+import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.OrderService;
 import com.hyperion.service.PromotionService;
 import com.hyperion.service.UserService;
 import com.hyperion.session.SessionCart;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,7 @@ public class OrderController {
     private final CustomerOrderRepository customerOrderRepository;
     private final UserService userService;
     private final PromotionService promotionService;
+    private final GlobalBannerService globalBannerService;
 
     @Value("${paypal.sandbox-url}")
     private String paypalSandboxUrl;
@@ -45,12 +48,13 @@ public class OrderController {
             SessionCart sessionCart,
             CustomerOrderRepository customerOrderRepository,
             UserService userService,
-            PromotionService promotionService) {
+            PromotionService promotionService, GlobalBannerService globalBannerService) {
         this.orderService = orderService;
         this.sessionCart = sessionCart;
         this.customerOrderRepository = customerOrderRepository;
         this.userService = userService;
         this.promotionService = promotionService;
+        this.globalBannerService = globalBannerService;
     }
 
     @GetMapping("/checkout")
@@ -103,27 +107,39 @@ public class OrderController {
     @PostMapping("/confirm")
     public String confirmOrder(
             Authentication authentication,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            HttpSession session
     ) {
         try {
-            User user = userService.findByLogin(authentication.getName()).orElseThrow(()-> new IllegalArgumentException("Utilisateur introuvable."));
-            CustomerOrder order =
-                    orderService.validateOrder(sessionCart.getCart(), user, authentication.isAuthenticated());
+            User user = userService
+                    .findByLogin(authentication.getName())
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "Utilisateur introuvable."
+                            )
+                    );
 
-            redirectAttributes.addFlashAttribute(
-                    "success",
+            CustomerOrder order =
+                    orderService.validateOrder(
+                            sessionCart.getCart(),
+                            user,
+                            authentication.isAuthenticated()
+                    );
+
+            globalBannerService.success(
+                    session,
                     "Commande confirmée."
             );
 
             return "redirect:/order/" + order.getId();
 
         } catch (IllegalArgumentException exception) {
-            redirectAttributes.addFlashAttribute(
-                    "error",
+            globalBannerService.error(
+                    session,
                     exception.getMessage()
             );
 
-            return "redirect:/checkout";
+            return "redirect:/order/checkout";
         }
     }
 

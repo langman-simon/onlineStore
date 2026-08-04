@@ -3,6 +3,7 @@
 
 <section class="orders">
 
+    <p class="eyebrow">Historique</p>
     <h1>Mes commandes</h1>
 
     <c:choose>
@@ -35,7 +36,7 @@
                     <tr>
                         <td>${order.id}</td>
 
-                        <td>${order.createdAt}</td>
+                        <td><fmt:formatNumber value="${order.createdAt.dayOfMonth}" pattern="00"/>/<fmt:formatNumber value="${order.createdAt.monthValue}" pattern="00"/>/${order.createdAt.year} à <fmt:formatNumber value="${order.createdAt.hour}" pattern="00"/>:<fmt:formatNumber value="${order.createdAt.minute}" pattern="00"/></td>
 
                         <td>${order.originalPrice} €</td>
 
