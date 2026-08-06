@@ -179,76 +179,13 @@
 
     overflow: hidden;
 
-    color: var(--cream);
-    background-color: transparent;
-
-    border: 1px solid transparent;
-    border-radius: 12px;
-
-    font: inherit;
     text-align: left;
-
-    cursor: pointer;
-
-    transition:
-            color 0.25s ease,
-            background-color 0.25s ease,
-            border-color 0.25s ease,
-            transform 0.3s ease;
-}
-
-.catalogue-selector::before {
-    content: "";
-
-    position: absolute;
-    top: 50%;
-    left: -1rem;
-
-    width: 3px;
-    height: 0;
-
-    background-color: var(--gold);
-
-    border-radius: 999px;
-
-    transform: translateY(-50%);
-
-    box-shadow:
-            0 0 12px rgba(216, 178, 111, 0.65);
-
-    transition:
-            left 0.3s ease,
-            height 0.3s ease;
 }
 
 .catalogue-selector:hover,
-.catalogue-selector:focus-visible {
-    color: var(--gold-on-dark);
-    background-color: rgba(216, 178, 111, 0.07);
-
-    border-color: rgba(216, 178, 111, 0.14);
-
-    transform: translateX(3px);
-}
-
+.catalogue-selector:focus-visible,
 .catalogue-selector.is-active {
-    color: var(--gold-on-dark);
-
-    background:
-            linear-gradient(
-                    90deg,
-                    rgba(216, 178, 111, 0.16),
-                    rgba(216, 178, 111, 0.04)
-            );
-
-    border-color: rgba(216, 178, 111, 0.35);
-
-    transform: translateX(5px);
-}
-
-.catalogue-selector.is-active::before {
-    left: 0;
-    height: 60%;
+    transform: translateX(4px);
 }
 
 /* =========================================================

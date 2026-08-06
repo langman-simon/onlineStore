@@ -60,7 +60,7 @@
 
                             <sec:csrfInput/>
 
-                            <button type="submit">
+                            <button type="submit" class="btn btn--primary btn--full">
                                 Mettre à jour
                             </button>
                         </form>
@@ -72,7 +72,7 @@
 
                             <sec:csrfInput/>
 
-                            <button type="submit" class="btn-delete">
+                            <button type="submit" class="btn btn--primary btn--full btn--delete">
                                 Supprimer
                             </button>
                         </form>
@@ -121,33 +121,42 @@
 
 
 
-        <div class="cart-actions">
+<div class="cart-actions">
 
-            <form method="get"
-                  action="<c:url value='/order/checkout'/>"
-                  class="cart-checkout-form">
+    <a href="<c:url value='/catalogue'/>"
+       class="btn btn--primary">
+        Retour au catalogue
+    </a>
 
-                <button type="submit" class="btn">
-                    Continuer vers la commande
-                </button>
-            </form>
+    <form method="post"
+          action="<c:url value='/cart/clear'/>">
 
-        <a class="btn" href="<c:url value='/catalogue'/>">
-            Retour au catalogue
-        </a>
+        <input type="hidden"
+               name="${_csrf.parameterName}"
+               value="${_csrf.token}">
 
-        <form method="post"
-              action="<c:url value='/cart/clear'/>"
-              class="cart-clear-form">
+        <button type="submit"
+                class="btn btn--delete">
+            Vider le panier
+        </button>
 
-            <sec:csrfInput/>
+    </form>
 
-            <button type="submit" class="btn-delete">
-                Vider le panier
-            </button>
-        </form>
+    <form method="post"
+          action="<c:url value='/order/validate'/>">
 
-        </div>
+        <input type="hidden"
+               name="${_csrf.parameterName}"
+               value="${_csrf.token}">
+
+        <button type="submit"
+                class="btn btn--primary">
+            Continuer vers la commande
+        </button>
+
+    </form>
+
+</div>
 
     </c:if>
 

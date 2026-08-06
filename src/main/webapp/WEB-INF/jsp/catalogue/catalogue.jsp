@@ -20,6 +20,7 @@
 
             <select id="categoryId"
                     name="categoryId"
+                    class="btn btn--primary btn--filter"
                     onchange="this.form.submit()">
 
                 <option value="">
@@ -62,7 +63,7 @@
                  id="catalogueExplorer">
 
                 <%-- =========================================
-                     LISTE LATÉRALE
+                     LATERAL LIST
                      ========================================= --%>
 
                 <aside class="catalogue-sidebar">
@@ -84,8 +85,7 @@
                                    varStatus="status">
 
                             <button type="button"
-                                    class="catalogue-selector
-                                           ${status.first ? 'is-active' : ''}"
+                                    class="btn btn--selector catalogue-selector ${status.first ? 'is-active' : ''}"
                                     data-catalogue-index="${status.index}"
                                     role="tab"
                                     aria-selected="${status.first}"
@@ -137,7 +137,7 @@
                 </aside>
 
                 <%-- =========================================
-                     SCÈNE DES PRODUITS
+                     PRODUCT SCENE
                      ========================================= --%>
 
                 <div class="catalogue-stage">
@@ -266,7 +266,7 @@
 
                                     </div>
 
-                                    <a class="catalogue-product__action"
+                                    <a class="btn btn--primary btn--full"
                                        href="<c:url value='/weapons/${weapon.id}'/>">
 
                                         <span>

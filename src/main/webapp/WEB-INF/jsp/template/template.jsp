@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="<c:url value='/css/layout.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/header.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/footer.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/buttons.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/components/buttons.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/header-bubbles.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/forms.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/components/forms.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/tables.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/home.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/catalogue.css'/>">

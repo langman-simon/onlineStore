@@ -64,11 +64,11 @@
 
                     <sec:csrfInput/>
 
-                    <button type="submit">
+                    <button type="submit" class="btn btn--primary btn--large">
                         Ajouter au panier
                     </button>
 
-                    <a class="btn" href="<c:url value='/catalogue'/>">
+                    <a class="btn btn--primary btn--large" href="<c:url value='/catalogue'/>">
                         Retour au catalogue
                     </a>
 

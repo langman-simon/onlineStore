@@ -61,7 +61,7 @@
                 <sec:csrfInput/>
 
                 <button type="submit"
-                        class="auth-submit">
+                        class="btn btn--primary btn--full">
                     Se connecter
                 </button>
 

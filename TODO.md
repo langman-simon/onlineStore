@@ -5,6 +5,9 @@
 - user non enregsitré au register quand on tape "Enter" au lieu du bouton créer un compte.
 - copier coller l'url d'une commande d'un autre user pour la réutiliser sur un nouvel user renvoie sur une page d'erreur classique, gérer cela.
 - refaire la page "mon compte"
+- filtre catégorie à améliorer
+- cart.jsp "continuer vers la commande", lance le lgoin mais renvoie sur home.jsp au lieu de checkout.jsp
+- une fois connecté, "continuer vers la commande" sur cart.jsp amène sur une page erreur 405 Method Not Allowed.
 
 # 🚀 Project Hyperion — Complete TODO List
 ---
@@ -84,10 +87,10 @@
 - ✅ Créer une page de connexion
 - ✅ Ajouter un champ login
 - ✅ Ajouter un champ mot de passe
-- [ ] Traiter l’authentification avec Spring Security
-- [ ] Charger l’utilisateur depuis PostgreSQL
-- [ ] Vérifier le mot de passe hashé avec un `PasswordEncoder`
-- [ ] Créer un `UserDetailsService`
+- ✅ Traiter l’authentification avec Spring Security
+- ✅ Charger l’utilisateur depuis PostgreSQL
+- ✅ Vérifier le mot de passe hashé avec un `PasswordEncoder`
+- ✅ Créer un `UserDetailsService`
 - ✅ Attribuer le rôle `USER` aux clients
 - ✅ Attribuer le rôle `ADMIN` aux administrateurs
 - ✅ Afficher un message en cas d’identifiants incorrects
