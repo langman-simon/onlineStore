@@ -54,6 +54,8 @@
             0 7px 20px rgba(0, 0, 0, 0.28),
             inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
+    box-sizing: border-box;
+
     transition:
             width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
             background-color 0.3s ease,
@@ -113,6 +115,8 @@
 .header-user .user-avatar {
     position: relative;
     z-index: 3;
+
+    box-sizing: border-box;
 
     display: flex;
     align-items: center;
@@ -175,6 +179,7 @@
 .header-user .user-avatar--anonymous {
     color: var(--cream);
     background-color: transparent;
+    border: 1px solid var(--gold);
 }
 
 .header-language .language-button:hover,
@@ -196,6 +201,9 @@
     display: flex;
     align-items: center;
     flex: 1 1 auto;
+
+    align-self: stretch;
+    height: 100%;
 
     min-width: 0;
     margin: 0;
@@ -255,26 +263,30 @@
 .header-language .language-dropdown {
     display: flex;
     align-items: stretch;
+    align-self: stretch;
     flex: 1 1 auto;
 
-    padding: 0 0.35rem 0 0;
+    height: 100%;
+    padding: 0;
 }
 
 .header-language .language-dropdown a {
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: stretch;
     flex: 1 1 0;
     gap: 0.4rem;
 
     min-width: 0;
-    height: 40px;
-    padding: 0 0.65rem;
+    height: 100%;
+    min-height: 40px;
+    padding: 0 0.75rem;
 
     color: var(--cream);
     background-color: transparent;
 
-    border-radius: 0px;
+    border-radius: 0;
 
     font-size: 0.78rem;
     text-decoration: none;
@@ -292,7 +304,13 @@
 .header-language .language-dropdown a:hover,
 .header-language .language-dropdown a:focus-visible {
     color: var(--gold-on-dark);
-    background-color: rgba(216, 178, 111, 0.1);
+
+    background:
+            linear-gradient(
+                    180deg,
+                    rgba(216, 178, 111, 0.16),
+                    rgba(216, 178, 111, 0.08)
+            );
 }
 
 .header-language .language-dropdown img {
@@ -313,19 +331,24 @@
 .header-user .user-dropdown {
     display: flex;
     align-items: stretch;
+    align-self: stretch;
     flex: 1 1 auto;
 
     min-width: 0;
-    padding: 0 0 0 0.35rem;
+    height: 100%;
+    padding: 0;
 }
 
 .header-user .user-dropdown__login {
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: stretch;
     flex: 0 1 auto;
 
     max-width: 115px;
+    height: 100%;
+    min-height: 40px;
     margin: 0;
     padding: 0 0.7rem;
 
@@ -346,9 +369,11 @@
 .header-user .user-dropdown > a,
 .header-user .user-dropdown > form {
     display: flex;
+    align-self: stretch;
     flex: 1 1 0;
 
     min-width: 0;
+    height: 100%;
     margin: 0;
 }
 
@@ -357,9 +382,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: stretch;
 
     width: 100%;
-    height: 40px;
+    height: 100%;
+    min-height: 40px;
     padding: 0 0.65rem;
 
     color: var(--cream);
@@ -394,7 +421,13 @@
 .header-user .user-dropdown form button:hover,
 .header-user .user-dropdown form button:focus-visible {
     color: var(--gold-on-dark);
-    background-color: rgba(216, 178, 111, 0.1);
+
+    background:
+            linear-gradient(
+                    180deg,
+                    rgba(216, 178, 111, 0.16),
+                    rgba(216, 178, 111, 0.08)
+            );
 }
 
 /* =========================================================
@@ -652,128 +685,6 @@
 }
 
 /* =========================================================
-   CORRECTION DE LA SURBRILLANCE DES LIENS
-   ========================================================= */
-
-/*
- * La capsule extérieure définit seule la forme arrondie.
- * Tout ce qui dépasse est découpé selon son contour.
- */
-.header-language > .hover-menu,
-.header-user > .hover-menu {
-    overflow: hidden;
-}
-
-/*
- * Le contenu occupe exactement toute la hauteur
- * intérieure de la capsule.
- */
-.header-language .hover-menu__content,
-.header-user .hover-menu__content {
-    align-self: stretch;
-    height: 100%;
-}
-
-/* =========================================================
-   MENU DE LANGUE
-   ========================================================= */
-
-.header-language .language-dropdown {
-    align-self: stretch;
-
-    height: 100%;
-    padding: 0;
-}
-
-.header-language .language-dropdown a {
-    align-self: stretch;
-
-    height: 100%;
-    min-height: 40px;
-    padding: 0 0.75rem;
-
-    /*
-     * Aucun arrondi individuel :
-     * le parent découpe la surbrillance.
-     */
-    border-radius: 0;
-}
-
-/*
- * Séparation interne entre les deux langues.
- */
-.header-language .language-dropdown a + a {
-    border-left: 1px solid rgba(216, 178, 111, 0.14);
-
-    border-radius: 0;
-}
-
-/*
- * Surbrillance uniforme sur toute la zone du lien.
- */
-.header-language .language-dropdown a:hover,
-.header-language .language-dropdown a:focus-visible {
-    color: var(--gold-on-dark);
-
-    background:
-            linear-gradient(
-                    180deg,
-                    rgba(216, 178, 111, 0.16),
-                    rgba(216, 178, 111, 0.08)
-            );
-}
-
-/* =========================================================
-   MENU UTILISATEUR
-   ========================================================= */
-
-.header-user .user-dropdown {
-    align-self: stretch;
-
-    height: 100%;
-    padding: 0;
-}
-
-.header-user .user-dropdown__login {
-    align-self: stretch;
-
-    height: 100%;
-    min-height: 40px;
-}
-
-.header-user .user-dropdown > a,
-.header-user .user-dropdown > form {
-    align-self: stretch;
-
-    height: 100%;
-}
-
-.header-user .user-dropdown > a,
-.header-user .user-dropdown form button {
-    align-self: stretch;
-
-    height: 100%;
-    min-height: 40px;
-    padding: 0 0.65rem;
-
-    border-radius: 0;
-}
-
-.header-user .user-dropdown > a:hover,
-.header-user .user-dropdown > a:focus-visible,
-.header-user .user-dropdown form button:hover,
-.header-user .user-dropdown form button:focus-visible {
-    color: var(--gold-on-dark);
-
-    background:
-            linear-gradient(
-                    180deg,
-                    rgba(216, 178, 111, 0.16),
-                    rgba(216, 178, 111, 0.08)
-            );
-}
-
-/* =========================================================
    BOUTONS AUX EXTRÉMITÉS
    ========================================================= */
 
@@ -789,6 +700,12 @@
     min-height: 40px;
 
     border-radius: 50%;
+}
+
+.header-user > .hover-menu:not(:hover):not(:focus-within) {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
 }
 
 /* =========================================================
