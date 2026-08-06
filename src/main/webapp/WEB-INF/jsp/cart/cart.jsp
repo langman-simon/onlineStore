@@ -48,11 +48,12 @@
                     </td>
 
                     <td>
-                        <form method="post"
+                        <form method="post" class="cart-quantity-form"
                               action="<c:url value='/cart/update/${item.weapon.id}'/>">
 
                             <input type="number"
                                    name="quantity"
+                                   class="quantity-input"
                                    value="${item.quantity}"
                                    min="0"
                                    max="${item.weapon.stock}"

@@ -55,6 +55,7 @@
 
                         <input id="quantity"
                                type="number"
+                               class="quantity-input"
                                name="quantity"
                                value="1"
                                min="1"
