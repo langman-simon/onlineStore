@@ -143,7 +143,7 @@
     </form>
 
     <form method="post"
-          action="<c:url value='/order/validate'/>">
+          action="<c:url value='/order/confirm'/>">
 
         <input type="hidden"
                name="${_csrf.parameterName}"
