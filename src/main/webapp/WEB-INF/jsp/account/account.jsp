@@ -62,7 +62,7 @@
 
             <sec:csrfInput/>
 
-            <button type="submit">Enregistrer les modifications</button>
+            <button type="submit" class="btn btn--primary btn--full">Enregistrer les modifications</button>
 
         </form>
 
