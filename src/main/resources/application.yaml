@@ -12,13 +12,15 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     defer-datasource-initialization: true
+
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
   sql:
     init:
       mode: always
       encoding: UTF-8
+      continue-on-error: false
 
   mvc:
     view:

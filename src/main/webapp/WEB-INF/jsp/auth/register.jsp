@@ -172,7 +172,7 @@
                 <sec:csrfInput/>
 
                 <button type="submit"
-                        class="auth-submit">
+                        class="btn btn--primary btn--large">
                     Créer le compte
                 </button>
 

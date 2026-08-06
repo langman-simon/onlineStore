@@ -55,6 +55,7 @@
 
                         <input id="quantity"
                                type="number"
+                               class="quantity-input"
                                name="quantity"
                                value="1"
                                min="1"
@@ -64,9 +65,13 @@
 
                     <sec:csrfInput/>
 
-                    <button type="submit">
+                    <button type="submit" class="btn btn--primary btn--large">
                         Ajouter au panier
                     </button>
+
+                    <a class="btn btn--primary btn--large" href="<c:url value='/catalogue'/>">
+                        Retour au catalogue
+                    </a>
 
                 </form>
             </c:when>

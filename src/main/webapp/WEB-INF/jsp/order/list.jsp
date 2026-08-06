@@ -11,7 +11,7 @@
         <c:when test="${empty orders}">
             <p>Vous n’avez encore aucune commande.</p>
 
-            <a class="btn" href="<c:url value='/catalogue'/>">
+            <a class="btn btn--primary btn--small" href="<c:url value='/catalogue'/>">
                 Voir le catalogue
             </a>
         </c:when>
@@ -73,7 +73,7 @@
                         </td>
 
                         <td>
-                            <a class="btn"
+                            <a class="btn btn--primary btn--full"
                                href="<c:url value='/order/${order.id}'/>">
                                 Détails
                             </a>
@@ -83,7 +83,7 @@
                 </tbody>
             </table>
 
-            <a class="btn" href="<c:url value='/catalogue'/>">
+            <a class="btn btn--primary btn--full" href="<c:url value='/catalogue'/>">
                 Retour au catalogue
             </a>
 

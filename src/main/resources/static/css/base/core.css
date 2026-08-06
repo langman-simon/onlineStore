@@ -80,7 +80,7 @@ h3 { font-size: 1.25rem; }
 
 p { color: var(--text); }
 
-/* Petit libellé "chapeau" en capitales espacées — utilisé au-dessus des titres */
+/* Small uppercase eyebrow label used above headings */
 .eyebrow {
     display: inline-block;
     margin: 0 0 0.6rem;
@@ -94,7 +94,7 @@ p { color: var(--text); }
 
 .eyebrow--on-dark { color: var(--gold-on-dark); }
 
-/* Filet-signature : ligne fine + losange, motif répété comme séparateur de section */
+/* Signature divider: thin line and diamond used between sections */
 .ornament-divider {
     display: flex;
     align-items: center;

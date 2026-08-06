@@ -15,14 +15,14 @@
 
             <div class="home-actions">
                 <a href="<c:url value='/company'/>"
-                   class="btn btn-secondary">
+                   class="btn btn--primary btn--large">
                     Notre société
                 </a>
                 <a href="<c:url value='/catalogue'/>"
-                   class="btn">
+                   class="btn btn--primary btn--large">
                     Découvrir le catalogue
                 </a>
-                <a class="btn btn-secondary" href="<c:url value='/cart'/>">
+                <a class="btn btn--primary btn--large" href="<c:url value='/cart'/>">
                     Accéder à votre panier
                 </a>
             </div>
@@ -123,7 +123,7 @@
         </p>
 
         <a href="<c:url value='/catalogue'/>"
-           class="btn">
+           class="btn btn--primary btn--large">
             Voir tous les produits
         </a>
     </section>
