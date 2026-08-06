@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="<c:url value='/css/order.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/responsive.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/auth.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/account.css'/>">
 </head>
 
 <script>
