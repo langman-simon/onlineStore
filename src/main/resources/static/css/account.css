@@ -1,0 +1,248 @@
+/* =========================================================
+   ACCOUNT PAGE
+   ========================================================= */
+
+.account-page {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    width: 100%;
+    min-height: calc(100vh - 160px);
+    padding: 4rem 1.5rem;
+}
+
+.account-card {
+    width: 100%;
+    max-width: 850px;
+    padding: 2.5rem;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(43, 37, 29, 0.98),
+                    rgba(26, 23, 19, 0.98)
+            );
+
+    border: 1px solid rgba(216, 178, 111, 0.28);
+    border-radius: 18px;
+
+    box-shadow:
+            0 24px 60px rgba(0, 0, 0, 0.32),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.account-card__header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+
+    border-bottom: 1px solid rgba(216, 178, 111, 0.16);
+}
+
+.account-card__header .eyebrow {
+    margin: 0 0 0.5rem;
+
+    color: var(--gold);
+}
+
+.account-card__header h1 {
+    margin: 0;
+
+    color: var(--cream);
+
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500;
+}
+
+.account-card__header > p:last-child {
+    margin: 0.7rem 0 0;
+
+    color: var(--text-muted);
+
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.account-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.35rem;
+}
+
+.account-form__full {
+    grid-column: 1 / -1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    min-width: 0;
+}
+
+.form-group label {
+    color: var(--cream);
+
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.045em;
+}
+
+.form-label-optional {
+    margin-left: 0.35rem;
+
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.form-group input {
+    box-sizing: border-box;
+
+    width: 100%;
+    min-height: 46px;
+    padding: 0.75rem 0.9rem;
+
+    color: var(--cream);
+    background-color: rgba(12, 11, 9, 0.52);
+
+    border: 1px solid rgba(216, 178, 111, 0.22);
+    border-radius: 10px;
+
+    font: inherit;
+    font-size: 0.88rem;
+
+    transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.form-group input:hover {
+    border-color: rgba(216, 178, 111, 0.42);
+}
+
+.form-group input:focus {
+    outline: none;
+
+    background-color: rgba(12, 11, 9, 0.72);
+
+    border-color: var(--gold-bright);
+
+    box-shadow:
+            0 0 0 3px rgba(216, 178, 111, 0.12);
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+.form-message {
+    margin: 0 0 1.5rem;
+    padding: 0.85rem 1rem;
+
+    border: 1px solid;
+    border-radius: 10px;
+
+    font-size: 0.84rem;
+}
+
+.form-message--success {
+    color: #b8d7b5;
+    background-color: rgba(63, 111, 66, 0.16);
+
+    border-color: rgba(112, 168, 113, 0.42);
+}
+
+.form-message--error {
+    color: #efb4b4;
+    background-color: rgba(139, 47, 47, 0.16);
+
+    border-color: rgba(200, 106, 106, 0.42);
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.account-form__actions {
+    grid-column: 1 / -1;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+
+    margin-top: 0.65rem;
+    padding-top: 1.5rem;
+
+    border-top: 1px solid rgba(216, 178, 111, 0.16);
+}
+
+.account-form__actions .btn {
+    min-width: 180px;
+}
+
+.account-form__cancel {
+    color: var(--cream);
+    background-color: transparent;
+
+    border-color: rgba(216, 178, 111, 0.3);
+}
+
+.account-form__cancel:hover,
+.account-form__cancel:focus-visible {
+    color: var(--gold-on-dark);
+    background-color: rgba(216, 178, 111, 0.08);
+
+    border-color: var(--gold);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .account-page {
+        padding: 2rem 1rem;
+    }
+
+    .account-card {
+        padding: 1.5rem;
+    }
+
+    .account-form {
+        grid-template-columns: 1fr;
+    }
+
+    .account-form__full,
+    .account-form__actions {
+        grid-column: auto;
+    }
+
+    .account-form__actions {
+        flex-direction: column-reverse;
+    }
+
+    .account-form__actions .btn {
+        width: 100%;
+        min-width: 0;
+    }
+}
