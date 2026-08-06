@@ -273,10 +273,6 @@
                                             Voir le produit
                                         </span>
 
-                                        <span aria-hidden="true">
-                                            →
-                                        </span>
-
                                     </a>
 
                                 </div>
