@@ -119,6 +119,41 @@
             </p>
         </div>
 
+        <div class="promo-summary">
+    <h2>Promotions appliquées</h2>
+
+    <c:if test="${discountAmount > 0}">
+        <p>
+            <strong>Réduction fidélité :</strong>
+            - ${discountAmount} €
+        </p>
+    </c:if>
+
+    <c:choose>
+        <c:when test="${freeDelivery}">
+            <p>
+                <strong>Livraison :</strong>
+                <span class="strikethrough">${standardDeliveryFee} €</span>
+                <span class="free-delivery">Offerte</span>
+            </p>
+        </c:when>
+        <c:otherwise>
+            <p>
+                <strong>Frais de livraison :</strong>
+                ${deliveryFee} €
+            </p>
+        </c:otherwise>
+    </c:choose>
+
+    <hr>
+
+    <p>
+        <strong>Total après promotions :</strong>
+        ${finalPrice} €
+    </p>
+</div>
+
+
         <div class="cart-actions">
 
             <form method="get"
