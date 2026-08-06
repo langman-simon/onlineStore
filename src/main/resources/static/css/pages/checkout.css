@@ -1,0 +1,21 @@
+.checkout-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.checkout-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 750px) {
+    .checkout-actions {
+        flex-direction: column;
+    }
+}

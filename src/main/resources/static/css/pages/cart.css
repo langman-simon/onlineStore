@@ -60,6 +60,13 @@
 .discount span { color: var(--wine); font-weight: 600; }
 @media (max-width: 750px) {
 
+    .cart-summary {
+        flex-direction: column;
+        gap: 0.75rem;
+
+        text-align: left;
+    }
+
     .cart-actions {
         align-items: stretch;
         flex-direction: column;

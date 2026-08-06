@@ -6,25 +6,32 @@
 <head>
     <meta charset="UTF-8">
     <title>${title}</title>
-    <link rel="stylesheet" href="<c:url value='/css/admin.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/base.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/layout.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/header.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/footer.css'/>">
+
+    <%-- Base --%>
+    <link rel="stylesheet" href="<c:url value='/css/base/core.css'/>">
+
+    <%-- Layout --%>
+    <link rel="stylesheet" href="<c:url value='/css/layout/layout.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/layout/header.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/layout/header-bubbles.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/layout/footer.css'/>">
+
+    <%-- Components --%>
     <link rel="stylesheet" href="<c:url value='/css/components/buttons.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/header-bubbles.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/components/forms.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/tables.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/home.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/catalogue.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/product-details.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/cart.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/checkout.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/company.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/order.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/responsive.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/auth.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/account.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/components/tables.css'/>">
+
+    <%-- Pages --%>
+    <link rel="stylesheet" href="<c:url value='/css/pages/home.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/catalogue.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/product-details.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/cart.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/checkout.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/company.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/order.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/auth.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/account.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/pages/admin.css'/>">
 </head>
 
 <script>

@@ -38,3 +38,13 @@
     flex-wrap: wrap;
     gap: 1rem;
 }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 750px) {
+    .order-actions {
+        flex-direction: column;
+    }
+}

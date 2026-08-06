@@ -343,8 +343,8 @@ Chaque page doit proposer au minimum :
 - ✅ Afficher l’état du stock
 - ✅ Signaler les produits en rupture de stock
 - ✅ Empêcher l’ajout au panier d’un produit sans stock
-- [ ] Trier les produits de façon cohérente
-- [ ] Ajouter une recherche par nom
+- ✅ Trier les produits de façon cohérente
+- ✅ Ajouter une recherche par nom
 - ✅ Ajouter un filtre par catégorie
 - [ ] Ajouter éventuellement d’autres filtres utiles
 

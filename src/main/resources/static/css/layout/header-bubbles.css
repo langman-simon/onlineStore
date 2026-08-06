@@ -1,5 +1,5 @@
 /* =========================================================
-   POSITION DES BULLES
+   BUBBLE POSITIONING
    ========================================================= */
 
 .navbar .header-language {
@@ -30,7 +30,7 @@
 }
 
 /* =========================================================
-   CAPSULES ANIMÉES
+   ANIMATED CAPSULES
    ========================================================= */
 
 .header-language > .hover-menu,
@@ -64,7 +64,7 @@
 }
 
 /* =========================================================
-   LANGUE : OUVERTURE VERS LA DROITE
+   LANGUAGE: OPEN TO THE RIGHT
    ========================================================= */
 
 .header-language > .hover-menu {
@@ -86,7 +86,7 @@
 }
 
 /* =========================================================
-   UTILISATEUR : OUVERTURE VERS LA GAUCHE
+   USER: OPEN TO THE LEFT
    ========================================================= */
 
 .header-user > .hover-menu {
@@ -108,7 +108,7 @@
 }
 
 /* =========================================================
-   BOUTONS PRINCIPAUX
+   MAIN BUTTONS
    ========================================================= */
 
 .header-language .language-button,
@@ -191,7 +191,7 @@
 }
 
 /* =========================================================
-   CONTENU DES CAPSULES
+   CAPSULE CONTENT
    ========================================================= */
 
 .header-language .hover-menu__content,
@@ -257,7 +257,7 @@
 }
 
 /* =========================================================
-   LIENS DE LANGUE
+   LANGUAGE LINKS
    ========================================================= */
 
 .header-language .language-dropdown {
@@ -325,7 +325,7 @@
 }
 
 /* =========================================================
-   CONTENU UTILISATEUR
+   USER CONTENT
    ========================================================= */
 
 .header-user .user-dropdown {
@@ -431,7 +431,7 @@
 }
 
 /* =========================================================
-   UTILISATEUR ANONYME
+   ANONYMOUS USER
    ========================================================= */
 
 .header-user > .hover-menu:has(.user-avatar--anonymous):hover,
@@ -440,7 +440,7 @@
 }
 
 /* =========================================================
-   EFFET LUMINEUX
+   LIGHT EFFECT
    ========================================================= */
 
 .header-language > .hover-menu::before,
@@ -493,7 +493,7 @@
 }
 
 /* =========================================================
-   ACCESSIBILITÉ
+   ACCESSIBILITY
    ========================================================= */
 
 .language-button:focus-visible,
@@ -506,7 +506,7 @@
 }
 
 /* =========================================================
-   ÉCRANS INTERMÉDIAIRES
+   INTERMEDIATE SCREENS
    ========================================================= */
 
 @media (max-width: 1100px) {
@@ -669,7 +669,7 @@
 }
 
 /* =========================================================
-   RÉDUCTION DES ANIMATIONS
+   REDUCED MOTION
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
@@ -685,12 +685,12 @@
 }
 
 /* =========================================================
-   BOUTONS AUX EXTRÉMITÉS
+   END BUTTONS
    ========================================================= */
 
 /*
- * Les boutons restent ronds, mais leur fond ne doit pas
- * dépasser sur le contenu de la capsule.
+ * Buttons remain circular, but their background must not
+ * overflow into the capsule content.
  */
 .header-language .language-button,
 .header-user .user-avatar {
@@ -715,8 +715,8 @@
 @media (max-width: 780px) {
 
     /*
-     * Sur mobile, les menus redeviennent des panneaux
-     * verticaux : les liens peuvent retrouver un léger arrondi.
+     * On mobile, menus become vertical panels again,
+     * so links can use a slight border radius.
      */
     .header-language .language-dropdown a,
     .header-user .user-dropdown > a,
