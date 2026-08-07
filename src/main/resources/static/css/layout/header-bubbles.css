@@ -71,8 +71,7 @@
     justify-content: flex-start;
 }
 
-.header-language > .hover-menu:hover,
-.header-language > .hover-menu:focus-within {
+.header-language > .hover-menu:hover {
     width: 270px;
 
     background-color: rgba(42, 36, 28, 0.99);
@@ -93,8 +92,7 @@
     justify-content: flex-end;
 }
 
-.header-user > .hover-menu:hover,
-.header-user > .hover-menu:focus-within {
+.header-user > .hover-menu:hover {
     width: 460px;
 
     background-color: rgba(42, 36, 28, 0.99);
@@ -241,9 +239,7 @@
 }
 
 .header-language > .hover-menu:hover .hover-menu__content,
-.header-language > .hover-menu:focus-within .hover-menu__content,
-.header-user > .hover-menu:hover .hover-menu__content,
-.header-user > .hover-menu:focus-within .hover-menu__content {
+.header-user > .hover-menu:hover .hover-menu__content {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -702,7 +698,7 @@
     border-radius: 50%;
 }
 
-.header-user > .hover-menu:not(:hover):not(:focus-within) {
+.header-user > .hover-menu:not(:hover) {
     background: transparent;
     border-color: transparent;
     box-shadow: none;
@@ -733,4 +729,11 @@
         border-left: none;
         border-top: 1px solid rgba(216, 178, 111, 0.12);
     }
+}
+
+.header-language .language-button,
+.header-user .user-avatar {
+    cursor: default;
+    pointer-events: none;
+    user-select: none;
 }

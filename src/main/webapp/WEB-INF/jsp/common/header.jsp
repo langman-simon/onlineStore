@@ -12,8 +12,7 @@
 
                 <button type="button"
                         class="language-button"
-                        aria-label="Changer de langue"
-                        title="Langue">
+                        aria-hidden="true">
 
                     <span aria-hidden="true">🌐</span>
 
@@ -113,7 +112,7 @@
 
                     <button type="button"
                             class="user-avatar user-avatar--anonymous"
-                            aria-label="Menu utilisateur non connecté">
+                            aria-hidden="true">
                         ?
                     </button>
 
@@ -142,7 +141,7 @@
 
                     <button type="button"
                             class="user-avatar"
-                            aria-label="Menu de ${currentLogin}">
+                            aria-hidden="true">
 
                             ${fn:toUpperCase(
                                     fn:substring(currentLogin, 0, 1)
