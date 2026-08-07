@@ -1,0 +1,208 @@
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.form-group label {
+    margin-bottom: 0;
+
+    color: var(--cream);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    box-sizing: border-box;
+
+    width: 100%;
+    min-height: 46px;
+    padding: 0.75rem 0.9rem;
+
+    color: var(--cream);
+    background-color: rgba(12, 11, 9, 0.52);
+
+    border: 1px solid rgba(216, 178, 111, 0.22);
+    border-radius: 10px;
+
+    font: inherit;
+    font-size: 0.88rem;
+
+    transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border-color: rgba(216, 178, 111, 0.42);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+
+    background-color: rgba(12, 11, 9, 0.72);
+
+    border-color: var(--gold-bright);
+
+    box-shadow:
+            0 0 0 3px rgba(216, 178, 111, 0.12);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-label-optional {
+    margin-left: 0.35rem;
+
+    color: var(--text-muted);
+
+    font-size: 0.68rem;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.form-message {
+    margin: 0 0 1.5rem;
+    padding: 0.85rem 1rem;
+
+    border: 1px solid;
+    border-radius: 10px;
+
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+.form-message--success {
+    color: #b8d7b5;
+    background-color: rgba(63, 111, 66, 0.16);
+
+    border-color: rgba(112, 168, 113, 0.42);
+}
+
+.form-message--error {
+    color: #efb4b4;
+    background-color: rgba(139, 47, 47, 0.16);
+
+    border-color: rgba(200, 106, 106, 0.42);
+}
+
+
+/* =========================================================
+   QUANTITY CONTROLS
+   ========================================================= */
+
+.quantity-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.quantity-input {
+    box-sizing: border-box;
+
+    width: 90px;
+    min-height: 42px;
+    padding: 0.6rem 0.75rem;
+
+    color: var(--cream);
+    background:
+            linear-gradient(
+                    180deg,
+                    rgba(28, 24, 19, 0.96),
+                    rgba(18, 16, 13, 0.96)
+            );
+
+    border: 1px solid rgba(216, 178, 111, 0.38);
+    border-radius: 10px;
+
+    font: inherit;
+    font-weight: 600;
+    text-align: center;
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background-color 0.2s ease;
+}
+
+.quantity-input:hover {
+    border-color: rgba(216, 178, 111, 0.65);
+}
+
+.quantity-input:focus {
+    outline: none;
+
+    border-color: var(--gold-bright);
+
+    box-shadow:
+            0 0 0 3px rgba(216, 178, 111, 0.12);
+}
+
+.cart-quantity-form {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* =========================================================
+   LIGHT FORM SURFACE
+   ========================================================= */
+
+.form--light .form-group label {
+    color: var(--text);
+}
+
+.form--light .form-group input,
+.form--light .form-group select,
+.form--light .form-group textarea {
+    color: var(--text);
+    background-color: rgba(255, 255, 255, 0.72);
+
+    border-color: rgba(38, 32, 26, 0.2);
+}
+
+.form--light .form-group input:hover,
+.form--light .form-group select:hover,
+.form--light .form-group textarea:hover {
+    border-color: rgba(38, 32, 26, 0.38);
+}
+
+.form--light .form-group input:focus,
+.form--light .form-group select:focus,
+.form--light .form-group textarea:focus {
+    background-color: #ffffff;
+
+    border-color: var(--gold);
+
+    box-shadow:
+            0 0 0 3px rgba(216, 178, 111, 0.18);
+}
+
+
+/* =========================================================
+   CHECKBOX
+   ========================================================= */
+
+.form-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-height: 20px;
+    padding: 0;
+
+    accent-color: var(--gold);
+
+    cursor: pointer;
+}

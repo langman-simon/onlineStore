@@ -48,11 +48,12 @@
                     </td>
 
                     <td>
-                        <form method="post"
+                        <form method="post" class="cart-quantity-form"
                               action="<c:url value='/cart/update/${item.weapon.id}'/>">
 
                             <input type="number"
                                    name="quantity"
+                                   class="quantity-input"
                                    value="${item.quantity}"
                                    min="0"
                                    max="${item.weapon.stock}"
@@ -60,7 +61,7 @@
 
                             <sec:csrfInput/>
 
-                            <button type="submit">
+                            <button type="submit" class="btn btn--primary btn--full">
                                 Mettre à jour
                             </button>
                         </form>
@@ -72,7 +73,7 @@
 
                             <sec:csrfInput/>
 
-                            <button type="submit" class="btn-delete">
+                            <button type="submit" class="btn btn--primary btn--full btn--delete">
                                 Supprimer
                             </button>
                         </form>
@@ -119,33 +120,104 @@
             </p>
         </div>
 
-        <div class="cart-actions">
+<div class="promo-summary">
+    <h2>Promotions appliquées</h2>
 
-            <form method="get"
-                  action="<c:url value='/order/checkout'/>"
-                  class="cart-checkout-form">
+    <c:if test="${discountAmount > 0}">
+        <p>
+            <strong>Réduction fidélité :</strong>
+            - ${discountAmount} €
+        </p>
+    </c:if>
 
-                <button type="submit" class="btn">
-                    Continuer vers la commande
-                </button>
-            </form>
+    <c:choose>
+        <c:when test="${freeDelivery}">
+            <p>
+                <strong>Livraison :</strong>
+                <span class="strikethrough">${standardDeliveryFee} €</span>
+                <span class="free-delivery">Offerte</span>
+            </p>
+        </c:when>
+        <c:otherwise>
+            <p>
+                <strong>Frais de livraison :</strong>
+                ${deliveryFee} €
+            </p>
+        </c:otherwise>
+    </c:choose>
 
-        <a class="btn" href="<c:url value='/catalogue'/>">
-            Retour au catalogue
-        </a>
+ <hr>
 
-        <form method="post"
-              action="<c:url value='/cart/clear'/>"
-              class="cart-clear-form">
+    <c:choose>
+        <c:when test="${authenticated}">
 
-            <sec:csrfInput/>
+            <c:if test="${not empty remainingForFreeDelivery && remainingForFreeDelivery > 0}">
+                <p class="promo-incentive">
+                    Plus que <strong>${remainingForFreeDelivery} €</strong>
+                    d'achat pour bénéficier de la livraison offerte !
+                </p>
+            </c:if>
 
-            <button type="submit" class="btn-delete">
-                Vider le panier
-            </button>
-        </form>
+            <c:if test="${not empty remainingForNextTier}">
+                <p class="promo-incentive">
+                    Plus que <strong>${remainingForNextTier} €</strong>
+                    d'achat pour passer à <strong>-${nextTierRate}%</strong> de réduction !
+                </p>
+            </c:if>
 
-        </div>
+        </c:when>
+        <c:otherwise>
+            <p class="promo-incentive">
+                <a href="<c:url value='/login'/>">Connectez-vous</a>
+                pour bénéficier des réductions fidélité et de la livraison offerte.
+            </p>
+        </c:otherwise>
+    </c:choose>
+
+    <hr>
+
+    <p>
+        <strong>Total après promotions :</strong>
+        ${finalPrice} €
+    </p>
+</div>
+
+<div class="cart-actions">
+
+    <a href="<c:url value='/catalogue'/>"
+       class="btn btn--primary">
+        Retour au catalogue
+    </a>
+
+    <form method="post"
+          action="<c:url value='/cart/clear'/>">
+
+        <input type="hidden"
+               name="${_csrf.parameterName}"
+               value="${_csrf.token}">
+
+        <button type="submit"
+                class="btn btn--delete">
+            Vider le panier
+        </button>
+
+    </form>
+
+    <form method="post"
+          action="<c:url value='/order/confirm'/>">
+
+        <input type="hidden"
+               name="${_csrf.parameterName}"
+               value="${_csrf.token}">
+
+        <button type="submit"
+                class="btn btn--primary">
+            Continuer vers la commande
+        </button>
+
+    </form>
+
+</div>
 
     </c:if>
 

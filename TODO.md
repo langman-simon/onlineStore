@@ -1,7 +1,13 @@
-# Problème répertorié
+# Problème répertoriés
 - home.jsp cliquer sur une catégorie proposée ramène sur "toutes les catégories" au lieu de la catégorie sélectionnée.
 - l'images dans weapon/details.jsp n'affiche rien si absence d'image.
 - manque un bouton retourner au catalogue dans weapon/details.jsp.
+- user non enregsitré au register quand on tape "Enter" au lieu du bouton créer un compte.
+- copier coller l'url d'une commande d'un autre user pour la réutiliser sur un nouvel user renvoie sur une page d'erreur classique, gérer cela.
+- refaire la page "mon compte"
+- filtre catégorie à améliorer
+- cart.jsp "continuer vers la commande", lance le lgoin mais renvoie sur home.jsp au lieu de checkout.jsp
+- une fois connecté, "continuer vers la commande" sur cart.jsp amène sur une page erreur 405 Method Not Allowed.
 
 # 🚀 Project Hyperion — Complete TODO List
 ---
@@ -81,10 +87,10 @@
 - ✅ Créer une page de connexion
 - ✅ Ajouter un champ login
 - ✅ Ajouter un champ mot de passe
-- [ ] Traiter l’authentification avec Spring Security
-- [ ] Charger l’utilisateur depuis PostgreSQL
-- [ ] Vérifier le mot de passe hashé avec un `PasswordEncoder`
-- [ ] Créer un `UserDetailsService`
+- ✅ Traiter l’authentification avec Spring Security
+- ✅ Charger l’utilisateur depuis PostgreSQL
+- ✅ Vérifier le mot de passe hashé avec un `PasswordEncoder`
+- ✅ Créer un `UserDetailsService`
 - ✅ Attribuer le rôle `USER` aux clients
 - ✅ Attribuer le rôle `ADMIN` aux administrateurs
 - ✅ Afficher un message en cas d’identifiants incorrects
@@ -337,8 +343,8 @@ Chaque page doit proposer au minimum :
 - ✅ Afficher l’état du stock
 - ✅ Signaler les produits en rupture de stock
 - ✅ Empêcher l’ajout au panier d’un produit sans stock
-- [ ] Trier les produits de façon cohérente
-- [ ] Ajouter une recherche par nom
+- ✅ Trier les produits de façon cohérente
+- ✅ Ajouter une recherche par nom
 - ✅ Ajouter un filtre par catégorie
 - [ ] Ajouter éventuellement d’autres filtres utiles
 
@@ -1246,20 +1252,20 @@ Chaque page doit proposer au minimum :
 - ✅ Enregistrer les lignes de commande
 - ✅ Enregistrer le produit commandé
 - ✅ Enregistrer la quantité commandée
-- [ ] Enregistrer le prix appliqué au moment de la commande
-- [ ] Enregistrer la commande avant le paiement
-- [ ] Enregistrer toutes les lignes avant le paiement
-- [ ] Utiliser une transaction pour valider la commande
-- [ ] Vérifier le stock avant validation
-- [ ] Réduire le stock après confirmation
-- [ ] Annuler toute l’opération en cas d’erreur
-- [ ] Vider le panier uniquement après une validation réussie
-- [ ] Ne pas vider le panier si la commande échoue
-- [ ] Rediriger vers la page de détail de la commande
-- [ ] Afficher le numéro de commande
-- [ ] Afficher toutes les lignes de la commande
-- [ ] Afficher le montant total
-- [ ] Afficher le statut payé/non payé
+- ✅ Enregistrer le prix appliqué au moment de la commande
+- ✅ Enregistrer la commande avant le paiement
+- ✅ Enregistrer toutes les lignes avant le paiement
+- ✅ Utiliser une transaction pour valider la commande
+- ✅ Vérifier le stock avant validation
+- ✅ Réduire le stock après confirmation
+- ✅ Annuler toute l’opération en cas d’erreur
+- ✅ Vider le panier uniquement après une validation réussie
+- ✅ Ne pas vider le panier si la commande échoue
+- ✅ Rediriger vers la page de détail de la commande
+- ✅ Afficher le numéro de commande
+- ✅ Afficher toutes les lignes de la commande
+- ✅ Afficher le montant total
+- ✅ Afficher le statut payé/non payé
 - [ ] Empêcher un utilisateur d’accéder à la commande d’un autre client
 
 ---

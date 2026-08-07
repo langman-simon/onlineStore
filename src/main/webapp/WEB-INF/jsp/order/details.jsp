@@ -72,12 +72,12 @@
 
     <div class="order-actions">
 
-        <a class="btn"
+        <a class="btn btn--primary btn--large"
            href="<c:url value='/order'/>">
             Mes commandes
         </a>
 
-        <a class="btn"
+        <a class="btn btn--primary btn--large"
            href="<c:url value='/catalogue'/>">
             Retour au catalogue
         </a>
@@ -119,7 +119,7 @@
                        name="cancel_return"
                        value="${baseUrl}/order/${order.id}/payment/cancel">
 
-                <button type="submit">
+                <button type="submit" class="btn btn--primary btn--large">
                     Payer avec PayPal
                 </button>
 

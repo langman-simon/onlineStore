@@ -3,10 +3,6 @@
 
 <section class="admin-page">
 
-    <%-- =====================================================
-         EN-TÊTE
-         ===================================================== --%>
-
     <header class="admin-hero">
 
         <div>
@@ -23,7 +19,7 @@
         </div>
 
         <details class="admin-add-panel">
-            <summary class="btn admin-add-panel__button">
+            <summary class="btn btn--primary">
                 Ajouter un produit
             </summary>
 
@@ -34,9 +30,9 @@
                 <form method="post"
                       action="<c:url value='/admin/weapons/add'/>"
                       enctype="multipart/form-data"
-                      class="admin-form">
+                      class="admin-product-form form--light">
 
-                    <div class="admin-form__grid">
+                    <div class="admin-product-form__grid">
 
                         <div class="form-group">
                             <label for="addName">Nom</label>
@@ -113,7 +109,7 @@
                                    required>
                         </div>
 
-                        <div class="form-group admin-form__full">
+                        <div class="form-group admin-product-form__full">
                             <label for="addDescription">Description</label>
 
                             <textarea id="addDescription"
@@ -123,7 +119,7 @@
                                       required></textarea>
                         </div>
 
-                        <div class="form-group admin-form__full">
+                        <div class="form-group admin-product-form__full">
                             <label for="addImage">Image</label>
 
                             <input type="file"
@@ -137,8 +133,8 @@
 
                     <sec:csrfInput/>
 
-                    <div class="admin-form__actions">
-                        <button type="submit">
+                    <div class="admin-product-form__actions">
+                        <button type="submit" class="btn btn--primary">
                             Ajouter au catalogue
                         </button>
                     </div>
@@ -149,36 +145,6 @@
         </details>
 
     </header>
-
-    <%-- =====================================================
-         MESSAGES
-         ===================================================== --%>
-
-    <c:if test="${not empty success}">
-        <div class="admin-alert admin-alert--success">
-            <span>${success}</span>
-
-            <button type="button"
-                    class="admin-alert__close"
-                    aria-label="Fermer"
-                    onclick="this.parentElement.remove()">
-                ×
-            </button>
-        </div>
-    </c:if>
-
-    <c:if test="${not empty error}">
-        <div class="admin-alert admin-alert--error">
-            <span>${error}</span>
-
-            <button type="button"
-                    class="admin-alert__close"
-                    aria-label="Fermer"
-                    onclick="this.parentElement.remove()">
-                ×
-            </button>
-        </div>
-    </c:if>
 
     <%-- =====================================================
          BARRE D’OUTILS
@@ -194,41 +160,28 @@
             </p>
         </div>
 
-        <form method="get"
-              action="<c:url value='/admin'/>"
-              class="admin-filter">
+        <div class="filter--list">
 
-            <div class="form-group">
-                <label for="filterCategoryId">
-                    Filtrer par catégorie
-                </label>
+            <a href="<c:url value='/admin'/>"
+               class="btn btn--filter ${empty selectedCategoryId ? 'is-active' : ''}">
+                Toutes les catégories
+            </a>
 
-                <select id="filterCategoryId"
-                        name="categoryId"
-                        onchange="this.form.submit()">
+            <c:forEach var="category" items="${categories}">
 
-                    <option value="">
-                        Toutes les catégories
-                    </option>
+                <c:url var="categoryUrl" value="/admin">
+                    <c:param name="categoryId"
+                             value="${category.id}"/>
+                </c:url>
 
-                    <c:forEach var="category"
-                               items="${categories}">
+                <a href="${categoryUrl}"
+                   class="btn btn--filter ${selectedCategoryId == category.id ? 'is-active' : ''}">
+                    ${category.name}
+                </a>
 
-                        <option value="${category.id}"
-                            <c:if test="${selectedCategoryId == category.id}">
-                                selected
-                            </c:if>>
+            </c:forEach>
 
-                            ${category.name}
-
-                        </option>
-
-                    </c:forEach>
-
-                </select>
-            </div>
-
-        </form>
+        </div>
 
     </div>
 
@@ -258,7 +211,7 @@
 
                     <article class="admin-product">
 
-                        <%-- Image --%>
+                        <%-- Product image --%>
 
                         <div class="admin-product__image">
 
@@ -279,310 +232,283 @@
 
                         </div>
 
-                        <%-- Informations principales --%>
 
-                        <div class="admin-product__main">
+                        <%-- Product summary --%>
 
-                            <div class="admin-product__heading">
+                        <div class="admin-product__content">
+
+                            <div class="admin-product__header">
 
                                 <div>
-                                    <span class="admin-product__category">
-                                        ${weapon.category.name}
-                                    </span>
+                                    <h3>${weapon.name}</h3>
 
-                                    <h2>${weapon.name}</h2>
+                                    <p class="admin-product__reference">
+                                        ${weapon.reference}
+                                    </p>
                                 </div>
 
-                                <span class="admin-product__reference">
-                                    ${weapon.reference}
+                                <strong class="admin-product__price">
+                                    ${weapon.price} €
+                                </strong>
+
+                            </div>
+
+
+                            <div class="admin-product__info">
+
+                                <span>
+                                    <strong>Catégorie</strong>
+                                    ${weapon.category.name}
+                                </span>
+
+                                <span>
+                                    <strong>Fabricant</strong>
+                                    ${weapon.manufacturer}
+                                </span>
+
+                                <span>
+                                    <strong>Stock</strong>
+                                    ${weapon.stock}
                                 </span>
 
                             </div>
 
-                            <p class="admin-product__description">
-                                ${weapon.description}
-                            </p>
 
-                            <div class="admin-product__metadata">
+                            <%-- Product actions --%>
 
-                                <div>
-                                    <span>Fabricant</span>
-                                    <strong>${weapon.manufacturer}</strong>
-                                </div>
+                            <div class="admin-product__actions">
 
-                                <div>
-                                    <span>Prix</span>
-                                    <strong>${weapon.price} €</strong>
-                                </div>
+                                <a href="<c:url value='/weapons/${weapon.id}'/>"
+                                   class="btn btn--primary">
+                                    Voir la fiche
+                                </a>
 
-                                <div>
-                                    <span>Stock</span>
 
-                                    <c:choose>
+                                <details class="admin-product-edit">
 
-                                        <c:when test="${weapon.stock > 5}">
-                                            <strong class="admin-stock admin-stock--good">
-                                                ${weapon.stock}
-                                            </strong>
-                                        </c:when>
+                                    <summary class="btn btn--primary">
+                                        Modifier
+                                    </summary>
 
-                                        <c:when test="${weapon.stock > 0}">
-                                            <strong class="admin-stock admin-stock--low">
-                                                ${weapon.stock}
-                                            </strong>
-                                        </c:when>
+                                    <div class="admin-product-edit__content">
 
-                                        <c:otherwise>
-                                            <strong class="admin-stock admin-stock--empty">
-                                                Rupture
-                                            </strong>
-                                        </c:otherwise>
-
-                                    </c:choose>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <%-- Actions rapides --%>
-
-                        <aside class="admin-product__actions">
-
-                            <a class="btn admin-product__details"
-                               href="<c:url value='/weapons/${weapon.id}'/>">
-                                Voir la fiche
-                            </a>
-
-                            <form method="post"
-                                  action="<c:url value='/admin/weapons/stock/${weapon.id}'/>"
-                                  class="admin-stock-form">
-
-                                <label for="stock-${weapon.id}">
-                                    Stock
-                                </label>
-
-                                <div class="admin-stock-form__controls">
-
-                                    <input type="number"
-                                           id="stock-${weapon.id}"
-                                           name="stock"
-                                           min="0"
-                                           value="${weapon.stock}"
-                                           required>
-
-                                    <sec:csrfInput/>
-
-                                    <button type="submit">
-                                        Mettre à jour
-                                    </button>
-
-                                </div>
-
-                            </form>
-
-                            <details class="admin-edit">
-
-                                <summary class="btn">
-                                    Modifier
-                                </summary>
-
-                                <div class="admin-edit__content">
-
-                                    <h3>Modifier ${weapon.name}</h3>
-
-                                    <form method="post"
-                                          action="<c:url value='/admin/weapons/update/${weapon.id}'/>"
-                                          enctype="multipart/form-data"
-                                          class="admin-form">
-
-                                        <div class="admin-form__grid">
-
-                                            <div class="form-group">
-                                                <label for="name-${weapon.id}">
-                                                    Nom
-                                                </label>
-
-                                                <input type="text"
-                                                       id="name-${weapon.id}"
-                                                       name="name"
-                                                       value="${weapon.name}"
-                                                       maxlength="150"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="reference-${weapon.id}">
-                                                    Référence
-                                                </label>
-
-                                                <input type="text"
-                                                       id="reference-${weapon.id}"
-                                                       name="reference"
-                                                       value="${weapon.reference}"
-                                                       maxlength="100"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="manufacturer-${weapon.id}">
-                                                    Fabricant
-                                                </label>
-
-                                                <input type="text"
-                                                       id="manufacturer-${weapon.id}"
-                                                       name="manufacturer"
-                                                       value="${weapon.manufacturer}"
-                                                       maxlength="100"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="category-${weapon.id}">
-                                                    Catégorie
-                                                </label>
-
-                                                <select id="category-${weapon.id}"
-                                                        name="categoryId"
-                                                        required>
-
-                                                    <c:forEach var="category"
-                                                               items="${categories}">
-
-                                                        <option value="${category.id}"
-                                                            <c:if test="${weapon.category.id == category.id}">
-                                                                selected
-                                                            </c:if>>
-
-                                                            ${category.name}
-
-                                                        </option>
-
-                                                    </c:forEach>
-
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="price-${weapon.id}">
-                                                    Prix
-                                                </label>
-
-                                                <input type="number"
-                                                       id="price-${weapon.id}"
-                                                       name="price"
-                                                       min="0"
-                                                       step="0.01"
-                                                       value="${weapon.price}"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="edit-stock-${weapon.id}">
-                                                    Stock
-                                                </label>
-
-                                                <input type="number"
-                                                       id="edit-stock-${weapon.id}"
-                                                       name="stock"
-                                                       min="0"
-                                                       value="${weapon.stock}"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group admin-form__full">
-                                                <label for="description-${weapon.id}">
-                                                    Description
-                                                </label>
-
-                                                <textarea id="description-${weapon.id}"
-                                                          name="description"
-                                                          rows="5"
-                                                          maxlength="1000"
-                                                          required>${weapon.description}</textarea>
-                                            </div>
-
-                                            <div class="form-group admin-form__full">
-                                                <label for="image-${weapon.id}">
-                                                    Remplacer l’image
-                                                </label>
-
-                                                <input type="file"
-                                                       id="image-${weapon.id}"
-                                                       name="image"
-                                                       accept="image/jpeg,image/png,image/webp">
-
-                                                <small>
-                                                    Laissez vide pour conserver l’image actuelle.
-                                                </small>
-                                            </div>
-
-                                        </div>
-
-                                        <sec:csrfInput/>
-
-                                        <div class="admin-form__actions">
-                                            <button type="submit">
-                                                Enregistrer
-                                            </button>
-                                        </div>
-
-                                    </form>
-
-                                </div>
-
-                            </details>
-
-                            <button type="button"
-                                    class="btn-delete"
-                                    onclick="openDeleteDialog('${weapon.id}')">
-                                Supprimer
-                            </button>
-
-                            <dialog id="delete-dialog-${weapon.id}"
-                                    class="admin-dialog">
-
-                                <div class="admin-dialog__content">
-
-                                    <h3>Supprimer le produit</h3>
-
-                                    <p>
-                                        Voulez-vous supprimer
-                                        <strong>${weapon.name}</strong> ?
-                                    </p>
-
-                                    <p class="admin-dialog__warning">
-                                        Cette action est définitive.
-                                    </p>
-
-                                    <div class="admin-dialog__actions">
-
-                                        <button type="button"
-                                                class="btn"
-                                                onclick="closeDeleteDialog('${weapon.id}')">
-                                            Annuler
-                                        </button>
+                                        <h3>
+                                            Modifier ${weapon.name}
+                                        </h3>
 
                                         <form method="post"
-                                              action="<c:url value='/admin/remove/${weapon.id}'/>">
+                                              action="<c:url value='/admin/weapons/update/${weapon.id}'/>"
+                                              enctype="multipart/form-data"
+                                              class="admin-product-form form--light">
+
+                                            <div class="admin-product-form__grid">
+
+                                                <div class="form-group">
+                                                    <label for="name-${weapon.id}">
+                                                        Nom
+                                                    </label>
+
+                                                    <input type="text"
+                                                           id="name-${weapon.id}"
+                                                           name="name"
+                                                           value="${weapon.name}"
+                                                           maxlength="150"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="reference-${weapon.id}">
+                                                        Référence
+                                                    </label>
+
+                                                    <input type="text"
+                                                           id="reference-${weapon.id}"
+                                                           name="reference"
+                                                           value="${weapon.reference}"
+                                                           maxlength="100"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="manufacturer-${weapon.id}">
+                                                        Fabricant
+                                                    </label>
+
+                                                    <input type="text"
+                                                           id="manufacturer-${weapon.id}"
+                                                           name="manufacturer"
+                                                           value="${weapon.manufacturer}"
+                                                           maxlength="100"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="category-${weapon.id}">
+                                                        Catégorie
+                                                    </label>
+
+                                                    <select id="category-${weapon.id}"
+                                                            name="categoryId"
+                                                            required>
+
+                                                        <c:forEach var="category"
+                                                                   items="${categories}">
+
+                                                            <option value="${category.id}"
+                                                                <c:if test="${weapon.category.id == category.id}">
+                                                                    selected
+                                                                </c:if>>
+
+                                                                ${category.name}
+
+                                                            </option>
+
+                                                        </c:forEach>
+
+                                                    </select>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="price-${weapon.id}">
+                                                        Prix
+                                                    </label>
+
+                                                    <input type="number"
+                                                           id="price-${weapon.id}"
+                                                           name="price"
+                                                           min="0"
+                                                           step="0.01"
+                                                           value="${weapon.price}"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="stock-${weapon.id}">
+                                                        Stock
+                                                    </label>
+
+                                                    <input type="number"
+                                                           id="stock-${weapon.id}"
+                                                           name="stock"
+                                                           min="0"
+                                                           value="${weapon.stock}"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group admin-product-form__full">
+
+                                                    <label for="description-${weapon.id}">
+                                                        Description
+                                                    </label>
+
+                                                    <textarea id="description-${weapon.id}"
+                                                              name="description"
+                                                              rows="4"
+                                                              maxlength="1000"
+                                                              required>${weapon.description}</textarea>
+
+                                                </div>
+
+
+                                                <div class="form-group admin-product-form__full">
+
+                                                    <label for="image-${weapon.id}">
+                                                        Remplacer l'image
+                                                    </label>
+
+                                                    <input type="file"
+                                                           id="image-${weapon.id}"
+                                                           name="image"
+                                                           accept="image/jpeg,image/png,image/webp">
+
+                                                    <small>
+                                                        Laissez vide pour conserver l'image actuelle.
+                                                    </small>
+
+                                                </div>
+
+                                            </div>
 
                                             <sec:csrfInput/>
 
-                                            <button type="submit"
-                                                    class="btn-delete">
-                                                Confirmer
-                                            </button>
+                                            <div class="admin-product-form__actions">
+
+                                                <button type="submit"
+                                                        class="btn btn--primary">
+                                                    Enregistrer
+                                                </button>
+
+                                            </div>
 
                                         </form>
 
                                     </div>
 
+                                </details>
+
+
+                                <button type="button"
+                                        class="btn btn--delete"
+                                        onclick="openDeleteDialog('${weapon.id}')">
+                                    Supprimer
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <%-- Delete confirmation dialog --%>
+
+                        <dialog id="delete-dialog-${weapon.id}"
+                                class="admin-dialog">
+
+                            <div class="admin-dialog__content">
+
+                                <h3>
+                                    Supprimer le produit
+                                </h3>
+
+                                <p>
+                                    Voulez-vous supprimer
+                                    <strong>${weapon.name}</strong> ?
+                                </p>
+
+                                <p class="admin-dialog__warning">
+                                    Cette action est définitive.
+                                </p>
+
+                                <div class="admin-dialog__actions">
+
+                                    <button type="button"
+                                            class="btn btn--primary"
+                                            onclick="closeDeleteDialog('${weapon.id}')">
+                                        Annuler
+                                    </button>
+
+                                    <form method="post"
+                                          action="<c:url value='/admin/remove/${weapon.id}'/>">
+
+                                        <sec:csrfInput/>
+
+                                        <button type="submit"
+                                                class="btn btn--delete">
+                                            Confirmer
+                                        </button>
+
+                                    </form>
+
                                 </div>
 
-                            </dialog>
+                            </div>
 
-                        </aside>
+                        </dialog>
 
                     </article>
 
@@ -595,6 +521,400 @@
     </c:choose>
 
 </section>
+
+<%-- =====================================================
+     PROMOTIONS
+     ===================================================== --%>
+
+<hr class="admin-separator">
+
+<section class="admin-promotions">
+
+    <div class="admin-promotions__header">
+
+        <h2>Promotions</h2>
+
+        <details class="admin-add-panel">
+
+            <summary class="btn btn--primary">
+                Ajouter une promotion
+            </summary>
+
+            <div class="admin-add-panel__content">
+
+                <h3>Nouvelle promotion</h3>
+
+                <form method="post"
+                      action="<c:url value='/admin/promotions/add'/>"
+                      class="admin-product-form form--light">
+
+                    <div class="admin-product-form__grid">
+
+                        <div class="form-group">
+                            <label for="promoTitle">
+                                Titre
+                            </label>
+
+                            <input type="text"
+                                   id="promoTitle"
+                                   name="title"
+                                   maxlength="150"
+                                   required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="promoDiscount">
+                                Réduction (%)
+                            </label>
+
+                            <input type="number"
+                                   id="promoDiscount"
+                                   name="discountPercentage"
+                                   min="0"
+                                   max="100"
+                                   step="0.01">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="promoStart">
+                                Date de début
+                            </label>
+
+                            <input type="date"
+                                   id="promoStart"
+                                   name="startDate">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="promoEnd">
+                                Date de fin
+                            </label>
+
+                            <input type="date"
+                                   id="promoEnd"
+                                   name="endDate">
+                        </div>
+
+
+                        <div class="form-group admin-product-form__full form--light">
+
+                            <label for="promoDescription">
+                                Description
+                            </label>
+
+                            <textarea id="promoDescription"
+                                      name="description"
+                                      rows="4"></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promoFreeDelivery">
+                                Livraison gratuite
+                            </label>
+
+                            <input type="checkbox"
+                                   id="promoFreeDelivery"
+                                   name="freeDelivery">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promoActive">
+                                Promotion active
+                            </label>
+
+                            <input type="checkbox"
+                                   id="promoActive"
+                                   name="active"
+                                   checked>
+
+                        </div>
+
+                    </div>
+
+                    <sec:csrfInput/>
+
+                    <div class="admin-product-form__actions">
+
+                        <button type="submit"
+                                class="btn btn--primary">
+                            Ajouter la promotion
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </details>
+
+    </div>
+
+
+    <%-- Promotion list --%>
+
+    <div class="admin-promotion-list">
+
+        <c:forEach var="promo"
+                   items="${promotions}">
+
+            <article class="admin-promo">
+
+                <div class="admin-promo__main">
+
+                    <h3>
+                        ${promo.title}
+                    </h3>
+
+                    <c:if test="${not empty promo.description}">
+                        <p>
+                            ${promo.description}
+                        </p>
+                    </c:if>
+
+
+                    <div class="admin-promo__metadata">
+
+                        <p>
+                            <strong>Réduction :</strong>
+
+                            <c:choose>
+
+                                <c:when test="${promo.discountPercentage != null}">
+                                    ${promo.discountPercentage} %
+                                </c:when>
+
+                                <c:otherwise>
+                                    Aucune
+                                </c:otherwise>
+
+                            </c:choose>
+                        </p>
+
+
+                        <p>
+                            <strong>Livraison gratuite :</strong>
+
+                            <c:choose>
+
+                                <c:when test="${promo.freeDelivery}">
+                                    Oui
+                                </c:when>
+
+                                <c:otherwise>
+                                    Non
+                                </c:otherwise>
+
+                            </c:choose>
+                        </p>
+
+
+                        <p>
+                            <strong>Début :</strong>
+
+                            <c:choose>
+                                <c:when test="${promo.startDate != null}">
+                                    ${promo.startDate}
+                                </c:when>
+                                <c:otherwise>
+                                    Non défini
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+
+
+                        <p>
+                            <strong>Fin :</strong>
+
+                            <c:choose>
+                                <c:when test="${promo.endDate != null}">
+                                    ${promo.endDate}
+                                </c:when>
+                                <c:otherwise>
+                                    Non définie
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+
+
+                        <p>
+                            <strong>Statut :</strong>
+
+                            <c:choose>
+
+                                <c:when test="${promo.active}">
+                                    Active
+                                </c:when>
+
+                                <c:otherwise>
+                                    Inactive
+                                </c:otherwise>
+
+                            </c:choose>
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <%-- Editable promotion --%>
+
+                <form method="post"
+                      action="<c:url value='/admin/promotions/update/${promo.id}'/>"
+                      class="admin-product-form form--light">
+
+                    <div class="admin-product-form__grid">
+
+                        <div class="form-group">
+
+                            <label for="promo-title-${promo.id}">
+                                Titre
+                            </label>
+
+                            <input type="text"
+                                   id="promo-title-${promo.id}"
+                                   name="title"
+                                   value="${promo.title}"
+                                   maxlength="150"
+                                   required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-discount-${promo.id}">
+                                Réduction (%)
+                            </label>
+
+                            <input type="number"
+                                   id="promo-discount-${promo.id}"
+                                   name="discountPercentage"
+                                   value="${promo.discountPercentage}"
+                                   min="0"
+                                   max="100"
+                                   step="0.01">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-start-${promo.id}">
+                                Date de début
+                            </label>
+
+                            <input type="date"
+                                   id="promo-start-${promo.id}"
+                                   name="startDate"
+                                   value="${promo.startDate}">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-end-${promo.id}">
+                                Date de fin
+                            </label>
+
+                            <input type="date"
+                                   id="promo-end-${promo.id}"
+                                   name="endDate"
+                                   value="${promo.endDate}">
+
+                        </div>
+
+
+                        <div class="form-group admin-product-form__full">
+
+                            <label for="promo-description-${promo.id}">
+                                Description
+                            </label>
+
+                            <textarea id="promo-description-${promo.id}"
+                                      name="description"
+                                      rows="4">${promo.description}</textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-free-delivery-${promo.id}">
+                                Livraison gratuite
+                            </label>
+
+                            <input type="checkbox"
+                                   id="promo-free-delivery-${promo.id}"
+                                   name="freeDelivery"
+                                   <c:if test="${promo.freeDelivery}">checked</c:if>>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-active-${promo.id}">
+                                Promotion active
+                            </label>
+
+                            <input type="checkbox"
+                                   id="promo-active-${promo.id}"
+                                   name="active"
+                                   <c:if test="${promo.active}">checked</c:if>>
+
+                        </div>
+
+                    </div>
+
+                    <sec:csrfInput/>
+
+                    <div class="admin-product-form__actions">
+
+                        <button type="submit"
+                                class="btn btn--primary">
+                            Enregistrer
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                <%-- Delete promotion --%>
+
+                <form method="post"
+                      action="<c:url value='/admin/promotions/remove/${promo.id}'/>"
+                      class="admin-promo__delete">
+
+                    <sec:csrfInput/>
+
+                    <button type="submit"
+                            class="btn btn--delete">
+                        Supprimer
+                    </button>
+
+                </form>
+
+            </article>
+
+        </c:forEach>
+
+    </div>
+
+</section>
+
 
 <script>
     function openDeleteDialog(weaponId) {
@@ -621,5 +941,35 @@
         if (event.target.classList.contains("admin-dialog")) {
             event.target.close();
         }
+    });
+    document.querySelectorAll(".admin-add-panel").forEach(function (panel) {
+        panel.addEventListener("mouseleave", function () {
+            panel.removeAttribute("open");
+        });
+    });
+    document.querySelectorAll(".admin-product-edit").forEach(function (panel) {
+
+        panel.addEventListener("toggle", function () {
+
+            if (!panel.open) {
+                return;
+            }
+
+            document
+                .querySelectorAll(".admin-product-edit[open]")
+                .forEach(function (otherPanel) {
+
+                    if (otherPanel !== panel) {
+                        otherPanel.removeAttribute("open");
+                    }
+
+                });
+
+        });
+
+        panel.addEventListener("mouseleave", function () {
+            panel.removeAttribute("open");
+        });
+
     });
 </script>

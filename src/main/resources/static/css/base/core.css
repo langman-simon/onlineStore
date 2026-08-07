@@ -2,37 +2,37 @@
 
 :root {
     /* Surfaces */
-    --ink:          #12100c;   /* chrome sombre : nav, footer, hero */
-    --ink-soft:     #1c1712;   /* surface sombre élevée : menus, panneaux admin */
-    --paper:        #f6f0e4;   /* fond général du site, parchemin */
-    --panel:        #fffcf6;   /* cartes, panneaux clairs */
-    --panel-alt:    #efe4cd;   /* survol / alternance de lignes */
+    --ink:          #12100c;   /* dark chrome: nav, footer, hero */
+    --ink-soft:     #1c1712;   /* elevated dark surface: menus, admin panels */
+    --paper:        #f6f0e4;   /* global site background, parchment */
+    --panel:        #fffcf6;   /* cards and light panels */
+    --panel-alt:    #efe4cd;   /* hover and alternating rows */
 
-    /* Or & filets */
-    --gold:         #a67c3d;   /* or bruni — accents, bordures */
-    --gold-bright:  #c99a54;   /* or clair — survol */
-    --gold-deep:    #7a5726;   /* or profond — texte sur fond clair */
-    --gold-on-dark: #d8b26f;   /* or lumineux — texte sur fond sombre */
-    --rule:         rgba(166, 124, 61, 0.35); /* filet fin */
+    /* Gold and rules */
+    --gold:         #a67c3d;   /* burnished gold: accents and borders */
+    --gold-bright:  #c99a54;   /* bright gold: hover */
+    --gold-deep:    #7a5726;   /* deep gold: text on light surfaces */
+    --gold-on-dark: #d8b26f;   /* bright gold: text on dark surfaces */
+    --rule:         rgba(166, 124, 61, 0.35); /* thin rule */
     --rule-soft:    rgba(166, 124, 61, 0.18);
 
-    /* Accent bordeaux (alertes, actions destructrices) */
+    /* Burgundy accent: alerts and destructive actions */
     --wine:         #6d2632;
     --wine-bright:  #8a3140;
     --wine-pale:    #f3dede;
 
-    /* Texte */
+    /* Text */
     --text:         #26201a;
     --text-muted:   #766b59;
     --cream:        #ece0c9;
     --muted-on-dark:#b4a488;
 
-    /* Ombres */
+    /* Shadows */
     --shadow-soft:  0 2px 10px rgba(18, 16, 12, 0.10);
     --shadow-lift:  0 14px 34px rgba(18, 16, 12, 0.18);
     --shadow-deep:  0 22px 55px rgba(0, 0, 0, 0.38);
 
-    /* Typographie */
+    /* Typography */
     --font-display: 'Fraunces', 'Iowan Old Style', serif;
     --font-body:    'Work Sans', 'Segoe UI', sans-serif;
 
@@ -80,7 +80,7 @@ h3 { font-size: 1.25rem; }
 
 p { color: var(--text); }
 
-/* Petit libellé "chapeau" en capitales espacées — utilisé au-dessus des titres */
+/* Small uppercase eyebrow label used above headings */
 .eyebrow {
     display: inline-block;
     margin: 0 0 0.6rem;
@@ -94,7 +94,7 @@ p { color: var(--text); }
 
 .eyebrow--on-dark { color: var(--gold-on-dark); }
 
-/* Filet-signature : ligne fine + losange, motif répété comme séparateur de section */
+/* Signature divider: thin line and diamond used between sections */
 .ornament-divider {
     display: flex;
     align-items: center;

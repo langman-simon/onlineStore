@@ -99,7 +99,34 @@ public class CartController {
         model.addAttribute("finalPrice", finalPrice);
         model.addAttribute("freeDelivery", freeDelivery);
         model.addAttribute("standardDeliveryFee", new BigDecimal("500.00"));
+        model.addAttribute("authenticated", authenticated);
 
+        BigDecimal freeDeliveryThreshold = promotionService.getFreeDeliveryThreshold();
+        BigDecimal remainingForFreeDelivery = freeDelivery
+                ? BigDecimal.ZERO
+                : freeDeliveryThreshold.subtract(originalPrice).max(BigDecimal.ZERO);
+
+        BigDecimal tier2Threshold = promotionService.getTier2Threshold();
+        BigDecimal tier3Threshold = promotionService.getTier3Threshold();
+
+        BigDecimal remainingForNextTier;
+        BigDecimal nextTierRate;
+
+        if (originalPrice.compareTo(tier3Threshold) >= 0) {
+            // déjà au meilleur palier
+            remainingForNextTier = null;
+            nextTierRate = null;
+        } else if (originalPrice.compareTo(tier2Threshold) >= 0) {
+            remainingForNextTier = tier3Threshold.subtract(originalPrice);
+            nextTierRate = promotionService.getTier3RatePercent();
+        } else {
+            remainingForNextTier = tier2Threshold.subtract(originalPrice);
+            nextTierRate = promotionService.getTier2RatePercent();
+        }
+
+        model.addAttribute("remainingForFreeDelivery", remainingForFreeDelivery);
+        model.addAttribute("remainingForNextTier", remainingForNextTier);
+        model.addAttribute("nextTierRate", nextTierRate);
         return "template/template";
     }
 
