@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import com.hyperion.service.GlobalBannerService;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
 
@@ -17,9 +19,14 @@ import java.util.Optional;
 public class ProfileController {
 
     private final UserService userService;
+    private final GlobalBannerService globalBannerService;
 
-    public ProfileController(UserService userService) {
+    public ProfileController(
+            UserService userService,
+            GlobalBannerService globalBannerService
+    ) {
         this.userService = userService;
+        this.globalBannerService = globalBannerService;
     }
 
     @GetMapping("/account")
@@ -38,40 +45,56 @@ public class ProfileController {
     }
 
     @PostMapping("/account")
-    public String updateAccount(Authentication authentication,
-                                @RequestParam String login,
-                                @RequestParam String lastName,
-                                @RequestParam String firstName,
-                                @RequestParam String deliveryAddress,
-                                @RequestParam String email,
-                                @RequestParam String phone,
-                                @RequestParam(required = false) String secondaryPhone,
-                                Model model) {
+    public String updateAccount(
+            Authentication authentication,
+            @RequestParam String login,
+            @RequestParam String lastName,
+            @RequestParam String firstName,
+            @RequestParam String deliveryAddress,
+            @RequestParam String email,
+            @RequestParam String phone,
+            @RequestParam(required = false) String secondaryPhone,
+            HttpSession session
+    ) {
         String currentLogin = authentication.getName();
 
         try {
-            userService.updateProfile(currentLogin, login, lastName, firstName, deliveryAddress, email, phone, secondaryPhone);
-
-            // Rafraîchit la session Spring Security avec le nouveau login
-            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+            userService.updateProfile(
+                    currentLogin,
                     login,
-                    authentication.getCredentials(),
-                    authentication.getAuthorities()
+                    lastName,
+                    firstName,
+                    deliveryAddress,
+                    email,
+                    phone,
+                    secondaryPhone
             );
-            SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("title", "Mon compte");
-            model.addAttribute("body", "/WEB-INF/jsp/account/account.jsp");
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("user", userService.findByLogin(currentLogin).get());
-            return "template/template";
+            // Refresh Spring Security authentication with the new login
+            Authentication newAuth =
+                    new UsernamePasswordAuthenticationToken(
+                            login,
+                            authentication.getCredentials(),
+                            authentication.getAuthorities()
+                    );
+
+            SecurityContextHolder
+                    .getContext()
+                    .setAuthentication(newAuth);
+
+            globalBannerService.success(
+                    session,
+                    "Profile updated successfully"
+            );
+
+        } catch (IllegalArgumentException exception) {
+
+            globalBannerService.error(
+                    session,
+                    exception.getMessage()
+            );
         }
 
-        model.addAttribute("success", "Profile updated successfully");
-        model.addAttribute("user", userService.findByLogin(login).get());
-        model.addAttribute("title", "Mon compte");
-        model.addAttribute("body", "/WEB-INF/jsp/account/account.jsp");
-        return "template/template";
+        return "redirect:/account";
     }
 }

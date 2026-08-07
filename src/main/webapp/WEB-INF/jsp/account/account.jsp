@@ -11,18 +11,6 @@
             <p>Modifiez vos informations personnelles et vos coordonnées.</p>
         </header>
 
-        <c:if test="${not empty success}">
-            <p class="form-message form-message--success">
-                    ${success}
-            </p>
-        </c:if>
-
-        <c:if test="${not empty error}">
-            <p class="form-message form-message--error">
-                    ${error}
-            </p>
-        </c:if>
-
         <form method="post"
               action="<c:url value='/account'/>"
               class="account-form">
