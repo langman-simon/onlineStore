@@ -602,6 +602,7 @@ Exemples possibles :
 - [ ] Éviter les messages d’erreur codés directement en dur
 
 ---
+// a faire 
 
 # ✅ Data Validation
 
