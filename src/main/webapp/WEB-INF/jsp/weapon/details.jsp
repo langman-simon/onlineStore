@@ -73,6 +73,14 @@
                         Retour au catalogue
                     </a>
 
+                    <sec:authorize access="isAuthenticated()">
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <a href="<c:url value='/admin'/>" class="btn btn--primary btn--large">
+                                Administration
+                            </a>
+                        </sec:authorize>
+                    </sec:authorize>
+
                 </form>
             </c:when>
 
