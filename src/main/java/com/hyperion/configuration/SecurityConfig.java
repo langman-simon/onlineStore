@@ -63,6 +63,21 @@ public class SecurityConfig {
 
                         .anyRequest()
                         .permitAll()
+                ).exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+
+                            request.getSession().setAttribute(
+                                    "globalBannerMessage",
+                                    "Accès refusé. Vous ne disposez pas des droits nécessaires."
+                            );
+
+                            request.getSession().setAttribute(
+                                    "globalBannerType",
+                                    "error"
+                            );
+
+                            response.sendRedirect("/");
+                        })
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
