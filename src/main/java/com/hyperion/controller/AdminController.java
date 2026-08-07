@@ -1,10 +1,12 @@
 package com.hyperion.controller;
 
 import com.hyperion.model.Category;
+import com.hyperion.model.Promotion;
 import com.hyperion.model.Weapon;
 import com.hyperion.repository.CategoryRepository;
 import com.hyperion.repository.WeaponRepository;
 import com.hyperion.service.ImageStorageService;
+import com.hyperion.service.PromotionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,15 +29,18 @@ public class AdminController {
     private final WeaponRepository weaponRepository;
     private final CategoryRepository categoryRepository;
     private final ImageStorageService imageStorageService;
+    private final PromotionService promotionService;
 
     public AdminController(
             WeaponRepository weaponRepository,
             CategoryRepository categoryRepository,
-            ImageStorageService imageStorageService
+            ImageStorageService imageStorageService,
+            PromotionService promotionService
     ) {
         this.weaponRepository = weaponRepository;
         this.categoryRepository = categoryRepository;
         this.imageStorageService = imageStorageService;
+        this.promotionService = promotionService;
     }
 
     @GetMapping
@@ -56,6 +62,7 @@ public class AdminController {
         model.addAttribute("weapons", weapons);
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("promotions", promotionService.findAll());
         model.addAttribute(
                 "title",
                 "Administration du catalogue"
@@ -138,7 +145,7 @@ public class AdminController {
             redirectAttributes.addFlashAttribute(
                     "error",
                     "Une erreur est survenue pendant "
-                            + "l’ajout du produit."
+                            + "l'ajout du produit."
             );
         }
 
@@ -284,7 +291,7 @@ public class AdminController {
         if (weapon == null) {
             redirectAttributes.addFlashAttribute(
                     "error",
-                    "Le produit demandé n’existe pas."
+                    "Le produit demandé n'existe pas."
             );
 
             return "redirect:/admin";
@@ -311,11 +318,136 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    // --- Gestion des promotions ---
+
+    @PostMapping("/promotions/add")
+    public String addPromotion(
+            @RequestParam String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String discountPercentage,
+            @RequestParam(required = false, defaultValue = "false") boolean freeDelivery,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false, defaultValue = "true") boolean active,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            BigDecimal discount = parseDiscount(discountPercentage);
+
+            validatePromotionData(title, discount);
+
+            Promotion promotion = new Promotion();
+            promotion.setTitle(title.trim());
+            promotion.setDescription(description != null ? description.trim() : null);
+            promotion.setDiscountPercentage(discount);
+            promotion.setFreeDelivery(freeDelivery);
+            promotion.setStartDate(parseDate(startDate));
+            promotion.setEndDate(parseDate(endDate));
+            promotion.setActive(active);
+
+            promotionService.save(promotion);
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "La promotion \"" + promotion.getTitle() + "\" a été ajoutée."
+            );
+
+        } catch (IllegalArgumentException exception) {
+            redirectAttributes.addFlashAttribute("error", exception.getMessage());
+
+        } catch (Exception exception) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Une erreur est survenue pendant l'ajout de la promotion."
+            );
+        }
+
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/promotions/update/{promotionId}")
+    public String updatePromotion(
+            @PathVariable Long promotionId,
+            @RequestParam String title,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String discountPercentage,
+            @RequestParam(required = false, defaultValue = "false") boolean freeDelivery,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false, defaultValue = "true") boolean active,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            BigDecimal discount = parseDiscount(discountPercentage);
+
+            validatePromotionData(title, discount);
+
+            Promotion promotion = findPromotion(promotionId);
+
+            promotion.setTitle(title.trim());
+            promotion.setDescription(description != null ? description.trim() : null);
+            promotion.setDiscountPercentage(discount);
+            promotion.setFreeDelivery(freeDelivery);
+            promotion.setStartDate(parseDate(startDate));
+            promotion.setEndDate(parseDate(endDate));
+            promotion.setActive(active);
+
+            promotionService.save(promotion);
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "La promotion \"" + promotion.getTitle() + "\" a été modifiée."
+            );
+
+        } catch (IllegalArgumentException exception) {
+            redirectAttributes.addFlashAttribute("error", exception.getMessage());
+
+        } catch (Exception exception) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Une erreur est survenue pendant la modification de la promotion."
+            );
+        }
+
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/promotions/remove/{promotionId}")
+    public String removePromotion(
+            @PathVariable Long promotionId,
+            RedirectAttributes redirectAttributes
+    ) {
+        Optional<Promotion> promotion = promotionService.findById(promotionId);
+
+        if (promotion.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "La promotion demandée n'existe pas.");
+            return "redirect:/admin";
+        }
+
+        try {
+            promotionService.deleteById(promotionId);
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "La promotion \"" + promotion.get().getTitle() + "\" a été supprimée."
+            );
+
+        } catch (Exception exception) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Impossible de supprimer cette promotion."
+            );
+        }
+
+        return "redirect:/admin";
+    }
+
+    // --- Méthodes privées ---
+
     private Weapon findWeapon(Long weaponId) {
         return weaponRepository.findById(weaponId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "Le produit demandé n’existe pas."
+                                "Le produit demandé n'existe pas."
                         )
                 );
     }
@@ -325,8 +457,15 @@ public class AdminController {
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "La catégorie sélectionnée "
-                                        + "n’existe pas."
+                                        + "n'existe pas."
                         )
+                );
+    }
+
+    private Promotion findPromotion(Long promotionId) {
+        return promotionService.findById(promotionId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("La promotion demandée n'existe pas.")
                 );
     }
 
@@ -411,5 +550,41 @@ public class AdminController {
                     "Une image est obligatoire."
             );
         }
+    }
+
+    private void validatePromotionData(String title, BigDecimal discountPercentage) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Le titre de la promotion est obligatoire.");
+        }
+
+        if (title.trim().length() > 150) {
+            throw new IllegalArgumentException("Le titre ne peut pas dépasser 150 caractères.");
+        }
+
+        if (discountPercentage != null
+                && (discountPercentage.compareTo(BigDecimal.ZERO) < 0
+                || discountPercentage.compareTo(new BigDecimal("100")) > 0)) {
+            throw new IllegalArgumentException("Le pourcentage de réduction doit être compris entre 0 et 100.");
+        }
+    }
+
+    private BigDecimal parseDiscount(String discountPercentage) {
+        if (discountPercentage == null || discountPercentage.isBlank()) {
+            return null;
+        }
+
+        try {
+            return new BigDecimal(discountPercentage);
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("Le pourcentage de réduction est invalide.");
+        }
+    }
+
+    private LocalDate parseDate(String date) {
+        if (date == null || date.isBlank()) {
+            return null;
+        }
+
+        return LocalDate.parse(date);
     }
 }

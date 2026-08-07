@@ -29,6 +29,60 @@
         </div>
     </section>
 
+    <section class="home-section home-promo-banner">
+        <p class="eyebrow">Avantages fidélité</p>
+        <div class="ornament-divider"><span></span></div>
+        <h2>Plus vous commandez, plus vous économisez</h2>
+
+        <div class="home-features">
+
+            <article class="home-feature">
+                <h3>Livraison offerte</h3>
+                <p>
+                    Dès <strong>${freeDeliveryThreshold} €</strong> d'achat,
+                    la livraison ne vous coûte rien.
+                </p>
+            </article>
+
+            <article class="home-feature">
+                <h3>-${tier2Rate}% de réduction</h3>
+                <p>
+                    À partir de <strong>${tier2Threshold} €</strong>
+                    d'achat sur votre commande.
+                </p>
+            </article>
+
+            <article class="home-feature">
+                <h3>-${tier3Rate}% de réduction</h3>
+                <p>
+                    À partir de <strong>${tier3Threshold} €</strong>
+                    d'achat, notre meilleur taux.
+                </p>
+            </article>
+
+        </div>
+
+        <c:if test="${not empty promotions}">
+            <div class="home-active-promos">
+                <h3>Offres en cours</h3>
+
+                <c:forEach var="promo" items="${promotions}">
+                    <div class="home-promo-card">
+                        <strong>${promo.title}</strong>
+                        <p>${promo.description}</p>
+
+                    <c:if test="${promo.discountPercentage != null}">
+                        <span class="home-promo-badge">-${promo.discountPercentage}%</span>
+                    </c:if>
+
+                    <c:if test="${promo.freeDelivery}">
+                        <span class="home-promo-badge">Livraison offerte</span>
+                    </c:if>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
+    </section>
     <section class="home-section">
         <p class="eyebrow">Savoir-faire</p>
         <div class="ornament-divider"><span></span></div>

@@ -596,6 +596,186 @@
 
 </section>
 
+<%-- =====================================================
+     PROMOTIONS
+     ===================================================== --%>
+
+<hr class="admin-separator">
+
+<section class="admin-promotions">
+
+    <h2>Promotions</h2>
+
+    <details class="admin-add-panel">
+        <summary class="btn admin-add-panel__button">
+            Ajouter une promotion
+        </summary>
+
+        <div class="admin-add-panel__content">
+
+            <h3>Nouvelle promotion</h3>
+
+            <form method="post" action="<c:url value='/admin/promotions/add'/>" class="admin-form">
+
+                <div class="admin-form__grid">
+
+                    <div class="form-group">
+                        <label for="promoTitle">Titre</label>
+                        <input type="text" id="promoTitle" name="title" maxlength="150" required>
+                    </div>
+
+                    <div class="form-group admin-form__full">
+                        <label for="promoDescription">Description</label>
+                        <textarea id="promoDescription" name="description" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="promoDiscount">Réduction (%)</label>
+                        <input type="number" id="promoDiscount" name="discountPercentage" min="0" max="100" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="promoFreeDelivery">Livraison gratuite</label>
+                        <input type="checkbox" id="promoFreeDelivery" name="freeDelivery">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="promoStart">Date début</label>
+                        <input type="date" id="promoStart" name="startDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="promoEnd">Date fin</label>
+                        <input type="date" id="promoEnd" name="endDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="promoActive">Active</label>
+                        <input type="checkbox" id="promoActive" name="active" checked>
+                    </div>
+
+                </div>
+
+                <sec:csrfInput/>
+
+                <div class="admin-form__actions">
+                    <button type="submit">Ajouter la promotion</button>
+                </div>
+
+            </form>
+
+        </div>
+    </details>
+
+    <h3>Liste des promotions</h3>
+
+    <c:forEach var="promo" items="${promotions}">
+        <article class="admin-promo">
+
+            <div class="admin-promo__main">
+
+                <h4>${promo.title}</h4>
+
+                <p>${promo.description}</p>
+
+                <p>
+                    Réduction :
+                    <c:choose>
+                        <c:when test="${promo.discountPercentage != null}">
+                            ${promo.discountPercentage}%
+                        </c:when>
+                        <c:otherwise>
+                            Aucune
+                        </c:otherwise>
+                    </c:choose>
+                </p>
+
+                <p>
+                    Livraison gratuite :
+                    <c:if test="${promo.freeDelivery}">Oui</c:if>
+                    <c:if test="${!promo.freeDelivery}">Non</c:if>
+                </p>
+
+                <p>
+                    Valable du ${promo.startDate} au ${promo.endDate}
+                </p>
+
+            </div>
+
+            <details class="admin-edit">
+                <summary class="btn">Modifier</summary>
+
+                <div class="admin-edit__content">
+
+                    <h3>Modifier ${promo.title}</h3>
+
+                    <form method="post" action="<c:url value='/admin/promotions/update/${promo.id}'/>" class="admin-form">
+
+                        <div class="admin-form__grid">
+
+                            <div class="form-group">
+                                <label>Titre</label>
+                                <input type="text" name="title" value="${promo.title}" required>
+                            </div>
+
+                            <div class="form-group admin-form__full">
+                                <label>Description</label>
+                                <textarea name="description">${promo.description}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Réduction (%)</label>
+                                <input type="number" name="discountPercentage"
+                                       value="${promo.discountPercentage}"
+                                       min="0" max="100" step="0.01">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Livraison gratuite</label>
+                                <input type="checkbox" name="freeDelivery"
+                                       <c:if test="${promo.freeDelivery}">checked</c:if>>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date début</label>
+                                <input type="date" name="startDate" value="${promo.startDate}">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date fin</label>
+                                <input type="date" name="endDate" value="${promo.endDate}">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Active</label>
+                                <input type="checkbox" name="active"
+                                       <c:if test="${promo.active}">checked</c:if>>
+                            </div>
+
+                        </div>
+
+                        <sec:csrfInput/>
+
+                        <div class="admin-form__actions">
+                            <button type="submit">Modifier</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </details>
+
+            <form method="post" action="<c:url value='/admin/promotions/remove/${promo.id}'/>">
+                <sec:csrfInput/>
+                <button type="submit" class="btn-delete">Supprimer</button>
+            </form>
+
+        </article>
+    </c:forEach>
+
+</section>
+
+
 <script>
     function openDeleteDialog(weaponId) {
         const dialog = document.getElementById(

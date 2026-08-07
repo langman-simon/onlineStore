@@ -120,7 +120,7 @@
             </p>
         </div>
 
-        <div class="promo-summary">
+<div class="promo-summary">
     <h2>Promotions appliquées</h2>
 
     <c:if test="${discountAmount > 0}">
@@ -146,6 +146,34 @@
         </c:otherwise>
     </c:choose>
 
+ <hr>
+
+    <c:choose>
+        <c:when test="${authenticated}">
+
+            <c:if test="${not empty remainingForFreeDelivery && remainingForFreeDelivery > 0}">
+                <p class="promo-incentive">
+                    Plus que <strong>${remainingForFreeDelivery} €</strong>
+                    d'achat pour bénéficier de la livraison offerte !
+                </p>
+            </c:if>
+
+            <c:if test="${not empty remainingForNextTier}">
+                <p class="promo-incentive">
+                    Plus que <strong>${remainingForNextTier} €</strong>
+                    d'achat pour passer à <strong>-${nextTierRate}%</strong> de réduction !
+                </p>
+            </c:if>
+
+        </c:when>
+        <c:otherwise>
+            <p class="promo-incentive">
+                <a href="<c:url value='/login'/>">Connectez-vous</a>
+                pour bénéficier des réductions fidélité et de la livraison offerte.
+            </p>
+        </c:otherwise>
+    </c:choose>
+
     <hr>
 
     <p>
@@ -153,7 +181,6 @@
         ${finalPrice} €
     </p>
 </div>
-
 
 <div class="cart-actions">
 

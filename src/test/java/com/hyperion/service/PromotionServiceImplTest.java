@@ -1,6 +1,9 @@
 package com.hyperion.service;
 
+import com.hyperion.repository.PromotionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
@@ -9,7 +12,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PromotionServiceImplTest {
 
-    private final PromotionServiceImpl promotionService = new PromotionServiceImpl();
+    private PromotionRepository promotionRepository;
+    private PromotionServiceImpl promotionService;
+
+    @BeforeEach
+    void setup() {
+        // On mock le repository car ton service en a besoin
+        promotionRepository = Mockito.mock(PromotionRepository.class);
+        promotionService = new PromotionServiceImpl(promotionRepository);
+    }
 
     // --- calculateDiscount ---
 
@@ -37,7 +48,6 @@ class PromotionServiceImplTest {
 
         BigDecimal discount = promotionService.calculateDiscount(cartTotal, true);
 
-        // 10% de 20000 = 2000.00
         assertThat(discount).isEqualByComparingTo("2000.00");
     }
 
@@ -56,7 +66,6 @@ class PromotionServiceImplTest {
 
         BigDecimal discount = promotionService.calculateDiscount(cartTotal, true);
 
-        // 15% de 100000 = 15000.00
         assertThat(discount).isEqualByComparingTo("15000.00");
     }
 
@@ -129,7 +138,6 @@ class PromotionServiceImplTest {
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, true);
 
-        // 1000 - 0 (pas de réduction) + 500 (livraison) = 1500.00
         assertThat(finalPrice).isEqualByComparingTo("1500.00");
     }
 
@@ -139,7 +147,6 @@ class PromotionServiceImplTest {
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, true);
 
-        // 5000 - 0 + 0 = 5000.00
         assertThat(finalPrice).isEqualByComparingTo("5000.00");
     }
 
@@ -149,7 +156,6 @@ class PromotionServiceImplTest {
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, true);
 
-        // 20000 - 2000 (10%) + 0 (livraison offerte) = 18000.00
         assertThat(finalPrice).isEqualByComparingTo("18000.00");
     }
 
@@ -159,7 +165,6 @@ class PromotionServiceImplTest {
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, true);
 
-        // 100000 - 15000 (15%) + 0 = 85000.00
         assertThat(finalPrice).isEqualByComparingTo("85000.00");
     }
 
@@ -169,7 +174,6 @@ class PromotionServiceImplTest {
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, false);
 
-        // 20000 - 0 + 500 (livraison payante) = 20500.00
         assertThat(finalPrice).isEqualByComparingTo("20500.00");
     }
 
