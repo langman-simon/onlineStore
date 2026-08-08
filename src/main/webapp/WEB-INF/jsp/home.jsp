@@ -25,6 +25,13 @@
                 <a class="btn btn--primary btn--large" href="<c:url value='/cart'/>">
                     Accéder à votre panier
                 </a>
+                <sec:authorize access="isAuthenticated()">
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <a href="<c:url value='/admin'/>" class="btn btn--primary btn--large">
+                            Administration
+                        </a>
+                    </sec:authorize>
+                </sec:authorize>
             </div>
         </div>
     </section>
