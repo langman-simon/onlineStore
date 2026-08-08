@@ -38,6 +38,7 @@
                         <input id="firstName"
                                type="text"
                                name="firstName"
+                               value="${registrationForm.firstName}"
                                placeholder="Votre prénom"
                                autocomplete="given-name"
                                required
@@ -54,6 +55,7 @@
                         <input id="lastName"
                                type="text"
                                name="lastName"
+                               value="${registrationForm.lastName}"
                                placeholder="Votre nom"
                                autocomplete="family-name"
                                required>
@@ -69,6 +71,7 @@
                         <input id="username"
                                type="text"
                                name="username"
+                               value="${registrationForm.username}"
                                placeholder="Choisissez un pseudo"
                                autocomplete="username"
                                required>
@@ -84,6 +87,7 @@
                         <input id="email"
                                type="email"
                                name="email"
+                               value="${registrationForm.email}"
                                placeholder="exemple@hyperion.com"
                                autocomplete="email"
                                required>
@@ -129,6 +133,7 @@
                         <input id="deliveryAddress"
                                type="text"
                                name="deliveryAddress"
+                               value="${registrationForm.deliveryAddress}"
                                placeholder="Rue, numéro, ville et code postal"
                                autocomplete="street-address"
                                required>
@@ -144,6 +149,7 @@
                         <input id="phone"
                                type="tel"
                                name="phone"
+                               value="${registrationForm.phone}"
                                placeholder="Numéro principal"
                                autocomplete="tel"
                                required>
@@ -162,6 +168,7 @@
                         <input id="secondaryPhone"
                                type="tel"
                                name="secondaryPhone"
+                               value="${registrationForm.secondaryPhone}"
                                placeholder="Numéro secondaire"
                                autocomplete="tel">
 
