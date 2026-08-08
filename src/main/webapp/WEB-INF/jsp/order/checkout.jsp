@@ -90,16 +90,16 @@
 
                     <sec:csrfInput/>
 
-                    <button type="submit" class="btn btn--selector btn--primary">
+                    <button type="submit" class="btn btn--primary btn--large">
                         Confirmer la commande
                     </button>
                 </form>
 
-                <a class="btn btn--selector btn--secondary" href="<c:url value='/cart'/>">
+                <a class="btn btn--primary btn--large" href="<c:url value='/cart'/>">
                     Retour au panier
                 </a>
 
-                <a class="btn btn--selector btn--secondary" href="<c:url value='/catalogue'/>">
+                <a class="btn btn--primary btn--large" href="<c:url value='/catalogue'/>">
                     Retour au catalogue
                 </a>
 

@@ -23,15 +23,20 @@
 
             </div>
 
+
             <form method="post"
                   action="<c:url value='/login'/>"
                   class="auth-form">
 
-                  <c:if test="${not empty param.redirect}">
-                        <input type="hidden"
-                               name="redirect"
-                               value="<c:out value='${param.redirect}'/>">
-                  </c:if>
+
+                <c:if test="${not empty param.redirect}">
+
+                    <input type="hidden"
+                           name="redirect"
+                           value="<c:out value='${param.redirect}'/>">
+
+                </c:if>
+
 
                 <div class="form-group">
 
@@ -49,6 +54,7 @@
 
                 </div>
 
+
                 <div class="form-group">
 
                     <label for="password">
@@ -64,7 +70,9 @@
 
                 </div>
 
+
                 <sec:csrfInput/>
+
 
                 <button type="submit"
                         class="btn btn--primary btn--full">
@@ -72,6 +80,7 @@
                 </button>
 
             </form>
+
 
             <div class="auth-footer">
 
