@@ -1,7 +1,6 @@
 package com.hyperion.configuration;
 
 import com.hyperion.service.GlobalBannerService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +25,7 @@ public class GlobalAccessDeniedHandler implements AccessDeniedHandler {
             HttpServletRequest request,
             HttpServletResponse response,
             AccessDeniedException accessDeniedException
-    ) throws IOException, ServletException {
+    ) throws IOException {
 
         globalBannerService.error(
                 request.getSession(),

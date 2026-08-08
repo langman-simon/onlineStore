@@ -167,10 +167,18 @@
 
         </c:when>
         <c:otherwise>
-            <p class="promo-incentive">
-                <a href="<c:url value='/login'/>">Connectez-vous</a>
-                pour bénéficier des réductions fidélité et de la livraison offerte.
-            </p>
+            <c:url var="loginFromCartUrl" value="/login">
+                <c:param name="redirect" value="/cart"/>
+            </c:url>
+
+            <span>
+                Connectez vous pour bénéficier des promotions !
+            </span>
+
+            <a href="${loginFromCartUrl}"
+               class="link--accent">
+                Se connecter
+            </a>
         </c:otherwise>
     </c:choose>
 
@@ -183,6 +191,20 @@
 </div>
 
 <div class="cart-actions">
+
+    <form method="post"
+          action="<c:url value='/order/confirm'/>">
+
+        <input type="hidden"
+               name="${_csrf.parameterName}"
+               value="${_csrf.token}">
+
+        <button type="submit"
+                class="btn btn--primary">
+            Continuer vers la commande
+        </button>
+
+    </form>
 
     <a href="<c:url value='/catalogue'/>"
        class="btn btn--primary">
@@ -199,20 +221,6 @@
         <button type="submit"
                 class="btn btn--delete">
             Vider le panier
-        </button>
-
-    </form>
-
-    <form method="post"
-          action="<c:url value='/order/confirm'/>">
-
-        <input type="hidden"
-               name="${_csrf.parameterName}"
-               value="${_csrf.token}">
-
-        <button type="submit"
-                class="btn btn--primary">
-            Continuer vers la commande
         </button>
 
     </form>

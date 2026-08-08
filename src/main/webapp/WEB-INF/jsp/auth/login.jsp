@@ -27,6 +27,12 @@
                   action="<c:url value='/login'/>"
                   class="auth-form">
 
+                  <c:if test="${not empty param.redirect}">
+                        <input type="hidden"
+                               name="redirect"
+                               value="<c:out value='${param.redirect}'/>">
+                  </c:if>
+
                 <div class="form-group">
 
                     <label for="username">

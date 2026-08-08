@@ -1,31 +1,34 @@
 package com.hyperion.configuration;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 
 @Configuration
 public class SecurityConfig {
 
     private final LoginSuccessHandler loginSuccessHandler;
-    private final LogoutSuccessHandler logoutSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
+    private final LogoutSuccessHandler logoutSuccessHandler;
+    private final GlobalAccessDeniedHandler globalAccessDeniedHandler;
 
     public SecurityConfig(
             LoginSuccessHandler loginSuccessHandler,
+            LoginFailureHandler loginFailureHandler,
             LogoutSuccessHandler logoutSuccessHandler,
-            LoginFailureHandler loginFailureHandler
+            GlobalAccessDeniedHandler globalAccessDeniedHandler
     ) {
         this.loginSuccessHandler = loginSuccessHandler;
-        this.logoutSuccessHandler = logoutSuccessHandler;
         this.loginFailureHandler = loginFailureHandler;
+        this.logoutSuccessHandler = logoutSuccessHandler;
+        this.globalAccessDeniedHandler = globalAccessDeniedHandler;
     }
 
     @Bean
@@ -46,10 +49,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(
+            HttpSecurity http
+    ) throws Exception {
+
         http
                 .authorizeHttpRequests(auth -> auth
-
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")
 
@@ -59,25 +64,14 @@ public class SecurityConfig {
                         )
                         .authenticated()
 
-                        .requestMatchers("/cart/**").permitAll()
+                        .requestMatchers("/cart/**")
+                        .permitAll()
 
                         .anyRequest()
                         .permitAll()
-                ).exceptionHandling(exception -> exception
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-
-                            request.getSession().setAttribute(
-                                    "globalBannerMessage",
-                                    "Accès refusé. Vous ne disposez pas des droits nécessaires."
-                            );
-
-                            request.getSession().setAttribute(
-                                    "globalBannerType",
-                                    "error"
-                            );
-
-                            response.sendRedirect("/");
-                        })
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(globalAccessDeniedHandler)
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

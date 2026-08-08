@@ -38,17 +38,14 @@ public class LogoutSuccessHandler
 
         HttpSession session = request.getSession(true);
 
-        if (username == null || username.isBlank()) {
-            globalBannerService.success(
-                    session,
-                    "Déconnexion réussie. Au revoir !"
-            );
-        } else {
-            globalBannerService.success(
-                    session,
-                    "Déconnexion réussie. Au revoir " + username + " !"
-            );
-        }
+        String message = username == null || username.isBlank()
+                ? "Déconnexion réussie. Au revoir !"
+                : "Déconnexion réussie. Au revoir " + username + " !";
+
+        globalBannerService.success(
+                session,
+                message
+        );
 
         super.onLogoutSuccess(
                 request,

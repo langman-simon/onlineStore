@@ -13,9 +13,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public InternalResourceViewResolver viewResolver() {
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        InternalResourceViewResolver resolver =
+                new InternalResourceViewResolver();
+
         resolver.setPrefix("/WEB-INF/jsp/");
         resolver.setSuffix(".jsp");
+
         return resolver;
     }
 
@@ -32,5 +35,4 @@ public class WebConfig implements WebMvcConfigurer {
                         uploadDirectory.toUri().toString()
                 );
     }
-
 }

@@ -1,12 +1,12 @@
 # Problème répertoriés
-- home.jsp cliquer sur une catégorie proposée ramène sur "toutes les catégories" au lieu de la catégorie sélectionnée.
-- l'images dans weapon/details.jsp n'affiche rien si absence d'image.
-- manque un bouton retourner au catalogue dans weapon/details.jsp.
-- user non enregsitré au register quand on tape "Enter" au lieu du bouton créer un compte.
+- home.jsp cliquer sur une catégorie proposée ramène sur "toutes les catégories" au lieu de la catégorie sélectionnée. 
+- l'images dans weapon/details.jsp n'affiche rien si absence d'image. FIXED
+- manque un bouton retourner au catalogue dans weapon/details.jsp. FIXED
+- user non enregsitré au register quand on tape "Enter" au lieu du bouton créer un compte. FIXED
 - copier coller l'url d'une commande d'un autre user pour la réutiliser sur un nouvel user renvoie sur une page d'erreur classique, gérer cela.
-- refaire la page "mon compte"
-- filtre catégorie à améliorer
-- cart.jsp "continuer vers la commande", lance le lgoin mais renvoie sur home.jsp au lieu de checkout.jsp
+- refaire la page "mon compte". OK
+- filtre catégorie à améliorer. FIXED
+- cart.jsp "continuer vers la commande", lance le login mais renvoie sur home.jsp au lieu de checkout.jsp.
 - une fois connecté, "continuer vers la commande" sur cart.jsp amène sur une page erreur 405 Method Not Allowed.
 
 # 🚀 Project Hyperion — Complete TODO List
