@@ -9,6 +9,7 @@ import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.ImageStorageService;
 import com.hyperion.service.PromotionService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -152,13 +154,6 @@ public class AdminController {
                     exception.getMessage()
             );
 
-        } catch (Exception exception) {
-
-            globalBannerService.error(
-                    session,
-                    "Une erreur est survenue pendant "
-                            + "l'ajout du produit."
-            );
         }
 
         return "redirect:/admin";
@@ -240,13 +235,6 @@ public class AdminController {
                     exception.getMessage()
             );
 
-        } catch (Exception exception) {
-
-            globalBannerService.error(
-                    session,
-                    "Une erreur est survenue pendant "
-                            + "la modification du produit."
-            );
         }
 
         return "redirect:/admin";
@@ -280,7 +268,7 @@ public class AdminController {
                             + "\" a été supprimé."
             );
 
-        } catch (Exception exception) {
+        } catch (DataIntegrityViolationException exception) {
 
             globalBannerService.error(
                     session,
@@ -314,7 +302,7 @@ public class AdminController {
             String endDate,
             @RequestParam(
                     required = false,
-                    defaultValue = "true"
+                    defaultValue = "false"
             )
             boolean active,
             HttpSession session
@@ -328,20 +316,29 @@ public class AdminController {
                     discount
             );
 
+            LocalDate parsedStartDate =
+                    parseDate(startDate);
+
+            LocalDate parsedEndDate =
+                    parseDate(endDate);
+
+            validatePromotionDates(
+                    parsedStartDate,
+                    parsedEndDate
+            );
+
             Promotion promotion = new Promotion();
 
             promotion.setTitle(title.trim());
 
             promotion.setDescription(
-                    description != null
-                            ? description.trim()
-                            : null
+                    normalizeOptionalText(description)
             );
 
             promotion.setDiscountPercentage(discount);
             promotion.setFreeDelivery(freeDelivery);
-            promotion.setStartDate(parseDate(startDate));
-            promotion.setEndDate(parseDate(endDate));
+            promotion.setStartDate(parsedStartDate);
+            promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
 
             promotionService.save(promotion);
@@ -360,13 +357,6 @@ public class AdminController {
                     exception.getMessage()
             );
 
-        } catch (Exception exception) {
-
-            globalBannerService.error(
-                    session,
-                    "Une erreur est survenue pendant "
-                            + "l'ajout de la promotion."
-            );
         }
 
         return "redirect:/admin";
@@ -391,7 +381,7 @@ public class AdminController {
             String endDate,
             @RequestParam(
                     required = false,
-                    defaultValue = "true"
+                    defaultValue = "false"
             )
             boolean active,
             HttpSession session
@@ -405,21 +395,30 @@ public class AdminController {
                     discount
             );
 
+            LocalDate parsedStartDate =
+                    parseDate(startDate);
+
+            LocalDate parsedEndDate =
+                    parseDate(endDate);
+
+            validatePromotionDates(
+                    parsedStartDate,
+                    parsedEndDate
+            );
+
             Promotion promotion =
                     findPromotion(promotionId);
 
             promotion.setTitle(title.trim());
 
             promotion.setDescription(
-                    description != null
-                            ? description.trim()
-                            : null
+                    normalizeOptionalText(description)
             );
 
             promotion.setDiscountPercentage(discount);
             promotion.setFreeDelivery(freeDelivery);
-            promotion.setStartDate(parseDate(startDate));
-            promotion.setEndDate(parseDate(endDate));
+            promotion.setStartDate(parsedStartDate);
+            promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
 
             promotionService.save(promotion);
@@ -438,13 +437,6 @@ public class AdminController {
                     exception.getMessage()
             );
 
-        } catch (Exception exception) {
-
-            globalBannerService.error(
-                    session,
-                    "Une erreur est survenue pendant "
-                            + "la modification de la promotion."
-            );
         }
 
         return "redirect:/admin";
@@ -478,7 +470,7 @@ public class AdminController {
                             + "\" a été supprimée."
             );
 
-        } catch (Exception exception) {
+        } catch (DataIntegrityViolationException exception) {
 
             globalBannerService.error(
                     session,
@@ -684,6 +676,36 @@ public class AdminController {
             return null;
         }
 
-        return LocalDate.parse(date);
+        try {
+            return LocalDate.parse(date);
+
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException(
+                    "La date renseignée est invalide."
+            );
+        }
+    }
+
+    private void validatePromotionDates(
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        if (startDate != null
+                && endDate != null
+                && startDate.isAfter(endDate)) {
+
+            throw new IllegalArgumentException(
+                    "La date de début doit précéder "
+                            + "la date de fin."
+            );
+        }
+    }
+
+    private String normalizeOptionalText(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        return value.trim();
     }
 }

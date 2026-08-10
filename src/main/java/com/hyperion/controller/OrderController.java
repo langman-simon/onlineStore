@@ -11,6 +11,8 @@ import com.hyperion.service.UserService;
 import com.hyperion.session.SessionCart;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/order")
@@ -48,7 +50,9 @@ public class OrderController {
             SessionCart sessionCart,
             CustomerOrderRepository customerOrderRepository,
             UserService userService,
-            PromotionService promotionService, GlobalBannerService globalBannerService) {
+            PromotionService promotionService,
+            GlobalBannerService globalBannerService
+    ) {
         this.orderService = orderService;
         this.sessionCart = sessionCart;
         this.customerOrderRepository = customerOrderRepository;
@@ -60,19 +64,25 @@ public class OrderController {
     @GetMapping("/checkout")
     public String checkout(
             Authentication authentication,
-            Model model
+            Model model,
+            HttpSession session
     ) {
         Cart cart = sessionCart.getCart();
 
         if (cart == null || cart.getItems().isEmpty()) {
+            globalBannerService.warning(
+                    session,
+                    "Votre panier est vide."
+            );
+
             return "redirect:/cart";
         }
 
         boolean authenticated =
-                authentication != null
-                        && authentication.isAuthenticated();
+                isAuthenticated(authentication);
 
-        BigDecimal originalPrice = cart.getTotalPrice();
+        BigDecimal originalPrice =
+                cart.getTotalPrice();
 
         BigDecimal discountAmount =
                 promotionService.calculateDiscount(
@@ -86,16 +96,29 @@ public class OrderController {
                         authenticated
                 );
 
-        BigDecimal deliveryFee = promotionService.calculateDeliveryFee(originalPrice, authenticated);
-        model.addAttribute("deliveryFee", deliveryFee);
-        model.addAttribute("freeDelivery", promotionService.isFreeDeliveryApplied(originalPrice, authenticated));
+        BigDecimal deliveryFee =
+                promotionService.calculateDeliveryFee(
+                        originalPrice,
+                        authenticated
+                );
+
+        boolean freeDelivery =
+                promotionService.isFreeDeliveryApplied(
+                        originalPrice,
+                        authenticated
+                );
 
         model.addAttribute("cart", cart);
         model.addAttribute("originalPrice", originalPrice);
         model.addAttribute("discountAmount", discountAmount);
+        model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("finalPrice", finalPrice);
+        model.addAttribute("freeDelivery", freeDelivery);
 
-        model.addAttribute("title", "Validation de la commande");
+        model.addAttribute(
+                "title",
+                "Validation de la commande"
+        );
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/order/checkout.jsp"
@@ -107,7 +130,6 @@ public class OrderController {
     @PostMapping("/confirm")
     public String confirmOrder(
             Authentication authentication,
-            RedirectAttributes redirectAttributes,
             HttpSession session
     ) {
         try {
@@ -123,7 +145,7 @@ public class OrderController {
                     orderService.validateOrder(
                             sessionCart.getCart(),
                             user,
-                            authentication.isAuthenticated()
+                            isAuthenticated(authentication)
                     );
 
             globalBannerService.success(
@@ -147,27 +169,41 @@ public class OrderController {
     public String orderDetails(
             @PathVariable Long id,
             Authentication authentication,
-            Model model
+            Model model,
+            HttpSession session
     ) {
-        CustomerOrder order = customerOrderRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Commande introuvable : " + id
-                        )
+        Optional<CustomerOrder> orderOpt =
+                findOrderForCurrentUser(
+                        id,
+                        authentication
                 );
 
-        if (!order.getUser().getLogin().equals(authentication.getName())) {
-            throw new IllegalArgumentException(
-                    "Accès interdit à cette commande."
+        if (orderOpt.isEmpty()) {
+            globalBannerService.error(
+                    session,
+                    "La commande demandée est introuvable."
             );
+
+            return "redirect:/order";
         }
 
+        CustomerOrder order = orderOpt.get();
+
         model.addAttribute("order", order);
-        model.addAttribute("paypalSandboxUrl", paypalSandboxUrl);
-        model.addAttribute("paypalSellerEmail", paypalSellerEmail);
+        model.addAttribute(
+                "paypalSandboxUrl",
+                paypalSandboxUrl
+        );
+        model.addAttribute(
+                "paypalSellerEmail",
+                paypalSellerEmail
+        );
         model.addAttribute("baseUrl", baseUrl);
 
-        model.addAttribute("title", "Commande n°" + order.getId());
+        model.addAttribute(
+                "title",
+                "Commande n°" + order.getId()
+        );
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/order/details.jsp"
@@ -180,33 +216,34 @@ public class OrderController {
     public String paymentSuccess(
             @PathVariable Long id,
             Authentication authentication,
-            RedirectAttributes redirectAttributes
+            HttpSession session
     ) {
-        try {
-            CustomerOrder order = customerOrderRepository.findById(id)
-                    .orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Commande introuvable : " + id
-                            )
-                    );
-
-            if (!order.getUser().getLogin()
-                    .equals(authentication.getName())) {
-                throw new IllegalArgumentException(
-                        "Accès interdit à cette commande."
+        Optional<CustomerOrder> orderOpt =
+                findOrderForCurrentUser(
+                        id,
+                        authentication
                 );
-            }
 
+        if (orderOpt.isEmpty()) {
+            globalBannerService.error(
+                    session,
+                    "La commande demandée est introuvable."
+            );
+
+            return "redirect:/order";
+        }
+
+        try {
             orderService.validatePayment(id);
 
-            redirectAttributes.addFlashAttribute(
-                    "success",
+            globalBannerService.success(
+                    session,
                     "Paiement validé."
             );
 
         } catch (IllegalArgumentException exception) {
-            redirectAttributes.addFlashAttribute(
-                    "error",
+            globalBannerService.error(
+                    session,
                     exception.getMessage()
             );
         }
@@ -218,24 +255,25 @@ public class OrderController {
     public String paymentCancel(
             @PathVariable Long id,
             Authentication authentication,
-            RedirectAttributes redirectAttributes
+            HttpSession session
     ) {
-        CustomerOrder order = customerOrderRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Commande introuvable : " + id
-                        )
+        Optional<CustomerOrder> orderOpt =
+                findOrderForCurrentUser(
+                        id,
+                        authentication
                 );
 
-        if (!order.getUser().getLogin()
-                .equals(authentication.getName())) {
-            throw new IllegalArgumentException(
-                    "Accès interdit à cette commande."
+        if (orderOpt.isEmpty()) {
+            globalBannerService.error(
+                    session,
+                    "La commande demandée est introuvable."
             );
+
+            return "redirect:/order";
         }
 
-        redirectAttributes.addFlashAttribute(
-                "error",
+        globalBannerService.warning(
+                session,
                 "Paiement annulé."
         );
 
@@ -261,6 +299,68 @@ public class OrderController {
         );
 
         return "template/template";
+    }
+
+    private Optional<CustomerOrder> findOrderForCurrentUser(
+            Long id,
+            Authentication authentication
+    ) {
+        Optional<CustomerOrder> orderOpt =
+                customerOrderRepository.findById(id);
+
+        if (orderOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        CustomerOrder order = orderOpt.get();
+
+        if (!order.getUser()
+                .getLogin()
+                .equals(authentication.getName())) {
+
+            throw new AccessDeniedException(
+                    "Accès interdit à cette commande."
+            );
+        }
+
+        return orderOpt;
+    }
+
+    private boolean isAuthenticated(
+            Authentication authentication
+    ) {
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication
+                instanceof AnonymousAuthenticationToken);
+    }
+
+    @PostMapping("/{id}/cancel")
+    public String cancelOrder(
+            @PathVariable Long id,
+            Authentication authentication,
+            HttpSession session
+    ) {
+        try {
+            orderService.cancelOrder(
+                    id,
+                    authentication.getName()
+            );
+
+            globalBannerService.success(
+                    session,
+                    "La commande a été annulée."
+            );
+
+        } catch (IllegalArgumentException exception) {
+
+            globalBannerService.error(
+                    session,
+                    exception.getMessage()
+            );
+        }
+
+        return "redirect:/order";
     }
 
 }

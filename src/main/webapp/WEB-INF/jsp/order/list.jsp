@@ -73,10 +73,28 @@
                         </td>
 
                         <td>
+
                             <a class="btn btn--primary btn--full"
                                href="<c:url value='/order/${order.id}'/>">
                                 Détails
                             </a>
+
+                            <c:if test="${order.status != 'PAID'}">
+
+                                <form method="post"
+                                      action="<c:url value='/order/${order.id}/cancel'/>">
+
+                                    <sec:csrfInput/>
+
+                                    <button type="submit"
+                                            class="btn btn--delete btn--full">
+                                        Annuler la commande
+                                    </button>
+
+                                </form>
+
+                            </c:if>
+
                         </td>
                     </tr>
                 </c:forEach>

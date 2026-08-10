@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
@@ -98,9 +99,10 @@ public class AuthController {
             return "template/template";
         }
 
-        if (userService.loginExists(
-                form.getUsername().trim()
-        )) {
+        String normalizedLogin =
+                form.getUsername().trim();
+
+        if (userService.loginExists(normalizedLogin)) {
             globalBannerService.error(
                     session,
                     "Ce pseudo est déjà utilisé."
@@ -113,88 +115,85 @@ public class AuthController {
 
         User user = new User();
 
-        user.setLastName(
-                form.getLastName().trim()
-        );
-
-        user.setFirstName(
-                form.getFirstName().trim()
-        );
-
+        user.setLastName(form.getLastName().trim());
+        user.setFirstName(form.getFirstName().trim());
         user.setDeliveryAddress(
                 form.getDeliveryAddress().trim()
         );
-
-        user.setEmail(
-                form.getEmail().trim()
-        );
-
-        user.setPhone(
-                form.getPhone().trim()
-        );
-
-        user.setLogin(
-                form.getUsername().trim()
-        );
+        user.setEmail(form.getEmail().trim());
+        user.setPhone(form.getPhone().trim());
+        user.setLogin(normalizedLogin);
 
         if (form.getSecondaryPhone() == null
                 || form.getSecondaryPhone().isBlank()) {
-
             user.setSecondaryPhone(null);
-
         } else {
             user.setSecondaryPhone(
                     form.getSecondaryPhone().trim()
             );
         }
 
-        userService.register(
-                user,
-                form.getPassword()
-        );
+        try {
+            userService.register(
+                    user,
+                    form.getPassword()
+            );
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        UsernamePasswordAuthenticationToken
-                                .unauthenticated(
-                                        user.getLogin(),
-                                        form.getPassword()
-                                )
-                );
+        } catch (IllegalArgumentException exception) {
+            globalBannerService.error(
+                    session,
+                    exception.getMessage()
+            );
 
-        SecurityContext securityContext =
-                SecurityContextHolder.createEmptyContext();
+            prepareRegisterPage(model);
 
-        securityContext.setAuthentication(
-                authentication
-        );
+            return "template/template";
+        }
 
-        SecurityContextHolder.setContext(
-                securityContext
-        );
+        try {
+            Authentication authentication =
+                    authenticationManager.authenticate(
+                            UsernamePasswordAuthenticationToken
+                                    .unauthenticated(
+                                            user.getLogin(),
+                                            form.getPassword()
+                                    )
+                    );
 
-        securityContextRepository.saveContext(
-                securityContext,
-                request,
-                response
-        );
+            SecurityContext securityContext =
+                    SecurityContextHolder
+                            .createEmptyContext();
 
-        globalBannerService.success(
-                session,
-                "Compte créé, bienvenue "
-                        + user.getLogin()
-                        + "."
-        );
+            securityContext.setAuthentication(authentication);
+            SecurityContextHolder.setContext(securityContext);
 
-        return "redirect:/";
+            securityContextRepository.saveContext(
+                    securityContext,
+                    request,
+                    response
+            );
+
+            globalBannerService.success(
+                    session,
+                    "Compte créé, bienvenue "
+                            + user.getLogin()
+                            + "."
+            );
+
+            return "redirect:/";
+
+        } catch (AuthenticationException exception) {
+            globalBannerService.warning(
+                    session,
+                    "Compte créé. Connectez-vous pour continuer."
+            );
+
+            return "redirect:/login";
+        }
     }
 
     private void prepareRegisterPage(Model model) {
-        model.addAttribute(
-                "title",
-                "Inscription"
-        );
-
+        model.addAttribute("title", "Inscription");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/auth/register.jsp"
