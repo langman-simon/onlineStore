@@ -17,12 +17,12 @@ public class Cart {
 
     public void addWeapon(Weapon weapon, int quantity) {
         if (weapon == null) {
-            throw new IllegalArgumentException("Le produit ne peut pas être nul.");
+            throw new IllegalArgumentException("error.cart.productNull");
         }
 
         if (quantity <= 0) {
             throw new IllegalArgumentException(
-                    "La quantité doit être supérieure à zéro."
+                    "error.cart.quantityPositive"
             );
         }
 
@@ -36,7 +36,7 @@ public class Cart {
 
         if (newQuantity > weapon.getStock()) {
             throw new IllegalArgumentException(
-                    "La quantité totale dépasse le stock disponible."
+                    "error.cart.totalQuantityStock"
             );
         }
 

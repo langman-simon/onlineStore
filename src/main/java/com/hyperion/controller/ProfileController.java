@@ -50,14 +50,14 @@ public class ProfileController {
         if (userOpt.isEmpty()) {
             globalBannerService.error(
                     session,
-                    "Le compte utilisateur est introuvable."
+                    "error.account.notFound"
             );
 
             return "redirect:/";
         }
 
         model.addAttribute("user", userOpt.get());
-        model.addAttribute("title", "Mon compte");
+        model.addAttribute("titleKey", "page.account");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/account/account.jsp"
@@ -117,7 +117,7 @@ public class ProfileController {
 
             globalBannerService.success(
                     session,
-                    "Profil mis à jour avec succès."
+                    "message.account.updated"
             );
 
         } catch (IllegalArgumentException exception) {

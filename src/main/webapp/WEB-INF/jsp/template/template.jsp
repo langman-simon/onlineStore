@@ -2,26 +2,33 @@
 <%@ include file="../include/importTags.jsp" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="${pageContext.response.locale.language}">
 <head>
     <meta charset="UTF-8">
-    <title>${title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <%-- Base --%>
+    <title>
+        <c:choose>
+            <c:when test="${not empty titleKey}">
+                <spring:message code="${titleKey}"/>
+            </c:when>
+            <c:otherwise>
+                <c:out value="${title}"/>
+            </c:otherwise>
+        </c:choose>
+    </title>
+
     <link rel="stylesheet" href="<c:url value='/css/base/core.css'/>">
 
-    <%-- Layout --%>
     <link rel="stylesheet" href="<c:url value='/css/layout/layout.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/layout/header.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/layout/header-bubbles.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/layout/footer.css'/>">
 
-    <%-- Components --%>
     <link rel="stylesheet" href="<c:url value='/css/components/buttons.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/components/forms.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/components/tables.css'/>">
 
-    <%-- Pages --%>
     <link rel="stylesheet" href="<c:url value='/css/pages/home.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/pages/catalogue.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/pages/product-details.css'/>">
@@ -33,6 +40,53 @@
     <link rel="stylesheet" href="<c:url value='/css/pages/account.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/pages/admin.css'/>">
 </head>
+
+<body>
+
+<jsp:include page="/WEB-INF/jsp/common/header.jsp"/>
+
+<c:if test="${not empty sessionScope.globalBannerMessage}">
+    <spring:message code="common.bannerAria" var="bannerAria"/>
+    <spring:message code="common.close" var="bannerClose"/>
+
+    <div id="global-banner"
+         class="global-banner global-banner--${sessionScope.globalBannerType}"
+         role="status"
+         aria-live="polite"
+         tabindex="0"
+         aria-label="${bannerAria}">
+
+        <span class="global-banner__icon" aria-hidden="true">
+            <c:choose>
+                <c:when test="${sessionScope.globalBannerType == 'success'}">✓</c:when>
+                <c:when test="${sessionScope.globalBannerType == 'error'}">!</c:when>
+                <c:when test="${sessionScope.globalBannerType == 'warning'}">!</c:when>
+                <c:otherwise>i</c:otherwise>
+            </c:choose>
+        </span>
+
+        <span class="global-banner__message">
+            <c:out value="${sessionScope.globalBannerMessage}"/>
+        </span>
+
+        <span class="global-banner__hint" aria-hidden="true">
+            ${bannerClose}
+        </span>
+
+        <div class="global-banner__timer" aria-hidden="true"></div>
+    </div>
+
+    <c:remove var="globalBannerMessage" scope="session"/>
+    <c:remove var="globalBannerType" scope="session"/>
+</c:if>
+
+<main>
+    <div class="container">
+        <jsp:include page="${body}"/>
+    </div>
+</main>
+
+<jsp:include page="/WEB-INF/jsp/common/footer.jsp"/>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -75,84 +129,7 @@
 </script>
 
 <script src="<c:url value='/js/header-menu.js'/>"></script>
-
 <script src="<c:url value='/js/catalogue-explorer.js'/>"></script>
-
-<body>
-
-<header>
-    <jsp:include page="/WEB-INF/jsp/common/header.jsp"/>
-</header>
-
-<c:if test="${not empty sessionScope.globalBannerMessage}">
-
-    <div id="global-banner"
-         class="global-banner global-banner--${sessionScope.globalBannerType}"
-         role="status"
-         aria-live="polite"
-         tabindex="0"
-         aria-label="Message de confirmation. Cliquer pour fermer.">
-
-        <span class="global-banner__icon"
-              aria-hidden="true">
-
-            <c:choose>
-                <c:when test="${sessionScope.globalBannerType == 'success'}">
-                    ✓
-                </c:when>
-
-                <c:when test="${sessionScope.globalBannerType == 'error'}">
-                    !
-                </c:when>
-
-                <c:when test="${sessionScope.globalBannerType == 'warning'}">
-                    !
-                </c:when>
-
-                <c:otherwise>
-                    i
-                </c:otherwise>
-            </c:choose>
-
-        </span>
-
-        <span class="global-banner__message">
-            <c:out value="${sessionScope.globalBannerMessage}"/>
-        </span>
-
-        <span class="global-banner__hint"
-              aria-hidden="true">
-            Cliquer pour fermer
-        </span>
-
-        <div class="global-banner__timer"
-             aria-hidden="true"></div>
-
-    </div>
-
-    <c:remove var="globalBannerMessage" scope="session"/>
-    <c:remove var="globalBannerType" scope="session"/>
-
-</c:if>
-
-<main>
-    <div class="container">
-        <c:if test="${not empty success}">
-            <p class="success">
-                ${success}
-            </p>
-            </c:if>
-
-            <c:if test="${not empty error}">
-            <p class="error">
-                ${error}
-            </p>
-        </c:if>
-        <jsp:include page="${body}" />
-    </div>
-</main>
-
-<jsp:include page="/WEB-INF/jsp/common/footer.jsp"/>
 
 </body>
 </html>

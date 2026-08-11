@@ -65,7 +65,7 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public BigDecimal calculateFinalPrice(BigDecimal cartTotal, boolean authenticated) {
         if (cartTotal == null) {
-            throw new IllegalArgumentException("Le montant du panier ne peut pas être nul.");
+            throw new IllegalArgumentException("error.promotion.cartAmountNull");
         }
 
         BigDecimal discount = calculateDiscount(cartTotal, authenticated);

@@ -5,6 +5,6 @@
     <div class="container">
         <div class="ornament-divider"><span></span></div>
         <p class="footer-tagline">Hyperion Industries</p>
-        <p>&copy; 2026 Hyperion &mdash; Tous droits réservés.</p>
+        <p>&copy; 2026 Hyperion &mdash; <spring:message code="footer.rights"/></p>
     </div>
 </footer>

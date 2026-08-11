@@ -50,7 +50,7 @@ public class CartController {
         if (weaponOpt.isEmpty()) {
             globalBannerService.error(
                     session,
-                    "Le produit demandé est introuvable."
+                    "error.product.notFound"
             );
 
             return "redirect:/catalogue";
@@ -61,7 +61,7 @@ public class CartController {
         if (quantity <= 0) {
             globalBannerService.error(
                     session,
-                    "La quantité doit être supérieure à zéro."
+                    "error.cart.quantityPositive"
             );
 
             return "redirect:/weapons/" + weaponId;
@@ -70,7 +70,7 @@ public class CartController {
         if (quantity > weapon.getStock()) {
             globalBannerService.error(
                     session,
-                    "La quantité demandée dépasse le stock disponible."
+                    "error.cart.quantityStock"
             );
 
             return "redirect:/weapons/" + weaponId;
@@ -84,7 +84,7 @@ public class CartController {
 
             globalBannerService.success(
                     session,
-                    "Le produit a été ajouté au panier."
+                    "message.cart.added"
             );
 
             return "redirect:/cart";
@@ -133,7 +133,7 @@ public class CartController {
                         authenticated
                 );
 
-        model.addAttribute("title", "Panier");
+        model.addAttribute("titleKey", "page.cart");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/cart/cart.jsp"
@@ -148,7 +148,6 @@ public class CartController {
                 "standardDeliveryFee",
                 new BigDecimal("500.00")
         );
-        model.addAttribute("authenticated", authenticated);
 
         BigDecimal freeDeliveryThreshold =
                 promotionService.getFreeDeliveryThreshold();
@@ -213,7 +212,7 @@ public class CartController {
 
             globalBannerService.success(
                     session,
-                    "Le produit a été supprimé du panier."
+                    "message.cart.removed"
             );
 
         } catch (IllegalArgumentException exception) {
@@ -238,7 +237,7 @@ public class CartController {
         if (weaponOpt.isEmpty()) {
             globalBannerService.error(
                     session,
-                    "Le produit demandé est introuvable."
+                    "error.product.notFound"
             );
 
             return "redirect:/cart";
@@ -247,7 +246,7 @@ public class CartController {
         if (quantity <= 0) {
             globalBannerService.error(
                     session,
-                    "La quantité doit être supérieure à zéro."
+                    "error.cart.quantityPositive"
             );
 
             return "redirect:/cart";
@@ -256,7 +255,7 @@ public class CartController {
         if (quantity > weaponOpt.get().getStock()) {
             globalBannerService.error(
                     session,
-                    "La quantité demandée dépasse le stock disponible."
+                    "error.cart.quantityStock"
             );
 
             return "redirect:/cart";
@@ -270,7 +269,7 @@ public class CartController {
 
             globalBannerService.success(
                     session,
-                    "La quantité a été mise à jour."
+                    "message.cart.updated"
             );
 
         } catch (IllegalArgumentException exception) {
@@ -289,7 +288,7 @@ public class CartController {
 
         globalBannerService.success(
                 session,
-                "Le panier a été vidé."
+                "message.cart.cleared"
         );
 
         return "redirect:/cart";

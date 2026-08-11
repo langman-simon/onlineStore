@@ -37,9 +37,8 @@ public class LoginSuccessHandler
 
         globalBannerService.success(
                 request.getSession(),
-                "Connexion réussie. Bienvenue "
-                        + authentication.getName()
-                        + " !"
+                "message.login.success",
+                authentication.getName()
         );
 
         String redirect = request.getParameter("redirect");
