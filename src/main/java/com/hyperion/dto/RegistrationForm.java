@@ -4,33 +4,33 @@ import jakarta.validation.constraints.*;
 
 public class RegistrationForm {
 
-    @NotBlank(message = "Last name is required")
+    @NotBlank(message = "{validation.lastName.required}")
     @Size(max = 50)
     private String lastName;
 
-    @NotBlank(message = "First name is required")
+    @NotBlank(message = "{validation.firstName.required}")
     @Size(max = 50)
     private String firstName;
 
-    @NotBlank(message = "Delivery address is required")
+    @NotBlank(message = "{validation.address.required}")
     private String deliveryAddress;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
+    @NotBlank(message = "{validation.email.required}")
+    @Email(message = "{validation.email.invalid}")
     private String email;
 
-    @NotBlank(message = "Phone is required")
-    @Size(min = 8, max = 20, message = "Phone must be between 8 and 20 characters")
+    @NotBlank(message = "{validation.phone.required}")
+    @Size(min = 8, max = 20, message = "{validation.phone.size}")
     private String phone;
 
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "{validation.username.required}")
     @Size(max = 50)
     private String username;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "{validation.password.required}")
     private String password;
 
-    @NotBlank(message = "Password confirmation is required")
+    @NotBlank(message = "{validation.passwordConfirmation.required}")
     private String passwordConfirmation;
 
     private String secondaryPhone;

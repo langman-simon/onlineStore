@@ -50,7 +50,7 @@ public class CatalogueController {
                 "selectedCategoryId",
                 categoryId
         );
-        model.addAttribute("title", "Catalogue");
+        model.addAttribute("titleKey", "page.catalogue");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/catalogue/catalogue.jsp"

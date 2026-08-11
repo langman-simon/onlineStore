@@ -33,29 +33,19 @@ public class GlobalErrorController implements ErrorController {
                 ? Integer.parseInt(statusAttribute.toString())
                 : 500;
 
-        String message = switch (status) {
-            case 400 ->
-                    "Requête invalide.";
-
-            case 403 ->
-                    "Accès refusé. Vous ne disposez pas des droits nécessaires.";
-
-            case 404 ->
-                    "La page demandée est introuvable.";
-
-            case 405 ->
-                    "Cette action n'est pas autorisée.";
-
-            case 500 ->
-                    "Une erreur interne est survenue.";
-
-            default ->
-                    "Une erreur est survenue. Code : " + status;
+        String messageCode = switch (status) {
+            case 400 -> "error.badRequest";
+            case 403 -> "error.accessDenied";
+            case 404 -> "error.notFound";
+            case 405 -> "error.methodNotAllowed";
+            case 500 -> "error.internal";
+            default -> "error.generic";
         };
 
         globalBannerService.error(
                 session,
-                message
+                messageCode,
+                status
         );
 
         return "redirect:/";

@@ -39,7 +39,7 @@ public class WeaponController {
         if (weaponOpt.isEmpty()) {
             globalBannerService.error(
                     session,
-                    "Le produit demandé est introuvable."
+                    "error.product.notFound"
             );
 
             return "redirect:/catalogue";

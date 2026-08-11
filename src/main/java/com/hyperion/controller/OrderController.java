@@ -72,7 +72,7 @@ public class OrderController {
         if (cart == null || cart.getItems().isEmpty()) {
             globalBannerService.warning(
                     session,
-                    "Votre panier est vide."
+                    "error.cart.empty"
             );
 
             return "redirect:/cart";
@@ -116,8 +116,8 @@ public class OrderController {
         model.addAttribute("freeDelivery", freeDelivery);
 
         model.addAttribute(
-                "title",
-                "Validation de la commande"
+                "titleKey",
+                "page.checkout"
         );
         model.addAttribute(
                 "body",
@@ -137,7 +137,7 @@ public class OrderController {
                     .findByLogin(authentication.getName())
                     .orElseThrow(() ->
                             new IllegalArgumentException(
-                                    "Utilisateur introuvable."
+                                    "error.user.notFound"
                             )
                     );
 
@@ -150,7 +150,7 @@ public class OrderController {
 
             globalBannerService.success(
                     session,
-                    "Commande confirmée."
+                    "message.order.confirmed"
             );
 
             return "redirect:/order/" + order.getId();
@@ -181,7 +181,7 @@ public class OrderController {
         if (orderOpt.isEmpty()) {
             globalBannerService.error(
                     session,
-                    "La commande demandée est introuvable."
+                    "error.order.notFound"
             );
 
             return "redirect:/order";
@@ -201,8 +201,8 @@ public class OrderController {
         model.addAttribute("baseUrl", baseUrl);
 
         model.addAttribute(
-                "title",
-                "Commande n°" + order.getId()
+                "titleKey",
+                "page.orderDetails"
         );
         model.addAttribute(
                 "body",
@@ -227,7 +227,7 @@ public class OrderController {
         if (orderOpt.isEmpty()) {
             globalBannerService.error(
                     session,
-                    "La commande demandée est introuvable."
+                    "error.order.notFound"
             );
 
             return "redirect:/order";
@@ -238,7 +238,7 @@ public class OrderController {
 
             globalBannerService.success(
                     session,
-                    "Paiement validé."
+                    "message.order.paymentValidated"
             );
 
         } catch (IllegalArgumentException exception) {
@@ -266,7 +266,7 @@ public class OrderController {
         if (orderOpt.isEmpty()) {
             globalBannerService.error(
                     session,
-                    "La commande demandée est introuvable."
+                    "error.order.notFound"
             );
 
             return "redirect:/order";
@@ -274,7 +274,7 @@ public class OrderController {
 
         globalBannerService.warning(
                 session,
-                "Paiement annulé."
+                "message.order.paymentCancelled"
         );
 
         return "redirect:/order/" + id;
@@ -292,7 +292,7 @@ public class OrderController {
                         );
 
         model.addAttribute("orders", orders);
-        model.addAttribute("title", "Mes commandes");
+        model.addAttribute("titleKey", "page.orders");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/order/list.jsp"
@@ -319,7 +319,7 @@ public class OrderController {
                 .equals(authentication.getName())) {
 
             throw new AccessDeniedException(
-                    "Accès interdit à cette commande."
+                    "error.accessDenied"
             );
         }
 
@@ -349,7 +349,7 @@ public class OrderController {
 
             globalBannerService.success(
                     session,
-                    "La commande a été annulée."
+                    "message.order.cancelled"
             );
 
         } catch (IllegalArgumentException exception) {

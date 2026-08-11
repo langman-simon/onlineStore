@@ -29,7 +29,7 @@ public class GlobalAccessDeniedHandler implements AccessDeniedHandler {
 
         globalBannerService.error(
                 request.getSession(),
-                "Accès refusé. Vous ne disposez pas des droits nécessaires."
+                "error.accessDenied"
         );
 
         response.sendRedirect(

@@ -71,8 +71,8 @@ public class AdminController {
         model.addAttribute("promotions", promotionService.findAll());
 
         model.addAttribute(
-                "title",
-                "Administration du catalogue"
+                "titleKey",
+                "page.admin"
         );
 
         model.addAttribute(
@@ -109,8 +109,6 @@ public class AdminController {
                     manufacturer
             );
 
-            validateRequiredImage(image);
-
             String normalizedReference = reference.trim();
 
             if (weaponRepository
@@ -118,8 +116,7 @@ public class AdminController {
                     .isPresent()) {
 
                 throw new IllegalArgumentException(
-                        "Une arme possède déjà la référence "
-                                + normalizedReference + "."
+                        "error.admin.referenceExists"
                 );
             }
 
@@ -143,8 +140,8 @@ public class AdminController {
 
             globalBannerService.success(
                     session,
-                    "Le produit \"" + weapon.getName()
-                            + "\" a été ajouté au catalogue."
+                    "message.admin.weaponAdded",
+                    weapon.getName()
             );
 
         } catch (IllegalArgumentException exception) {
@@ -199,8 +196,7 @@ public class AdminController {
                     .equals(weaponId)) {
 
                 throw new IllegalArgumentException(
-                        "Une autre arme possède déjà la référence "
-                                + normalizedReference + "."
+                        "error.admin.referenceOther"
                 );
             }
 
@@ -224,8 +220,8 @@ public class AdminController {
 
             globalBannerService.success(
                     session,
-                    "Le produit \"" + weapon.getName()
-                            + "\" a été modifié."
+                    "message.admin.weaponUpdated",
+                    weapon.getName()
             );
 
         } catch (IllegalArgumentException exception) {
@@ -253,7 +249,7 @@ public class AdminController {
 
             globalBannerService.error(
                     session,
-                    "Le produit demandé n'existe pas."
+                    "error.admin.weaponNotFound"
             );
 
             return "redirect:/admin";
@@ -264,17 +260,15 @@ public class AdminController {
 
             globalBannerService.success(
                     session,
-                    "Le produit \"" + weapon.getName()
-                            + "\" a été supprimé."
+                    "message.admin.weaponDeleted",
+                    weapon.getName()
             );
 
         } catch (DataIntegrityViolationException exception) {
 
             globalBannerService.error(
                     session,
-                    "Impossible de supprimer ce produit. "
-                            + "Il est peut-être utilisé "
-                            + "dans une commande."
+                    "error.admin.weaponDelete"
             );
         }
 
@@ -345,9 +339,8 @@ public class AdminController {
 
             globalBannerService.success(
                     session,
-                    "La promotion \""
-                            + promotion.getTitle()
-                            + "\" a été ajoutée."
+                    "message.admin.promotionAdded",
+                    promotion.getTitle()
             );
 
         } catch (IllegalArgumentException exception) {
@@ -425,9 +418,8 @@ public class AdminController {
 
             globalBannerService.success(
                     session,
-                    "La promotion \""
-                            + promotion.getTitle()
-                            + "\" a été modifiée."
+                    "message.admin.promotionUpdated",
+                    promotion.getTitle()
             );
 
         } catch (IllegalArgumentException exception) {
@@ -454,7 +446,7 @@ public class AdminController {
 
             globalBannerService.error(
                     session,
-                    "La promotion demandée n'existe pas."
+                    "error.admin.promotionNotFound"
             );
 
             return "redirect:/admin";
@@ -465,16 +457,15 @@ public class AdminController {
 
             globalBannerService.success(
                     session,
-                    "La promotion \""
-                            + promotion.get().getTitle()
-                            + "\" a été supprimée."
+                    "message.admin.promotionDeleted",
+                    promotion.get().getTitle()
             );
 
         } catch (DataIntegrityViolationException exception) {
 
             globalBannerService.error(
                     session,
-                    "Impossible de supprimer cette promotion."
+                    "error.admin.promotionDelete"
             );
         }
 
@@ -490,7 +481,7 @@ public class AdminController {
                 .findById(weaponId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "Le produit demandé n'existe pas."
+                                "error.admin.weaponNotFound"
                         )
                 );
     }
@@ -500,8 +491,7 @@ public class AdminController {
                 .findById(categoryId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "La catégorie sélectionnée "
-                                        + "n'existe pas."
+                                "error.admin.categoryNotFound"
                         )
                 );
     }
@@ -511,8 +501,7 @@ public class AdminController {
                 .findById(promotionId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "La promotion demandée "
-                                        + "n'existe pas."
+                                "error.admin.promotionNotFound"
                         )
                 );
     }
@@ -528,60 +517,61 @@ public class AdminController {
         if (name == null || name.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "Le nom du produit est obligatoire."
+                    "error.admin.nameRequired"
             );
         }
 
         if (name.trim().length() > 150) {
 
             throw new IllegalArgumentException(
-                    "Le nom du produit ne peut pas dépasser "
-                            + "150 caractères."
+                    "error.admin.nameLength"
             );
         }
 
         if (description == null || description.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "La description est obligatoire."
+                    "error.admin.descriptionRequired"
             );
         }
 
         if (description.trim().length() > 1000) {
 
             throw new IllegalArgumentException(
-                    "La description ne peut pas dépasser "
-                            + "1000 caractères."
+                    "error.admin.descriptionLength"
             );
         }
 
-        if (price == null
-                || price.compareTo(BigDecimal.ZERO) < 0) {
-
+        if (price == null) {
             throw new IllegalArgumentException(
-                    "Le prix ne peut pas être négatif."
+                    "error.admin.priceRequired"
+            );
+        }
+
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException(
+                    "error.admin.priceNegative"
             );
         }
 
         if (stock < 0) {
 
             throw new IllegalArgumentException(
-                    "Le stock ne peut pas être négatif."
+                    "error.admin.stockNegative"
             );
         }
 
         if (reference == null || reference.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "La référence est obligatoire."
+                    "error.admin.referenceRequired"
             );
         }
 
         if (reference.trim().length() > 100) {
 
             throw new IllegalArgumentException(
-                    "La référence ne peut pas dépasser "
-                            + "100 caractères."
+                    "error.admin.referenceLength"
             );
         }
 
@@ -589,26 +579,14 @@ public class AdminController {
                 || manufacturer.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "Le fabricant est obligatoire."
+                    "error.admin.manufacturerRequired"
             );
         }
 
         if (manufacturer.trim().length() > 100) {
 
             throw new IllegalArgumentException(
-                    "Le fabricant ne peut pas dépasser "
-                            + "100 caractères."
-            );
-        }
-    }
-
-    private void validateRequiredImage(
-            MultipartFile image
-    ) {
-        if (image == null || image.isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Une image est obligatoire."
+                    "error.admin.manufacturerLength"
             );
         }
     }
@@ -620,15 +598,14 @@ public class AdminController {
         if (title == null || title.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "Le titre de la promotion est obligatoire."
+                    "error.admin.promotionTitleRequired"
             );
         }
 
         if (title.trim().length() > 150) {
 
             throw new IllegalArgumentException(
-                    "Le titre ne peut pas dépasser "
-                            + "150 caractères."
+                    "error.admin.promotionTitleLength"
             );
         }
 
@@ -643,8 +620,7 @@ public class AdminController {
         )) {
 
             throw new IllegalArgumentException(
-                    "Le pourcentage de réduction doit être "
-                            + "compris entre 0 et 100."
+                    "error.admin.discountRange"
             );
         }
     }
@@ -666,7 +642,7 @@ public class AdminController {
         } catch (NumberFormatException exception) {
 
             throw new IllegalArgumentException(
-                    "Le pourcentage de réduction est invalide."
+                    "error.admin.discountInvalid"
             );
         }
     }
@@ -681,7 +657,7 @@ public class AdminController {
 
         } catch (DateTimeParseException exception) {
             throw new IllegalArgumentException(
-                    "La date renseignée est invalide."
+                    "error.admin.dateInvalid"
             );
         }
     }
@@ -695,8 +671,7 @@ public class AdminController {
                 && startDate.isAfter(endDate)) {
 
             throw new IllegalArgumentException(
-                    "La date de début doit précéder "
-                            + "la date de fin."
+                    "error.admin.dateOrder"
             );
         }
     }

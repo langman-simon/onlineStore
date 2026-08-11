@@ -44,7 +44,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        model.addAttribute("title", "Connexion");
+        model.addAttribute("titleKey", "page.login");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/auth/login.jsp"
@@ -78,7 +78,7 @@ public class AuthController {
         if (result.hasErrors()) {
             globalBannerService.error(
                     session,
-                    "Veuillez corriger les informations du formulaire."
+                    "error.form.invalid"
             );
 
             prepareRegisterPage(model);
@@ -91,7 +91,7 @@ public class AuthController {
 
             globalBannerService.error(
                     session,
-                    "Les mots de passe ne correspondent pas."
+                    "error.password.mismatch"
             );
 
             prepareRegisterPage(model);
@@ -101,17 +101,6 @@ public class AuthController {
 
         String normalizedLogin =
                 form.getUsername().trim();
-
-        if (userService.loginExists(normalizedLogin)) {
-            globalBannerService.error(
-                    session,
-                    "Ce pseudo est déjà utilisé."
-            );
-
-            prepareRegisterPage(model);
-
-            return "template/template";
-        }
 
         User user = new User();
 
@@ -175,9 +164,8 @@ public class AuthController {
 
             globalBannerService.success(
                     session,
-                    "Compte créé, bienvenue "
-                            + user.getLogin()
-                            + "."
+                    "message.register.success",
+                    user.getLogin()
             );
 
             return "redirect:/";
@@ -185,7 +173,7 @@ public class AuthController {
         } catch (AuthenticationException exception) {
             globalBannerService.warning(
                     session,
-                    "Compte créé. Connectez-vous pour continuer."
+                    "message.register.loginRequired"
             );
 
             return "redirect:/login";
@@ -193,7 +181,7 @@ public class AuthController {
     }
 
     private void prepareRegisterPage(Model model) {
-        model.addAttribute("title", "Inscription");
+        model.addAttribute("titleKey", "page.register");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/auth/register.jsp"

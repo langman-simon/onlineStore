@@ -32,7 +32,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 
         globalBannerService.error(
                 request.getSession(),
-                "Identifiant ou mot de passe incorrect."
+                "message.login.failure"
         );
 
         String targetUrl = "/login";

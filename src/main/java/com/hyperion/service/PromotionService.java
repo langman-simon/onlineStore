@@ -23,4 +23,5 @@ public interface PromotionService {
     BigDecimal getTier2RatePercent();
     BigDecimal getTier3Threshold();
     BigDecimal getTier3RatePercent();
+    BigDecimal getStandardDeliveryFee();
 }

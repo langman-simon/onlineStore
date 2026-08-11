@@ -38,13 +38,13 @@ public class OrderService {
     ) {
         if (cart == null || cart.isEmpty()) {
             throw new IllegalArgumentException(
-                    "Le panier est vide."
+                    "error.cart.empty"
             );
         }
 
         if (user == null) {
             throw new IllegalArgumentException(
-                    "L’utilisateur de la commande est obligatoire."
+                    "error.order.userRequired"
             );
         }
 
@@ -81,8 +81,7 @@ public class OrderService {
                     weaponRepository.findById(weaponId)
                             .orElseThrow(() ->
                                     new IllegalArgumentException(
-                                            "Produit introuvable : "
-                                                    + weaponId
+                                            "error.product.notFound"
                                     )
                             );
 
@@ -91,15 +90,13 @@ public class OrderService {
 
             if (quantity <= 0) {
                 throw new IllegalArgumentException(
-                        "Quantité invalide pour le produit : "
-                                + weapon.getName()
+                        "error.quantity.invalid"
                 );
             }
 
             if (weapon.getStock() < quantity) {
                 throw new IllegalArgumentException(
-                        "Stock insuffisant pour le produit : "
-                                + weapon.getName()
+                        "error.stock.insufficient"
                 );
             }
 
@@ -128,14 +125,13 @@ public class OrderService {
                 customerOrderRepository.findById(orderId)
                         .orElseThrow(() ->
                                 new IllegalArgumentException(
-                                        "Commande introuvable : "
-                                                + orderId
+                                        "error.order.notFound"
                                 )
                         );
 
         if ("PAID".equals(order.getStatus())) {
             throw new IllegalArgumentException(
-                    "Cette commande est déjà payée."
+                    "error.order.alreadyPaid"
             );
         }
 
@@ -147,10 +143,7 @@ public class OrderService {
                             )
                             .orElseThrow(() ->
                                     new IllegalArgumentException(
-                                            "Produit introuvable : "
-                                                    + orderItem
-                                                    .getWeapon()
-                                                    .getId()
+                                            "error.product.notFound"
                                     )
                             );
 
@@ -159,8 +152,7 @@ public class OrderService {
 
             if (weapon.getStock() < quantity) {
                 throw new IllegalArgumentException(
-                        "Stock insuffisant pour le produit : "
-                                + weapon.getName()
+                        "error.stock.insufficient"
                 );
             }
 
@@ -183,7 +175,7 @@ public class OrderService {
                 customerOrderRepository.findById(orderId)
                         .orElseThrow(() ->
                                 new IllegalArgumentException(
-                                        "La commande demandée est introuvable."
+                                        "error.order.notFound"
                                 )
                         );
 
@@ -193,13 +185,13 @@ public class OrderService {
                 .equals(userLogin)) {
 
             throw new IllegalArgumentException(
-                    "Vous ne pouvez pas annuler cette commande."
+                    "error.order.cancelForbidden"
             );
         }
 
         if ("PAID".equals(order.getStatus())) {
             throw new IllegalArgumentException(
-                    "Une commande déjà payée ne peut pas être annulée."
+                    "error.order.paidCannotCancel"
             );
         }
 

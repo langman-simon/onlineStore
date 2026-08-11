@@ -16,7 +16,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("title", "Accueil");
+        model.addAttribute("titleKey", "page.home");
         model.addAttribute("promotions", promotionService.findAll().stream()
                 .filter(p -> p.isCurrentlyValid())
                 .toList());
