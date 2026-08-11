@@ -259,3 +259,42 @@
         transition: none;
     }
 }
+
+.link--accent {
+    position: relative;
+
+    color: var(--gold-on-dark);
+
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.link--accent::after {
+    content: "";
+
+    position: absolute;
+    right: 100%;
+    bottom: -3px;
+    left: 0;
+
+    height: 1px;
+
+    background-color: var(--gold-bright);
+
+    transition: right 0.25s ease;
+}
+
+.link--accent:hover,
+.link--accent:focus-visible {
+    color: var(--gold-bright);
+}
+
+.link--accent:hover::after,
+.link--accent:focus-visible::after {
+    right: 0;
+}
+
+.link--accent:focus-visible {
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 3px;
+}

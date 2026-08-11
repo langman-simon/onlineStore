@@ -6,7 +6,9 @@ import com.hyperion.repository.CategoryRepository;
 import com.hyperion.repository.WeaponRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class CatalogueController {
         this.categoryRepository = categoryRepository;
     }
 
-    @GetMapping()
+    @GetMapping
     public String catalogue(
             @RequestParam(required = false) Long categoryId,
             Model model
@@ -39,25 +41,21 @@ public class CatalogueController {
                     .findByCategoryIdOrderByNameAsc(categoryId);
         }
 
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories =
+                categoryRepository.findAll();
 
         model.addAttribute("weapons", weapons);
         model.addAttribute("categories", categories);
-        model.addAttribute("selectedCategoryId", categoryId);
-        model.addAttribute("title", "Catalogue");
+        model.addAttribute(
+                "selectedCategoryId",
+                categoryId
+        );
+        model.addAttribute("titleKey", "page.catalogue");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/catalogue/catalogue.jsp"
         );
 
         return "template/template";
-    }
-
-    @PostMapping("/remove/{weaponId}")
-    public String removeFromCatalogue(@PathVariable Long weapon) {
-
-        weaponRepository.removeWeaponById(weapon);
-
-        return "redirect:/admin";
     }
 }

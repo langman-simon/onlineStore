@@ -20,7 +20,6 @@ public class OrderService {
     private final CustomerOrderRepository customerOrderRepository;
     private final PromotionService promotionService;
 
-
     public OrderService(
             WeaponRepository weaponRepository,
             CustomerOrderRepository customerOrderRepository,
@@ -38,16 +37,19 @@ public class OrderService {
             boolean authenticated
     ) {
         if (cart == null || cart.isEmpty()) {
-            throw new IllegalArgumentException("Le panier est vide.");
+            throw new IllegalArgumentException(
+                    "error.cart.empty"
+            );
         }
 
         if (user == null) {
             throw new IllegalArgumentException(
-                    "L’utilisateur de la commande est obligatoire."
+                    "error.order.userRequired"
             );
         }
 
-        BigDecimal originalPrice = cart.getTotalPrice();
+        BigDecimal originalPrice =
+                cart.getTotalPrice();
 
         BigDecimal discountAmount =
                 promotionService.calculateDiscount(
@@ -61,44 +63,48 @@ public class OrderService {
                         authenticated
                 );
 
-        CustomerOrder order = new CustomerOrder(
-                originalPrice,
-                discountAmount,
-                finalPrice
-        );
+        CustomerOrder order =
+                new CustomerOrder(
+                        originalPrice,
+                        discountAmount,
+                        finalPrice
+                );
 
         order.setUser(user);
 
         for (CartItem cartItem : cart.getItems()) {
-            Long weaponId = cartItem.getWeapon().getId();
 
-            Weapon weapon = weaponRepository.findById(weaponId)
-                    .orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Produit introuvable : " + weaponId
-                            )
-                    );
+            Long weaponId =
+                    cartItem.getWeapon().getId();
 
-            int quantity = cartItem.getQuantity();
+            Weapon weapon =
+                    weaponRepository.findById(weaponId)
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "error.product.notFound"
+                                    )
+                            );
+
+            int quantity =
+                    cartItem.getQuantity();
 
             if (quantity <= 0) {
                 throw new IllegalArgumentException(
-                        "Quantité invalide pour le produit : "
-                                + weapon.getName()
+                        "error.quantity.invalid"
                 );
             }
 
             if (weapon.getStock() < quantity) {
                 throw new IllegalArgumentException(
-                        "Stock insuffisant pour le produit : "
-                                + weapon.getName()
+                        "error.stock.insufficient"
                 );
             }
 
-            OrderItem orderItem = new OrderItem(
-                    weapon,
-                    quantity
-            );
+            OrderItem orderItem =
+                    new OrderItem(
+                            weapon,
+                            quantity
+                    );
 
             order.addItem(orderItem);
         }
@@ -112,47 +118,83 @@ public class OrderService {
     }
 
     @Transactional
-    public CustomerOrder validatePayment(Long orderId) {
-
-        CustomerOrder order = customerOrderRepository.findById(orderId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Commande introuvable : " + orderId
-                        )
-                );
+    public CustomerOrder validatePayment(
+            Long orderId
+    ) {
+        CustomerOrder order =
+                customerOrderRepository.findById(orderId)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "error.order.notFound"
+                                )
+                        );
 
         if ("PAID".equals(order.getStatus())) {
             throw new IllegalArgumentException(
-                    "Cette commande est déjà payée."
+                    "error.order.alreadyPaid"
             );
         }
 
         for (OrderItem orderItem : order.getItems()) {
 
-            Weapon weapon = weaponRepository.findById(
-                            orderItem.getWeapon().getId()
-                    )
-                    .orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Produit introuvable : "
-                                            + orderItem.getWeapon().getId()
+            Weapon weapon =
+                    weaponRepository.findById(
+                                    orderItem.getWeapon().getId()
                             )
-                    );
+                            .orElseThrow(() ->
+                                    new IllegalArgumentException(
+                                            "error.product.notFound"
+                                    )
+                            );
 
-            int quantity = orderItem.getQuantity();
+            int quantity =
+                    orderItem.getQuantity();
 
             if (weapon.getStock() < quantity) {
                 throw new IllegalArgumentException(
-                        "Stock insuffisant pour le produit : "
-                                + weapon.getName()
+                        "error.stock.insufficient"
                 );
             }
 
-            weapon.setStock(weapon.getStock() - quantity);
+            weapon.setStock(
+                    weapon.getStock() - quantity
+            );
         }
 
         order.setStatus("PAID");
 
         return customerOrderRepository.save(order);
+    }
+
+    @Transactional
+    public void cancelOrder(
+            Long orderId,
+            String userLogin
+    ) {
+        CustomerOrder order =
+                customerOrderRepository.findById(orderId)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "error.order.notFound"
+                                )
+                        );
+
+        if (order.getUser() == null
+                || !order.getUser()
+                .getLogin()
+                .equals(userLogin)) {
+
+            throw new IllegalArgumentException(
+                    "error.order.cancelForbidden"
+            );
+        }
+
+        if ("PAID".equals(order.getStatus())) {
+            throw new IllegalArgumentException(
+                    "error.order.paidCannotCancel"
+            );
+        }
+
+        customerOrderRepository.delete(order);
     }
 }

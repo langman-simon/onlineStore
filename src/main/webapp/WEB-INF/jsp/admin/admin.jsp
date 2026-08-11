@@ -3,43 +3,38 @@
 
 <section class="admin-page">
 
-    <%-- =====================================================
-         EN-TÊTE
-         ===================================================== --%>
-
     <header class="admin-hero">
 
         <div>
             <p class="admin-hero__eyebrow">
-                Espace administrateur
+                <spring:message code="admin.eyebrow"/>
             </p>
 
-            <h1>Gestion du catalogue</h1>
+            <h1><spring:message code="admin.title"/></h1>
 
             <p class="admin-hero__description">
-                Gérez les produits, les stocks et les informations
-                du catalogue Hyperion.
+                <spring:message code="admin.hero.description"/>
             </p>
         </div>
 
         <details class="admin-add-panel">
-            <summary class="btn admin-add-panel__button">
-                Ajouter un produit
+            <summary class="btn btn--primary">
+                <spring:message code="admin.openAddProduct"/>
             </summary>
 
             <div class="admin-add-panel__content">
 
-                <h2>Nouveau produit</h2>
+                <h2><spring:message code="admin.newProduct"/></h2>
 
                 <form method="post"
                       action="<c:url value='/admin/weapons/add'/>"
                       enctype="multipart/form-data"
-                      class="admin-form">
+                      class="admin-product-form form--light">
 
-                    <div class="admin-form__grid">
+                    <div class="admin-product-form__grid">
 
                         <div class="form-group">
-                            <label for="addName">Nom</label>
+                            <label for="addName"><spring:message code="common.name"/></label>
 
                             <input type="text"
                                    id="addName"
@@ -49,7 +44,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addReference">Référence</label>
+                            <label for="addReference"><spring:message code="common.reference"/></label>
 
                             <input type="text"
                                    id="addReference"
@@ -60,7 +55,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addManufacturer">Fabricant</label>
+                            <label for="addManufacturer"><spring:message code="common.manufacturer"/></label>
 
                             <input type="text"
                                    id="addManufacturer"
@@ -70,21 +65,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addCategoryId">Catégorie</label>
+                            <label for="addCategoryId"><spring:message code="common.category"/></label>
 
                             <select id="addCategoryId"
                                     name="categoryId"
                                     required>
 
                                 <option value="" disabled selected>
-                                    Choisir une catégorie
+                                    <spring:message code="admin.chooseCategory"/>
                                 </option>
 
                                 <c:forEach var="category"
                                            items="${categories}">
 
                                     <option value="${category.id}">
-                                        ${category.name}
+                                        <spring:message code="${category.name}" text="${category.name}"/>
                                     </option>
 
                                 </c:forEach>
@@ -93,7 +88,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addPrice">Prix</label>
+                            <label for="addPrice"><spring:message code="common.price"/></label>
 
                             <input type="number"
                                    id="addPrice"
@@ -104,7 +99,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addStock">Stock</label>
+                            <label for="addStock"><spring:message code="common.stock"/></label>
 
                             <input type="number"
                                    id="addStock"
@@ -113,8 +108,8 @@
                                    required>
                         </div>
 
-                        <div class="form-group admin-form__full">
-                            <label for="addDescription">Description</label>
+                        <div class="form-group admin-product-form__full">
+                            <label for="addDescription"><spring:message code="common.description"/></label>
 
                             <textarea id="addDescription"
                                       name="description"
@@ -123,8 +118,8 @@
                                       required></textarea>
                         </div>
 
-                        <div class="form-group admin-form__full">
-                            <label for="addImage">Image</label>
+                        <div class="form-group admin-product-form__full">
+                            <label for="addImage"><spring:message code="common.image"/></label>
 
                             <input type="file"
                                    id="addImage"
@@ -137,9 +132,9 @@
 
                     <sec:csrfInput/>
 
-                    <div class="admin-form__actions">
-                        <button type="submit">
-                            Ajouter au catalogue
+                    <div class="admin-product-form__actions">
+                        <button type="submit" class="btn btn--primary">
+                            <spring:message code="admin.addProduct"/>
                         </button>
                     </div>
 
@@ -151,84 +146,41 @@
     </header>
 
     <%-- =====================================================
-         MESSAGES
-         ===================================================== --%>
-
-    <c:if test="${not empty success}">
-        <div class="admin-alert admin-alert--success">
-            <span>${success}</span>
-
-            <button type="button"
-                    class="admin-alert__close"
-                    aria-label="Fermer"
-                    onclick="this.parentElement.remove()">
-                ×
-            </button>
-        </div>
-    </c:if>
-
-    <c:if test="${not empty error}">
-        <div class="admin-alert admin-alert--error">
-            <span>${error}</span>
-
-            <button type="button"
-                    class="admin-alert__close"
-                    aria-label="Fermer"
-                    onclick="this.parentElement.remove()">
-                ×
-            </button>
-        </div>
-    </c:if>
-
-    <%-- =====================================================
          BARRE D’OUTILS
          ===================================================== --%>
 
     <div class="admin-toolbar">
 
         <div>
-            <h2>Produits</h2>
+            <h2><spring:message code="admin.products"/></h2>
 
             <p>
-                ${weapons.size()} produit(s) affiché(s)
+                <spring:message code="admin.productsDisplayed" arguments="${fn:length(weapons)}"/>
             </p>
         </div>
 
-        <form method="get"
-              action="<c:url value='/admin'/>"
-              class="admin-filter">
+        <div class="filter--list">
 
-            <div class="form-group">
-                <label for="filterCategoryId">
-                    Filtrer par catégorie
-                </label>
+            <a href="<c:url value='/admin'/>"
+               class="btn btn--filter ${empty selectedCategoryId ? 'is-active' : ''}">
+                <spring:message code="catalogue.filter.all"/>
+            </a>
 
-                <select id="filterCategoryId"
-                        name="categoryId"
-                        onchange="this.form.submit()">
+            <c:forEach var="category" items="${categories}">
 
-                    <option value="">
-                        Toutes les catégories
-                    </option>
+                <c:url var="categoryUrl" value="/admin">
+                    <c:param name="categoryId"
+                             value="${category.id}"/>
+                </c:url>
 
-                    <c:forEach var="category"
-                               items="${categories}">
+                <a href="${categoryUrl}"
+                   class="btn btn--filter ${selectedCategoryId == category.id ? 'is-active' : ''}">
+                    <spring:message code="${category.name}" text="${category.name}"/>
+                </a>
 
-                        <option value="${category.id}"
-                            <c:if test="${selectedCategoryId == category.id}">
-                                selected
-                            </c:if>>
+            </c:forEach>
 
-                            ${category.name}
-
-                        </option>
-
-                    </c:forEach>
-
-                </select>
-            </div>
-
-        </form>
+        </div>
 
     </div>
 
@@ -241,10 +193,10 @@
         <c:when test="${empty weapons}">
 
             <div class="admin-empty">
-                <h2>Aucun produit trouvé</h2>
+                <h2><spring:message code="admin.noProducts"/></h2>
 
                 <p>
-                    Aucun produit ne correspond à la catégorie sélectionnée.
+                    <spring:message code="admin.noProductsText"/>
                 </p>
             </div>
 
@@ -258,7 +210,7 @@
 
                     <article class="admin-product">
 
-                        <%-- Image --%>
+                        <%-- Product image --%>
 
                         <div class="admin-product__image">
 
@@ -271,7 +223,7 @@
 
                                 <c:otherwise>
                                     <div class="admin-product__placeholder">
-                                        Aucune image
+                                        <spring:message code="common.noImage"/>
                                     </div>
                                 </c:otherwise>
 
@@ -279,310 +231,282 @@
 
                         </div>
 
-                        <%-- Informations principales --%>
 
-                        <div class="admin-product__main">
+                        <%-- Product summary --%>
 
-                            <div class="admin-product__heading">
+                        <div class="admin-product__content">
+
+                            <div class="admin-product__header">
 
                                 <div>
-                                    <span class="admin-product__category">
-                                        ${weapon.category.name}
-                                    </span>
+                                    <h3>${weapon.name}</h3>
 
-                                    <h2>${weapon.name}</h2>
+                                    <p class="admin-product__reference">
+                                        ${weapon.reference}
+                                    </p>
                                 </div>
 
-                                <span class="admin-product__reference">
-                                    ${weapon.reference}
+                                <strong class="admin-product__price">
+                                    ${weapon.price} €
+                                </strong>
+
+                            </div>
+
+
+                            <div class="admin-product__info">
+
+                                <span>
+                                    <strong><spring:message code="common.category"/></strong>
+                                    <spring:message code="${weapon.category.name}" text="${weapon.category.name}"/>
+                                </span>
+
+                                <span>
+                                    <strong><spring:message code="common.manufacturer"/></strong>
+                                    ${weapon.manufacturer}
+                                </span>
+
+                                <span>
+                                    <strong><spring:message code="common.stock"/></strong>
+                                    ${weapon.stock}
                                 </span>
 
                             </div>
 
-                            <p class="admin-product__description">
-                                ${weapon.description}
-                            </p>
 
-                            <div class="admin-product__metadata">
+                            <%-- Product actions --%>
 
-                                <div>
-                                    <span>Fabricant</span>
-                                    <strong>${weapon.manufacturer}</strong>
-                                </div>
+                            <div class="admin-product__actions">
 
-                                <div>
-                                    <span>Prix</span>
-                                    <strong>${weapon.price} €</strong>
-                                </div>
+                                <a href="<c:url value='/weapons/${weapon.id}'/>"
+                                   class="btn btn--primary">
+                                    <spring:message code="admin.viewProduct"/>
+                                </a>
 
-                                <div>
-                                    <span>Stock</span>
 
-                                    <c:choose>
+                                <details class="admin-product-edit">
 
-                                        <c:when test="${weapon.stock > 5}">
-                                            <strong class="admin-stock admin-stock--good">
-                                                ${weapon.stock}
-                                            </strong>
-                                        </c:when>
+                                    <summary class="btn btn--primary">
+                                        <spring:message code="admin.edit"/>
+                                    </summary>
 
-                                        <c:when test="${weapon.stock > 0}">
-                                            <strong class="admin-stock admin-stock--low">
-                                                ${weapon.stock}
-                                            </strong>
-                                        </c:when>
+                                    <div class="admin-product-edit__content">
 
-                                        <c:otherwise>
-                                            <strong class="admin-stock admin-stock--empty">
-                                                Rupture
-                                            </strong>
-                                        </c:otherwise>
-
-                                    </c:choose>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <%-- Actions rapides --%>
-
-                        <aside class="admin-product__actions">
-
-                            <a class="btn admin-product__details"
-                               href="<c:url value='/weapons/${weapon.id}'/>">
-                                Voir la fiche
-                            </a>
-
-                            <form method="post"
-                                  action="<c:url value='/admin/weapons/stock/${weapon.id}'/>"
-                                  class="admin-stock-form">
-
-                                <label for="stock-${weapon.id}">
-                                    Stock
-                                </label>
-
-                                <div class="admin-stock-form__controls">
-
-                                    <input type="number"
-                                           id="stock-${weapon.id}"
-                                           name="stock"
-                                           min="0"
-                                           value="${weapon.stock}"
-                                           required>
-
-                                    <sec:csrfInput/>
-
-                                    <button type="submit">
-                                        Mettre à jour
-                                    </button>
-
-                                </div>
-
-                            </form>
-
-                            <details class="admin-edit">
-
-                                <summary class="btn">
-                                    Modifier
-                                </summary>
-
-                                <div class="admin-edit__content">
-
-                                    <h3>Modifier ${weapon.name}</h3>
-
-                                    <form method="post"
-                                          action="<c:url value='/admin/weapons/update/${weapon.id}'/>"
-                                          enctype="multipart/form-data"
-                                          class="admin-form">
-
-                                        <div class="admin-form__grid">
-
-                                            <div class="form-group">
-                                                <label for="name-${weapon.id}">
-                                                    Nom
-                                                </label>
-
-                                                <input type="text"
-                                                       id="name-${weapon.id}"
-                                                       name="name"
-                                                       value="${weapon.name}"
-                                                       maxlength="150"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="reference-${weapon.id}">
-                                                    Référence
-                                                </label>
-
-                                                <input type="text"
-                                                       id="reference-${weapon.id}"
-                                                       name="reference"
-                                                       value="${weapon.reference}"
-                                                       maxlength="100"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="manufacturer-${weapon.id}">
-                                                    Fabricant
-                                                </label>
-
-                                                <input type="text"
-                                                       id="manufacturer-${weapon.id}"
-                                                       name="manufacturer"
-                                                       value="${weapon.manufacturer}"
-                                                       maxlength="100"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="category-${weapon.id}">
-                                                    Catégorie
-                                                </label>
-
-                                                <select id="category-${weapon.id}"
-                                                        name="categoryId"
-                                                        required>
-
-                                                    <c:forEach var="category"
-                                                               items="${categories}">
-
-                                                        <option value="${category.id}"
-                                                            <c:if test="${weapon.category.id == category.id}">
-                                                                selected
-                                                            </c:if>>
-
-                                                            ${category.name}
-
-                                                        </option>
-
-                                                    </c:forEach>
-
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="price-${weapon.id}">
-                                                    Prix
-                                                </label>
-
-                                                <input type="number"
-                                                       id="price-${weapon.id}"
-                                                       name="price"
-                                                       min="0"
-                                                       step="0.01"
-                                                       value="${weapon.price}"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="edit-stock-${weapon.id}">
-                                                    Stock
-                                                </label>
-
-                                                <input type="number"
-                                                       id="edit-stock-${weapon.id}"
-                                                       name="stock"
-                                                       min="0"
-                                                       value="${weapon.stock}"
-                                                       required>
-                                            </div>
-
-                                            <div class="form-group admin-form__full">
-                                                <label for="description-${weapon.id}">
-                                                    Description
-                                                </label>
-
-                                                <textarea id="description-${weapon.id}"
-                                                          name="description"
-                                                          rows="5"
-                                                          maxlength="1000"
-                                                          required>${weapon.description}</textarea>
-                                            </div>
-
-                                            <div class="form-group admin-form__full">
-                                                <label for="image-${weapon.id}">
-                                                    Remplacer l’image
-                                                </label>
-
-                                                <input type="file"
-                                                       id="image-${weapon.id}"
-                                                       name="image"
-                                                       accept="image/jpeg,image/png,image/webp">
-
-                                                <small>
-                                                    Laissez vide pour conserver l’image actuelle.
-                                                </small>
-                                            </div>
-
-                                        </div>
-
-                                        <sec:csrfInput/>
-
-                                        <div class="admin-form__actions">
-                                            <button type="submit">
-                                                Enregistrer
-                                            </button>
-                                        </div>
-
-                                    </form>
-
-                                </div>
-
-                            </details>
-
-                            <button type="button"
-                                    class="btn-delete"
-                                    onclick="openDeleteDialog('${weapon.id}')">
-                                Supprimer
-                            </button>
-
-                            <dialog id="delete-dialog-${weapon.id}"
-                                    class="admin-dialog">
-
-                                <div class="admin-dialog__content">
-
-                                    <h3>Supprimer le produit</h3>
-
-                                    <p>
-                                        Voulez-vous supprimer
-                                        <strong>${weapon.name}</strong> ?
-                                    </p>
-
-                                    <p class="admin-dialog__warning">
-                                        Cette action est définitive.
-                                    </p>
-
-                                    <div class="admin-dialog__actions">
-
-                                        <button type="button"
-                                                class="btn"
-                                                onclick="closeDeleteDialog('${weapon.id}')">
-                                            Annuler
-                                        </button>
+                                        <h3>
+                                            <spring:message code="admin.editProduct" arguments="${weapon.name}"/>
+                                        </h3>
 
                                         <form method="post"
-                                              action="<c:url value='/admin/remove/${weapon.id}'/>">
+                                              action="<c:url value='/admin/weapons/update/${weapon.id}'/>"
+                                              enctype="multipart/form-data"
+                                              class="admin-product-form form--light">
+
+                                            <div class="admin-product-form__grid">
+
+                                                <div class="form-group">
+                                                    <label for="name-${weapon.id}">
+                                                        <spring:message code="common.name"/>
+                                                    </label>
+
+                                                    <input type="text"
+                                                           id="name-${weapon.id}"
+                                                           name="name"
+                                                           value="${weapon.name}"
+                                                           maxlength="150"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="reference-${weapon.id}">
+                                                        <spring:message code="common.reference"/>
+                                                    </label>
+
+                                                    <input type="text"
+                                                           id="reference-${weapon.id}"
+                                                           name="reference"
+                                                           value="${weapon.reference}"
+                                                           maxlength="100"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="manufacturer-${weapon.id}">
+                                                        <spring:message code="common.manufacturer"/>
+                                                    </label>
+
+                                                    <input type="text"
+                                                           id="manufacturer-${weapon.id}"
+                                                           name="manufacturer"
+                                                           value="${weapon.manufacturer}"
+                                                           maxlength="100"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="category-${weapon.id}">
+                                                        <spring:message code="common.category"/>
+                                                    </label>
+
+                                                    <select id="category-${weapon.id}"
+                                                            name="categoryId"
+                                                            required>
+
+                                                        <c:forEach var="category"
+                                                                   items="${categories}">
+
+                                                            <option value="${category.id}"
+                                                                <c:if test="${weapon.category.id == category.id}">
+                                                                    selected
+                                                                </c:if>>
+
+                                                                <spring:message code="${category.name}" text="${category.name}"/>
+
+                                                            </option>
+
+                                                        </c:forEach>
+
+                                                    </select>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="price-${weapon.id}">
+                                                        <spring:message code="common.price"/>
+                                                    </label>
+
+                                                    <input type="number"
+                                                           id="price-${weapon.id}"
+                                                           name="price"
+                                                           min="0"
+                                                           step="0.01"
+                                                           value="${weapon.price}"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="stock-${weapon.id}">
+                                                        <spring:message code="common.stock"/>
+                                                    </label>
+
+                                                    <input type="number"
+                                                           id="stock-${weapon.id}"
+                                                           name="stock"
+                                                           min="0"
+                                                           value="${weapon.stock}"
+                                                           required>
+                                                </div>
+
+
+                                                <div class="form-group admin-product-form__full">
+
+                                                    <label for="description-${weapon.id}">
+                                                        <spring:message code="common.description"/>
+                                                    </label>
+
+                                                    <textarea id="description-${weapon.id}"
+                                                              name="description"
+                                                              rows="4"
+                                                              maxlength="1000"
+                                                              required>${weapon.description}</textarea>
+
+                                                </div>
+
+
+                                                <div class="form-group admin-product-form__full">
+
+                                                    <label for="image-${weapon.id}">
+                                                        <spring:message code="admin.replaceImage"/>
+                                                    </label>
+
+                                                    <input type="file"
+                                                           id="image-${weapon.id}"
+                                                           name="image"
+                                                           accept="image/jpeg,image/png,image/webp">
+
+                                                    <small>
+                                                        <spring:message code="admin.keepImage"/>
+                                                    </small>
+
+                                                </div>
+
+                                            </div>
 
                                             <sec:csrfInput/>
 
-                                            <button type="submit"
-                                                    class="btn-delete">
-                                                Confirmer
-                                            </button>
+                                            <div class="admin-product-form__actions">
+
+                                                <button type="submit"
+                                                        class="btn btn--primary">
+                                                    <spring:message code="common.save"/>
+                                                </button>
+
+                                            </div>
 
                                         </form>
 
                                     </div>
 
+                                </details>
+
+
+                                <button type="button"
+                                        class="btn btn--delete"
+                                        onclick="openDeleteDialog('${weapon.id}')">
+                                    <spring:message code="common.delete"/>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <%-- Delete confirmation dialog --%>
+
+                        <dialog id="delete-dialog-${weapon.id}"
+                                class="admin-dialog">
+
+                            <div class="admin-dialog__content">
+
+                                <h3>
+                                    <spring:message code="admin.deleteProduct"/>
+                                </h3>
+
+                                <p>
+                                    <spring:message code="admin.deleteProductQuestion" arguments="${weapon.name}"/>
+                                </p>
+
+                                <p class="admin-dialog__warning">
+                                    <spring:message code="admin.deleteWarning"/>
+                                </p>
+
+                                <div class="admin-dialog__actions">
+
+                                    <button type="button"
+                                            class="btn btn--primary"
+                                            onclick="closeDeleteDialog('${weapon.id}')">
+                                        <spring:message code="common.cancel"/>
+                                    </button>
+
+                                    <form method="post"
+                                          action="<c:url value='/admin/remove/${weapon.id}'/>">
+
+                                        <sec:csrfInput/>
+
+                                        <button type="submit"
+                                                class="btn btn--delete">
+                                            <spring:message code="admin.confirm"/>
+                                        </button>
+
+                                    </form>
+
                                 </div>
 
-                            </dialog>
+                            </div>
 
-                        </aside>
+                        </dialog>
 
                     </article>
 
@@ -604,174 +528,388 @@
 
 <section class="admin-promotions">
 
-    <h2>Promotions</h2>
+    <div class="admin-promotions__header">
 
-    <details class="admin-add-panel">
-        <summary class="btn admin-add-panel__button">
-            Ajouter une promotion
-        </summary>
+        <h2><spring:message code="admin.promotions"/></h2>
 
-        <div class="admin-add-panel__content">
+        <details class="admin-add-panel">
 
-            <h3>Nouvelle promotion</h3>
+            <summary class="btn btn--primary">
+                <spring:message code="admin.addPromotion"/>
+            </summary>
 
-            <form method="post" action="<c:url value='/admin/promotions/add'/>" class="admin-form">
+            <div class="admin-add-panel__content">
 
-                <div class="admin-form__grid">
+                <h3><spring:message code="admin.newPromotion"/></h3>
 
-                    <div class="form-group">
-                        <label for="promoTitle">Titre</label>
-                        <input type="text" id="promoTitle" name="title" maxlength="150" required>
+                <form method="post"
+                      action="<c:url value='/admin/promotions/add'/>"
+                      class="admin-product-form form--light">
+
+                    <div class="admin-product-form__grid">
+
+                        <div class="form-group">
+                            <label for="promoTitle">
+                                <spring:message code="admin.promotionTitle"/>
+                            </label>
+
+                            <input type="text"
+                                   id="promoTitle"
+                                   name="title"
+                                   maxlength="150"
+                                   required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="promoDiscount">
+                                <spring:message code="admin.promotionDiscount"/>
+                            </label>
+
+                            <input type="number"
+                                   id="promoDiscount"
+                                   name="discountPercentage"
+                                   min="0"
+                                   max="100"
+                                   step="0.01">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="promoStart">
+                                <spring:message code="admin.promotionStart"/>
+                            </label>
+
+                            <input type="date"
+                                   id="promoStart"
+                                   name="startDate">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="promoEnd">
+                                <spring:message code="admin.promotionEnd"/>
+                            </label>
+
+                            <input type="date"
+                                   id="promoEnd"
+                                   name="endDate">
+                        </div>
+
+
+                        <div class="form-group admin-product-form__full form--light">
+
+                            <label for="promoDescription">
+                                <spring:message code="common.description"/>
+                            </label>
+
+                            <textarea id="promoDescription"
+                                      name="description"
+                                      rows="4"></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promoFreeDelivery">
+                                <spring:message code="admin.promotionFreeDelivery"/>
+                            </label>
+
+                            <input type="checkbox"
+                                   id="promoFreeDelivery"
+                                   name="freeDelivery">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promoActive">
+                                <spring:message code="admin.promotionActive"/>
+                            </label>
+
+                            <input type="checkbox"
+                                   id="promoActive"
+                                   name="active"
+                                   checked>
+
+                        </div>
+
                     </div>
 
-                    <div class="form-group admin-form__full">
-                        <label for="promoDescription">Description</label>
-                        <textarea id="promoDescription" name="description" rows="4"></textarea>
+                    <sec:csrfInput/>
+
+                    <div class="admin-product-form__actions">
+
+                        <button type="submit"
+                                class="btn btn--primary">
+                            <spring:message code="admin.addPromotion"/>
+                        </button>
+
                     </div>
 
-                    <div class="form-group">
-                        <label for="promoDiscount">Réduction (%)</label>
-                        <input type="number" id="promoDiscount" name="discountPercentage" min="0" max="100" step="0.01">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="promoFreeDelivery">Livraison gratuite</label>
-                        <input type="checkbox" id="promoFreeDelivery" name="freeDelivery">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="promoStart">Date début</label>
-                        <input type="date" id="promoStart" name="startDate">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="promoEnd">Date fin</label>
-                        <input type="date" id="promoEnd" name="endDate">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="promoActive">Active</label>
-                        <input type="checkbox" id="promoActive" name="active" checked>
-                    </div>
-
-                </div>
-
-                <sec:csrfInput/>
-
-                <div class="admin-form__actions">
-                    <button type="submit">Ajouter la promotion</button>
-                </div>
-
-            </form>
-
-        </div>
-    </details>
-
-    <h3>Liste des promotions</h3>
-
-    <c:forEach var="promo" items="${promotions}">
-        <article class="admin-promo">
-
-            <div class="admin-promo__main">
-
-                <h4>${promo.title}</h4>
-
-                <p>${promo.description}</p>
-
-                <p>
-                    Réduction :
-                    <c:choose>
-                        <c:when test="${promo.discountPercentage != null}">
-                            ${promo.discountPercentage}%
-                        </c:when>
-                        <c:otherwise>
-                            Aucune
-                        </c:otherwise>
-                    </c:choose>
-                </p>
-
-                <p>
-                    Livraison gratuite :
-                    <c:if test="${promo.freeDelivery}">Oui</c:if>
-                    <c:if test="${!promo.freeDelivery}">Non</c:if>
-                </p>
-
-                <p>
-                    Valable du ${promo.startDate} au ${promo.endDate}
-                </p>
+                </form>
 
             </div>
 
-            <details class="admin-edit">
-                <summary class="btn">Modifier</summary>
+        </details>
 
-                <div class="admin-edit__content">
+    </div>
 
-                    <h3>Modifier ${promo.title}</h3>
 
-                    <form method="post" action="<c:url value='/admin/promotions/update/${promo.id}'/>" class="admin-form">
+    <%-- Promotion list --%>
 
-                        <div class="admin-form__grid">
+    <div class="admin-promotion-list">
 
-                            <div class="form-group">
-                                <label>Titre</label>
-                                <input type="text" name="title" value="${promo.title}" required>
-                            </div>
+        <c:forEach var="promo"
+                   items="${promotions}">
 
-                            <div class="form-group admin-form__full">
-                                <label>Description</label>
-                                <textarea name="description">${promo.description}</textarea>
-                            </div>
+            <article class="admin-promo">
 
-                            <div class="form-group">
-                                <label>Réduction (%)</label>
-                                <input type="number" name="discountPercentage"
-                                       value="${promo.discountPercentage}"
-                                       min="0" max="100" step="0.01">
-                            </div>
+                <div class="admin-promo__main">
 
-                            <div class="form-group">
-                                <label>Livraison gratuite</label>
-                                <input type="checkbox" name="freeDelivery"
-                                       <c:if test="${promo.freeDelivery}">checked</c:if>>
-                            </div>
+                    <h3>
+                        ${promo.title}
+                    </h3>
 
-                            <div class="form-group">
-                                <label>Date début</label>
-                                <input type="date" name="startDate" value="${promo.startDate}">
-                            </div>
+                    <c:if test="${not empty promo.description}">
+                        <p>
+                            ${promo.description}
+                        </p>
+                    </c:if>
 
-                            <div class="form-group">
-                                <label>Date fin</label>
-                                <input type="date" name="endDate" value="${promo.endDate}">
-                            </div>
 
-                            <div class="form-group">
-                                <label>Active</label>
-                                <input type="checkbox" name="active"
-                                       <c:if test="${promo.active}">checked</c:if>>
-                            </div>
+                    <div class="admin-promo__metadata">
 
-                        </div>
+                        <p>
+                            <strong><spring:message code="admin.promotionDiscountLabel"/></strong>
 
-                        <sec:csrfInput/>
+                            <c:choose>
 
-                        <div class="admin-form__actions">
-                            <button type="submit">Modifier</button>
-                        </div>
+                                <c:when test="${promo.discountPercentage != null}">
+                                    ${promo.discountPercentage} %
+                                </c:when>
 
-                    </form>
+                                <c:otherwise>
+                                    <spring:message code="common.none"/>
+                                </c:otherwise>
+
+                            </c:choose>
+                        </p>
+
+
+                        <p>
+                            <strong><spring:message code="admin.promotionFreeDeliveryLabel"/></strong>
+
+                            <c:choose>
+
+                                <c:when test="${promo.freeDelivery}">
+                                    <spring:message code="common.yes"/>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <spring:message code="common.no"/>
+                                </c:otherwise>
+
+                            </c:choose>
+                        </p>
+
+
+                        <p>
+                            <strong><spring:message code="admin.promotionStartLabel"/></strong>
+
+                            <c:choose>
+                                <c:when test="${promo.startDate != null}">
+                                    ${promo.startDate}
+                                </c:when>
+                                <c:otherwise>
+                                    <spring:message code="admin.notDefined"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+
+
+                        <p>
+                            <strong><spring:message code="admin.promotionEndLabel"/></strong>
+
+                            <c:choose>
+                                <c:when test="${promo.endDate != null}">
+                                    ${promo.endDate}
+                                </c:when>
+                                <c:otherwise>
+                                    <spring:message code="admin.notDefinedF"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+
+
+                        <p>
+                            <strong><spring:message code="admin.promotionStatusLabel"/></strong>
+
+                            <c:choose>
+
+                                <c:when test="${promo.active}">
+                                    <spring:message code="admin.promotionActiveLabel"/>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <spring:message code="admin.promotionInactiveLabel"/>
+                                </c:otherwise>
+
+                            </c:choose>
+                        </p>
+
+                    </div>
 
                 </div>
-            </details>
 
-            <form method="post" action="<c:url value='/admin/promotions/remove/${promo.id}'/>">
-                <sec:csrfInput/>
-                <button type="submit" class="btn-delete">Supprimer</button>
-            </form>
 
-        </article>
-    </c:forEach>
+                <%-- Editable promotion --%>
+
+                <form method="post"
+                      action="<c:url value='/admin/promotions/update/${promo.id}'/>"
+                      class="admin-product-form form--light">
+
+                    <div class="admin-product-form__grid">
+
+                        <div class="form-group">
+
+                            <label for="promo-title-${promo.id}">
+                                <spring:message code="admin.promotionTitle"/>
+                            </label>
+
+                            <input type="text"
+                                   id="promo-title-${promo.id}"
+                                   name="title"
+                                   value="${promo.title}"
+                                   maxlength="150"
+                                   required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-discount-${promo.id}">
+                                <spring:message code="admin.promotionDiscount"/>
+                            </label>
+
+                            <input type="number"
+                                   id="promo-discount-${promo.id}"
+                                   name="discountPercentage"
+                                   value="${promo.discountPercentage}"
+                                   min="0"
+                                   max="100"
+                                   step="0.01">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-start-${promo.id}">
+                                <spring:message code="admin.promotionStart"/>
+                            </label>
+
+                            <input type="date"
+                                   id="promo-start-${promo.id}"
+                                   name="startDate"
+                                   value="${promo.startDate}">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-end-${promo.id}">
+                                <spring:message code="admin.promotionEnd"/>
+                            </label>
+
+                            <input type="date"
+                                   id="promo-end-${promo.id}"
+                                   name="endDate"
+                                   value="${promo.endDate}">
+
+                        </div>
+
+
+                        <div class="form-group admin-product-form__full">
+
+                            <label for="promo-description-${promo.id}">
+                                <spring:message code="common.description"/>
+                            </label>
+
+                            <textarea id="promo-description-${promo.id}"
+                                      name="description"
+                                      rows="4">${promo.description}</textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-free-delivery-${promo.id}">
+                                <spring:message code="admin.promotionFreeDelivery"/>
+                            </label>
+
+                            <input type="checkbox"
+                                   id="promo-free-delivery-${promo.id}"
+                                   name="freeDelivery"
+                                   <c:if test="${promo.freeDelivery}">checked</c:if>>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="promo-active-${promo.id}">
+                                <spring:message code="admin.promotionActive"/>
+                            </label>
+
+                            <input type="checkbox"
+                                   id="promo-active-${promo.id}"
+                                   name="active"
+                                   <c:if test="${promo.active}">checked</c:if>>
+
+                        </div>
+
+                    </div>
+
+                    <sec:csrfInput/>
+
+                    <div class="admin-product-form__actions">
+
+                        <button type="submit"
+                                class="btn btn--primary">
+                            <spring:message code="common.save"/>
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                <%-- Delete promotion --%>
+
+                <form method="post"
+                      action="<c:url value='/admin/promotions/remove/${promo.id}'/>"
+                      class="admin-promo__delete">
+
+                    <sec:csrfInput/>
+
+                    <button type="submit"
+                            class="btn btn--delete">
+                        <spring:message code="common.delete"/>
+                    </button>
+
+                </form>
+
+            </article>
+
+        </c:forEach>
+
+    </div>
 
 </section>
 
@@ -801,5 +939,35 @@
         if (event.target.classList.contains("admin-dialog")) {
             event.target.close();
         }
+    });
+    document.querySelectorAll(".admin-add-panel").forEach(function (panel) {
+        panel.addEventListener("mouseleave", function () {
+            panel.removeAttribute("open");
+        });
+    });
+    document.querySelectorAll(".admin-product-edit").forEach(function (panel) {
+
+        panel.addEventListener("toggle", function () {
+
+            if (!panel.open) {
+                return;
+            }
+
+            document
+                .querySelectorAll(".admin-product-edit[open]")
+                .forEach(function (otherPanel) {
+
+                    if (otherPanel !== panel) {
+                        otherPanel.removeAttribute("open");
+                    }
+
+                });
+
+        });
+
+        panel.addEventListener("mouseleave", function () {
+            panel.removeAttribute("open");
+        });
+
     });
 </script>

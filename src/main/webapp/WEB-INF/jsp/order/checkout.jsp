@@ -3,65 +3,55 @@
 
 <section class="checkout-page">
 
-    <p class="eyebrow">Dernière étape</p>
-    <h1>Récapitulatif de la commande</h1>
+    <p class="eyebrow"><spring:message code="checkout.eyebrow"/></p>
+    <h1><spring:message code="checkout.title"/></h1>
 
     <c:choose>
-
         <c:when test="${empty cart.items}">
-            <p>Votre panier est vide.</p>
+            <p><spring:message code="cart.empty"/></p>
 
             <a class="btn" href="<c:url value='/catalogue'/>">
-                Retour au catalogue
+                <spring:message code="common.backCatalogue"/>
             </a>
         </c:when>
 
         <c:otherwise>
-
             <table>
                 <thead>
                 <tr>
-                    <th>Produit</th>
-                    <th>Prix unitaire</th>
-                    <th>Quantité</th>
-                    <th>Sous-total</th>
+                    <th><spring:message code="common.product"/></th>
+                    <th><spring:message code="common.unitPrice"/></th>
+                    <th><spring:message code="common.quantity"/></th>
+                    <th><spring:message code="common.subtotal"/></th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <c:forEach var="item" items="${cart.items}">
                     <tr>
-                        <td>${item.weapon.name}</td>
-
-                        <td>
-                            ${item.weapon.price} €
-                        </td>
-
-                        <td>
-                            ${item.quantity}
-                        </td>
-
-                        <td>
-                            ${item.subtotal} €
-                        </td>
+                        <td><c:out value="${item.weapon.name}"/></td>
+                        <td>${item.weapon.price} €</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.subtotal} €</td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
 
             <div class="order-total">
-
                 <p>
-                    Sous-total :
+                    <spring:message code="common.subtotal"/> :
                     <span>${originalPrice} €</span>
                 </p>
 
                 <p>
-                    Frais de livraison :
+                    <spring:message code="cart.delivery"/>
                     <c:choose>
                         <c:when test="${freeDelivery}">
                             <span class="strikethrough">500.00 €</span>
-                            <span class="free-delivery">Offerts !</span>
+                            <span class="free-delivery">
+                                <spring:message code="common.free"/>
+                            </span>
                         </c:when>
                         <c:otherwise>
                             <span>${deliveryFee} €</span>
@@ -71,42 +61,36 @@
 
                 <c:if test="${discountAmount > 0}">
                     <p class="discount">
-                        Réduction fidélité :
+                        <spring:message code="cart.loyaltyDiscount"/>
                         <span>- ${discountAmount} €</span>
                     </p>
                 </c:if>
 
                 <p>
-                    Total à payer :
+                    <spring:message code="checkout.totalPay"/>
                     <strong>${finalPrice} €</strong>
                 </p>
-
             </div>
 
             <div class="checkout-actions">
-
-                <form method="post"
-                      action="<c:url value='/order/confirm'/>">
-
+                <form method="post" action="<c:url value='/order/confirm'/>">
                     <sec:csrfInput/>
-
-                    <button type="submit" class="btn btn--selector btn--primary">
-                        Confirmer la commande
+                    <button type="submit" class="btn btn--primary btn--large">
+                        <spring:message code="checkout.confirm"/>
                     </button>
                 </form>
 
-                <a class="btn btn--selector btn--secondary" href="<c:url value='/cart'/>">
-                    Retour au panier
+                <a class="btn btn--primary btn--large"
+                   href="<c:url value='/cart'/>">
+                    <spring:message code="common.backCart"/>
                 </a>
 
-                <a class="btn btn--selector btn--secondary" href="<c:url value='/catalogue'/>">
-                    Retour au catalogue
+                <a class="btn btn--primary btn--large"
+                   href="<c:url value='/catalogue'/>">
+                    <spring:message code="common.backCatalogue"/>
                 </a>
-
             </div>
-
         </c:otherwise>
-
     </c:choose>
 
 </section>

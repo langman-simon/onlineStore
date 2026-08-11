@@ -6,41 +6,44 @@
     <div class="product-details__image">
         <c:choose>
             <c:when test="${not empty weapon.imageUrl}">
-                <img src="${weapon.imageUrl}" alt="${weapon.name}">
+                <img src="${weapon.imageUrl}"
+                     alt="<c:out value='${weapon.name}'/>"/>
             </c:when>
 
             <c:otherwise>
                 <div class="image-placeholder">
-                    Aucune image
+                    <spring:message code="common.noImage"/>
                 </div>
             </c:otherwise>
         </c:choose>
     </div>
 
     <div class="product-details__content">
-
-        <p class="eyebrow">${weapon.category.name}</p>
-        <h1>${weapon.name}</h1>
-
-        <p class="product-price">
-            ${weapon.price} €
+        <p class="eyebrow">
+            <spring:message code="${weapon.category.name}"
+                            text="${weapon.category.name}"/>
         </p>
 
-        <p>
-            ${weapon.description}
-        </p>
+        <h1><c:out value="${weapon.name}"/></h1>
+
+        <p class="product-price">${weapon.price} €</p>
+
+        <p><c:out value="${weapon.description}"/></p>
 
         <dl class="product-characteristics">
-            <dt>Catégorie</dt>
-            <dd>${weapon.category.name}</dd>
+            <dt><spring:message code="common.category"/></dt>
+            <dd>
+                <spring:message code="${weapon.category.name}"
+                                text="${weapon.category.name}"/>
+            </dd>
 
-            <dt>Fabricant</dt>
-            <dd>${weapon.manufacturer}</dd>
+            <dt><spring:message code="common.manufacturer"/></dt>
+            <dd><c:out value="${weapon.manufacturer}"/></dd>
 
-            <dt>Référence</dt>
-            <dd>${weapon.reference}</dd>
+            <dt><spring:message code="common.reference"/></dt>
+            <dd><c:out value="${weapon.reference}"/></dd>
 
-            <dt>Stock</dt>
+            <dt><spring:message code="common.stock"/></dt>
             <dd>${weapon.stock}</dd>
         </dl>
 
@@ -51,7 +54,9 @@
                       class="add-to-cart-form">
 
                     <div>
-                        <label for="quantity">Quantité</label>
+                        <label for="quantity">
+                            <spring:message code="common.quantity"/>
+                        </label>
 
                         <input id="quantity"
                                type="number"
@@ -66,23 +71,29 @@
                     <sec:csrfInput/>
 
                     <button type="submit" class="btn btn--primary btn--large">
-                        Ajouter au panier
+                        <spring:message code="product.addToCart"/>
                     </button>
 
-                    <a class="btn btn--primary btn--large" href="<c:url value='/catalogue'/>">
-                        Retour au catalogue
+                    <a class="btn btn--primary btn--large"
+                       href="<c:url value='/catalogue'/>">
+                        <spring:message code="common.backCatalogue"/>
                     </a>
 
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <a href="<c:url value='/admin'/>"
+                           class="btn btn--primary btn--large">
+                            <spring:message code="common.admin"/>
+                        </a>
+                    </sec:authorize>
                 </form>
             </c:when>
 
             <c:otherwise>
                 <p class="error">
-                    Produit indisponible.
+                    <spring:message code="product.unavailable"/>
                 </p>
             </c:otherwise>
         </c:choose>
-
     </div>
 
 </section>

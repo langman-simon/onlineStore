@@ -24,6 +24,44 @@
 
     width: 100%;
     min-height: 46px;
+    padding: 0.75rem 0.9rem;
+
+    color: var(--cream);
+    background-color: rgba(12, 11, 9, 0.52);
+
+    border: 1px solid rgba(216, 178, 111, 0.22);
+    border-radius: 10px;
+
+    font: inherit;
+    font-size: 0.88rem;
+
+    transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border-color: rgba(216, 178, 111, 0.42);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+
+    background-color: rgba(12, 11, 9, 0.72);
+
+    border-color: var(--gold-bright);
+
+    box-shadow:
+            0 0 0 3px rgba(216, 178, 111, 0.12);
+}
+
+.form-group textarea {
+    resize: vertical;
 }
 
 .form-label-optional {
@@ -117,4 +155,54 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+}
+
+/* =========================================================
+   LIGHT FORM SURFACE
+   ========================================================= */
+
+.form--light .form-group label {
+    color: var(--text);
+}
+
+.form--light .form-group input,
+.form--light .form-group select,
+.form--light .form-group textarea {
+    color: var(--text);
+    background-color: rgba(255, 255, 255, 0.72);
+
+    border-color: rgba(38, 32, 26, 0.2);
+}
+
+.form--light .form-group input:hover,
+.form--light .form-group select:hover,
+.form--light .form-group textarea:hover {
+    border-color: rgba(38, 32, 26, 0.38);
+}
+
+.form--light .form-group input:focus,
+.form--light .form-group select:focus,
+.form--light .form-group textarea:focus {
+    background-color: #ffffff;
+
+    border-color: var(--gold);
+
+    box-shadow:
+            0 0 0 3px rgba(216, 178, 111, 0.18);
+}
+
+
+/* =========================================================
+   CHECKBOX
+   ========================================================= */
+
+.form-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-height: 20px;
+    padding: 0;
+
+    accent-color: var(--gold);
+
+    cursor: pointer;
 }

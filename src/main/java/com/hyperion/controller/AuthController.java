@@ -1,23 +1,26 @@
 package com.hyperion.controller;
 
+import com.hyperion.dto.RegistrationForm;
+import com.hyperion.model.User;
 import com.hyperion.service.GlobalBannerService;
+import com.hyperion.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
-import com.hyperion.dto.RegistrationForm;
-import com.hyperion.model.User;
-import com.hyperion.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class AuthController {
@@ -41,21 +44,31 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        model.addAttribute("title", "Connexion");
-        model.addAttribute("body", "/WEB-INF/jsp/auth/login.jsp");
+        model.addAttribute("titleKey", "page.login");
+        model.addAttribute(
+                "body",
+                "/WEB-INF/jsp/auth/login.jsp"
+        );
+
         return "template/template";
     }
 
     @GetMapping("/register")
     public String register(Model model) {
-        model.addAttribute("title", "Inscription");
-        model.addAttribute("body", "/WEB-INF/jsp/auth/register.jsp");
+        model.addAttribute(
+                "registrationForm",
+                new RegistrationForm()
+        );
+
+        prepareRegisterPage(model);
+
         return "template/template";
     }
 
     @PostMapping("/register")
     public String processRegister(
-            @Valid @ModelAttribute RegistrationForm form,
+            @Valid @ModelAttribute("registrationForm")
+            RegistrationForm form,
             BindingResult result,
             Model model,
             HttpServletRequest request,
@@ -63,95 +76,115 @@ public class AuthController {
             HttpSession session
     ) {
         if (result.hasErrors()) {
+            globalBannerService.error(
+                    session,
+                    "error.form.invalid"
+            );
+
             prepareRegisterPage(model);
+
             return "template/template";
         }
 
         if (!form.getPassword()
                 .equals(form.getPasswordConfirmation())) {
 
-            prepareRegisterPage(model);
-
-            model.addAttribute(
-                    "error",
-                    "Les mots de passe ne correspondent pas."
+            globalBannerService.error(
+                    session,
+                    "error.password.mismatch"
             );
+
+            prepareRegisterPage(model);
 
             return "template/template";
         }
 
-        if (userService.loginExists(form.getUsername())) {
-            prepareRegisterPage(model);
-
-            model.addAttribute(
-                    "error",
-                    "Ce pseudo est déjà utilisé."
-            );
-
-            return "template/template";
-        }
+        String normalizedLogin =
+                form.getUsername().trim();
 
         User user = new User();
 
         user.setLastName(form.getLastName().trim());
         user.setFirstName(form.getFirstName().trim());
-        user.setDeliveryAddress(form.getDeliveryAddress().trim());
+        user.setDeliveryAddress(
+                form.getDeliveryAddress().trim()
+        );
         user.setEmail(form.getEmail().trim());
         user.setPhone(form.getPhone().trim());
-        user.setLogin(form.getUsername().trim());
+        user.setLogin(normalizedLogin);
 
         if (form.getSecondaryPhone() == null
                 || form.getSecondaryPhone().isBlank()) {
-
             user.setSecondaryPhone(null);
-
         } else {
             user.setSecondaryPhone(
                     form.getSecondaryPhone().trim()
             );
         }
 
-        userService.register(
-                user,
-                form.getPassword()
-        );
+        try {
+            userService.register(
+                    user,
+                    form.getPassword()
+            );
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        UsernamePasswordAuthenticationToken
-                                .unauthenticated(
-                                        user.getLogin(),
-                                        form.getPassword()
-                                )
-                );
+        } catch (IllegalArgumentException exception) {
+            globalBannerService.error(
+                    session,
+                    exception.getMessage()
+            );
 
-        SecurityContext securityContext =
-                SecurityContextHolder.createEmptyContext();
+            prepareRegisterPage(model);
 
-        securityContext.setAuthentication(authentication);
+            return "template/template";
+        }
 
-        SecurityContextHolder.setContext(securityContext);
+        try {
+            Authentication authentication =
+                    authenticationManager.authenticate(
+                            UsernamePasswordAuthenticationToken
+                                    .unauthenticated(
+                                            user.getLogin(),
+                                            form.getPassword()
+                                    )
+                    );
 
-        securityContextRepository.saveContext(
-                securityContext,
-                request,
-                response
-        );
+            SecurityContext securityContext =
+                    SecurityContextHolder
+                            .createEmptyContext();
 
-        globalBannerService.success(
-                session,
-                "Compte créé, bienvenue " + user.getLogin() + "."
-        );
+            securityContext.setAuthentication(authentication);
+            SecurityContextHolder.setContext(securityContext);
 
-        return "redirect:/";
+            securityContextRepository.saveContext(
+                    securityContext,
+                    request,
+                    response
+            );
+
+            globalBannerService.success(
+                    session,
+                    "message.register.success",
+                    user.getLogin()
+            );
+
+            return "redirect:/";
+
+        } catch (AuthenticationException exception) {
+            globalBannerService.warning(
+                    session,
+                    "message.register.loginRequired"
+            );
+
+            return "redirect:/login";
+        }
     }
 
     private void prepareRegisterPage(Model model) {
-        model.addAttribute("title", "Inscription");
+        model.addAttribute("titleKey", "page.register");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/auth/register.jsp"
         );
     }
-
 }

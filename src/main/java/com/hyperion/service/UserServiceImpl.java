@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user, String rawPassword) {
         if (userRepository.existsByLogin(user.getLogin())) {
-            throw new IllegalArgumentException("Login already exists");
+            throw new IllegalArgumentException("error.login.used");
         }
         user.setPassword(passwordEncoder.encode(rawPassword));
         return userRepository.save(user);
@@ -50,10 +50,10 @@ public class UserServiceImpl implements UserService {
     public User updateProfile(String currentLogin, String newLogin, String lastName, String firstName,
                               String deliveryAddress, String email, String phone, String secondaryPhone) {
         User user = userRepository.findByLogin(currentLogin)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("error.user.notFound"));
 
         if (!currentLogin.equals(newLogin) && userRepository.existsByLogin(newLogin)) {
-            throw new IllegalArgumentException("Ce pseudo est déjà utilisé");
+            throw new IllegalArgumentException("error.login.used");
         }
 
         user.setLogin(newLogin);

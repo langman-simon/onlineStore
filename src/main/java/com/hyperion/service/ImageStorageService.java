@@ -29,7 +29,7 @@ public class ImageStorageService {
             Files.createDirectories(uploadDirectory);
         } catch (IOException exception) {
             throw new IllegalStateException(
-                    "Impossible de créer le dossier d’upload.",
+                    "error.image.folder",
                     exception
             );
         }
@@ -38,13 +38,13 @@ public class ImageStorageService {
     public String saveWeaponImage(MultipartFile image) {
         if (image == null || image.isEmpty()) {
             throw new IllegalArgumentException(
-                    "Une image est obligatoire."
+                    "error.image.required"
             );
         }
 
         if (!ALLOWED_CONTENT_TYPES.contains(image.getContentType())) {
             throw new IllegalArgumentException(
-                    "Format non autorisé. Utilisez JPG, PNG ou WEBP."
+                    "error.image.format"
             );
         }
 
@@ -59,7 +59,7 @@ public class ImageStorageService {
 
         if (!destination.startsWith(uploadDirectory)) {
             throw new IllegalArgumentException(
-                    "Chemin de fichier invalide."
+                    "error.image.path"
             );
         }
 
@@ -71,7 +71,7 @@ public class ImageStorageService {
             );
         } catch (IOException exception) {
             throw new IllegalStateException(
-                    "Impossible d’enregistrer l’image.",
+                    "error.image.save",
                     exception
             );
         }

@@ -36,6 +36,7 @@
 .order-actions {
     display: flex;
     flex-wrap: wrap;
+    justify-content: right;
     gap: 1rem;
 }
 

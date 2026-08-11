@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(
-                                "Utilisateur introuvable : " + login
+                                "error.user.notFound"
                         )
                 );
 
