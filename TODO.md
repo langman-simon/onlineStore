@@ -1,15 +1,27 @@
 # Problème répertoriés
 - home.jsp cliquer sur une catégorie proposée ramène sur "toutes les catégories" au lieu de la catégorie sélectionnée. 
-- l'images dans weapon/details.jsp n'affiche rien si absence d'image. FIXED
-- manque un bouton retourner au catalogue dans weapon/details.jsp. FIXED
-- user non enregsitré au register quand on tape "Enter" au lieu du bouton créer un compte. FIXED
+- l'images dans weapon/details.jsp n'affiche rien si absence d'image. ✅
+- manque un bouton retourner au catalogue dans weapon/details.jsp. ✅
+- user non enregsitré au register quand on tape "Enter" au lieu du bouton créer un compte. ✅
 - copier coller l'url d'une commande d'un autre user pour la réutiliser sur un nouvel user renvoie sur une page d'erreur classique, gérer cela.
-- refaire la page "mon compte". OK
-- filtre catégorie à améliorer. FIXED
+- refaire la page "mon compte". ✅
+- filtre catégorie à améliorer. ✅
+- VALIDATIONS !!!!!!
 - cart.jsp "continuer vers la commande", lance le login mais renvoie sur home.jsp au lieu de checkout.jsp.
 - une fois connecté, "continuer vers la commande" sur cart.jsp amène sur une page erreur 405 Method Not Allowed.
 - trier catalogue par nom, prix desc asc, etc
 - devise ?
-- message paiement annulé ?
+- message paiement annulé ? ✅
 - Ne pas faire confiance au montant envoyé par le navigateur ?
 - Journaliser ou enregistrer la référence du paiement.
+- no sync des promotions.
+- promotions sur des produits et catégories particuliers.
+- refaire interface promotions administration, plus voyant.
+- trad properties are empty ?....
+- trad don't work...
+- footer more visible
+- if an item is out of stock, add "go to catalogue" button.
+- if the cart is empty, add "go to catalogue" button. 
+- add specific promotions to concerned product details. NIS
+- 500$ offert NIS
+- what if there is any pictures ? SIM

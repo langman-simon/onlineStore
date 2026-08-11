@@ -132,7 +132,7 @@
 
 
             <p>
-                Sous-total :
+                Total :
                 <strong>
                     ${originalPrice} €
                 </strong>
