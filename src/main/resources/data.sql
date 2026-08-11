@@ -51,18 +51,6 @@ ON CONFLICT (login) DO UPDATE
 -- CATÉGORIES
 -- =========================================================
 
--- Category names are stable i18n keys. Existing French rows are
--- migrated in place so foreign keys keep the same category IDs.
-UPDATE categories SET name = 'category.handguns' WHERE name = 'Armes de poing';
-UPDATE categories SET name = 'category.rifles' WHERE name = 'Fusils';
-UPDATE categories SET name = 'category.submachineGuns' WHERE name = 'Pistolets-mitrailleurs';
-UPDATE categories SET name = 'category.precisionWeapons' WHERE name = 'Armes de précision';
-UPDATE categories SET name = 'category.launchers' WHERE name = 'Lanceurs';
-UPDATE categories SET name = 'category.ammunitionExplosives' WHERE name = 'Munitions et explosifs';
-UPDATE categories SET name = 'category.protection' WHERE name = 'Protections';
-UPDATE categories SET name = 'category.maritime' WHERE name = 'Équipements maritimes';
-UPDATE categories SET name = 'category.oddities' WHERE name = 'Bizarrerie';
-
 INSERT INTO categories (
     name,
     description
@@ -107,6 +95,43 @@ VALUES
 ON CONFLICT (name) DO UPDATE
     SET
         description = EXCLUDED.description;
+
+
+-- Migrate legacy French category rows without violating the unique name constraint.
+WITH category_mapping(old_name, new_name) AS (
+    VALUES
+        ('Armes de poing', 'category.handguns'),
+        ('Fusils', 'category.rifles'),
+        ('Pistolets-mitrailleurs', 'category.submachineGuns'),
+        ('Armes de précision', 'category.precisionWeapons'),
+        ('Lanceurs', 'category.launchers'),
+        ('Munitions et explosifs', 'category.ammunitionExplosives'),
+        ('Protections', 'category.protection'),
+        ('Équipements maritimes', 'category.maritime'),
+        ('Bizarrerie', 'category.oddities')
+)
+UPDATE weapons AS weapon
+SET category_id = new_category.id
+FROM categories AS old_category
+JOIN category_mapping AS mapping
+    ON mapping.old_name = old_category.name
+JOIN categories AS new_category
+    ON new_category.name = mapping.new_name
+WHERE weapon.category_id = old_category.id;
+
+-- Remove legacy rows after every weapon points to the canonical i18n category.
+DELETE FROM categories
+WHERE name IN (
+    'Armes de poing',
+    'Fusils',
+    'Pistolets-mitrailleurs',
+    'Armes de précision',
+    'Lanceurs',
+    'Munitions et explosifs',
+    'Protections',
+    'Équipements maritimes',
+    'Bizarrerie'
+);
 
 -- =========================================================
 -- PRODUITS
