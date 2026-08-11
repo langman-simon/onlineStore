@@ -140,4 +140,8 @@ public class PromotionServiceImpl implements PromotionService {
     public BigDecimal getTier3RatePercent() {
         return TIER_3_RATE.multiply(new BigDecimal("100"));
     }
+    @Override
+    public BigDecimal getStandardDeliveryFee() {
+        return STANDARD_DELIVERY_FEE;
+    }
 }

@@ -98,7 +98,7 @@ public class CartController {
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("finalPrice", finalPrice);
         model.addAttribute("freeDelivery", freeDelivery);
-        model.addAttribute("standardDeliveryFee", new BigDecimal("500.00"));
+        model.addAttribute("standardDeliveryFee", promotionService.getStandardDeliveryFee());
         model.addAttribute("authenticated", authenticated);
 
         BigDecimal freeDeliveryThreshold = promotionService.getFreeDeliveryThreshold();
