@@ -794,6 +794,22 @@
                             </c:choose>
                         </p>
 
+                        <p>
+                            <strong>Cible :</strong>
+
+                            <c:choose>
+                                <c:when test="${promo.targetWeapon != null}">
+                                    Produit : <c:out value="${promo.targetWeapon.name}"/>
+                                </c:when>
+                                <c:when test="${promo.targetCategory != null}">
+                                    Catégorie : <spring:message code="${promo.targetCategory.name}" text="${promo.targetCategory.name}"/>
+                                </c:when>
+                                <c:otherwise>
+                                    Tout le site
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+
                     </div>
 
                 </div>
