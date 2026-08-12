@@ -178,7 +178,7 @@ class PromotionServiceImplTest {
 
     @Test
     void shouldThrowWhenCartTotalIsNull() {
-        assertThatThrownBy(() -> promotionService.calculateFinalPrice(null, true))
+        assertThatThrownBy(() -> promotionService.calculateFinalPrice((BigDecimal) null, true))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

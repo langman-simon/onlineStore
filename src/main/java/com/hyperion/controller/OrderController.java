@@ -80,28 +80,33 @@ public class OrderController {
         BigDecimal originalPrice = cart.getTotalPrice();
         BigDecimal discountAmount =
                 promotionService.calculateDiscount(
-                        originalPrice,
+                        cart.getItems(),
+                        authenticated
+                );
+        String discountLabel =
+                promotionService.getAppliedDiscountLabel(
+                        cart.getItems(),
                         authenticated
                 );
         BigDecimal finalPrice =
                 promotionService.calculateFinalPrice(
-                        originalPrice,
-                        authenticated
-                );
-        BigDecimal deliveryFee =
-                promotionService.calculateDeliveryFee(
-                        originalPrice,
+                        cart.getItems(),
                         authenticated
                 );
         boolean freeDelivery =
                 promotionService.isFreeDeliveryApplied(
-                        originalPrice,
+                        cart.getItems(),
                         authenticated
                 );
+        BigDecimal deliveryFee =
+                freeDelivery
+                        ? BigDecimal.ZERO
+                        : promotionService.getStandardDeliveryFee();
 
         model.addAttribute("cart", cart);
         model.addAttribute("originalPrice", originalPrice);
         model.addAttribute("discountAmount", discountAmount);
+        model.addAttribute("discountLabel", discountLabel);
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("finalPrice", finalPrice);
         model.addAttribute("freeDelivery", freeDelivery);

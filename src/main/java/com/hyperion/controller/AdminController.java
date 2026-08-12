@@ -284,11 +284,9 @@ public class AdminController {
             String startDate,
             @RequestParam(required = false)
             String endDate,
-            @RequestParam(
-                    required = false,
-                    defaultValue = "false"
-            )
-            boolean active,
+            @RequestParam(required = false) Long targetCategoryId,
+            @RequestParam(required = false) Long targetWeaponId,
+            @RequestParam(required = false, defaultValue = "false") boolean active,
             HttpSession session
     ) {
         try {
@@ -299,6 +297,13 @@ public class AdminController {
                     title,
                     discount
             );
+
+            if (targetCategoryId != null && targetWeaponId != null) {
+                throw new IllegalArgumentException("Choisissez soit une catégorie, soit un produit, pas les deux.");
+            }
+
+            Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
+            Weapon targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
 
             LocalDate parsedStartDate =
                     parseDate(startDate);
@@ -324,6 +329,8 @@ public class AdminController {
             promotion.setStartDate(parsedStartDate);
             promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
+            promotion.setTargetCategory(targetCategory);
+            promotion.setTargetWeapon(targetWeapon);
 
             promotionService.save(promotion);
 
@@ -362,11 +369,9 @@ public class AdminController {
             String startDate,
             @RequestParam(required = false)
             String endDate,
-            @RequestParam(
-                    required = false,
-                    defaultValue = "false"
-            )
-            boolean active,
+            @RequestParam(required = false) Long targetCategoryId,
+            @RequestParam(required = false) Long targetWeaponId,
+            @RequestParam(required = false, defaultValue = "false") boolean active,
             HttpSession session
     ) {
         try {
@@ -377,6 +382,13 @@ public class AdminController {
                     title,
                     discount
             );
+
+            if (targetCategoryId != null && targetWeaponId != null) {
+                throw new IllegalArgumentException("Choisissez soit une catégorie, soit un produit, pas les deux.");
+            }
+
+            Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
+            Weapon targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
 
             LocalDate parsedStartDate =
                     parseDate(startDate);
@@ -403,6 +415,8 @@ public class AdminController {
             promotion.setStartDate(parsedStartDate);
             promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
+            promotion.setTargetCategory(targetCategory);
+            promotion.setTargetWeapon(targetWeapon);
 
             promotionService.save(promotion);
 
