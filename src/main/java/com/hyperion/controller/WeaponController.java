@@ -1,7 +1,7 @@
 package com.hyperion.controller;
 
 import com.hyperion.model.Weapon;
-import com.hyperion.repository.WeaponRepository;
+import com.hyperion.service.CatalogueService;
 import com.hyperion.service.GlobalBannerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -16,14 +16,14 @@ import java.util.Optional;
 @RequestMapping("/weapons")
 public class WeaponController {
 
-    private final WeaponRepository weaponRepository;
+    private final CatalogueService catalogueService;
     private final GlobalBannerService globalBannerService;
 
     public WeaponController(
-            WeaponRepository weaponRepository,
+            CatalogueService catalogueService,
             GlobalBannerService globalBannerService
     ) {
-        this.weaponRepository = weaponRepository;
+        this.catalogueService = catalogueService;
         this.globalBannerService = globalBannerService;
     }
 
@@ -34,7 +34,7 @@ public class WeaponController {
             HttpSession session
     ) {
         Optional<Weapon> weaponOpt =
-                weaponRepository.findById(id);
+                catalogueService.findWeaponById(id);
 
         if (weaponOpt.isEmpty()) {
             globalBannerService.error(

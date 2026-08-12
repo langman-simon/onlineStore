@@ -1,7 +1,7 @@
 package com.hyperion.controller;
 
 import com.hyperion.model.Weapon;
-import com.hyperion.repository.WeaponRepository;
+import com.hyperion.service.CatalogueService;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.PromotionService;
 import com.hyperion.session.SessionCart;
@@ -21,18 +21,18 @@ import java.util.Optional;
 public class CartController {
 
     private final SessionCart sessionCart;
-    private final WeaponRepository weaponRepository;
+    private final CatalogueService catalogueService;
     private final PromotionService promotionService;
     private final GlobalBannerService globalBannerService;
 
     public CartController(
             SessionCart sessionCart,
-            WeaponRepository weaponRepository,
+            CatalogueService catalogueService,
             PromotionService promotionService,
             GlobalBannerService globalBannerService
     ) {
         this.sessionCart = sessionCart;
-        this.weaponRepository = weaponRepository;
+        this.catalogueService = catalogueService;
         this.promotionService = promotionService;
         this.globalBannerService = globalBannerService;
     }
@@ -44,7 +44,7 @@ public class CartController {
             HttpSession session
     ) {
         Optional<Weapon> weaponOpt =
-                weaponRepository.findById(weaponId);
+                catalogueService.findWeaponById(weaponId);
 
         if (weaponOpt.isEmpty()) {
             globalBannerService.error(
@@ -145,7 +145,7 @@ public class CartController {
         model.addAttribute("freeDelivery", freeDelivery);
         model.addAttribute(
                 "standardDeliveryFee",
-                new BigDecimal("500.00")
+                promotionService.getStandardDeliveryFee()
         );
 
         BigDecimal freeDeliveryThreshold =
@@ -231,7 +231,7 @@ public class CartController {
             HttpSession session
     ) {
         Optional<Weapon> weaponOpt =
-                weaponRepository.findById(weaponId);
+                catalogueService.findWeaponById(weaponId);
 
         if (weaponOpt.isEmpty()) {
             globalBannerService.error(

@@ -3,8 +3,7 @@ package com.hyperion.controller;
 import com.hyperion.model.Category;
 import com.hyperion.model.Promotion;
 import com.hyperion.model.Weapon;
-import com.hyperion.repository.CategoryRepository;
-import com.hyperion.repository.WeaponRepository;
+import com.hyperion.service.CatalogueService;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.ImageStorageService;
 import com.hyperion.service.PromotionService;
@@ -29,21 +28,18 @@ import java.util.Optional;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final WeaponRepository weaponRepository;
-    private final CategoryRepository categoryRepository;
+    private final CatalogueService catalogueService;
     private final ImageStorageService imageStorageService;
     private final PromotionService promotionService;
     private final GlobalBannerService globalBannerService;
 
     public AdminController(
-            WeaponRepository weaponRepository,
-            CategoryRepository categoryRepository,
+            CatalogueService catalogueService,
             ImageStorageService imageStorageService,
             PromotionService promotionService,
             GlobalBannerService globalBannerService
     ) {
-        this.weaponRepository = weaponRepository;
-        this.categoryRepository = categoryRepository;
+        this.catalogueService = catalogueService;
         this.imageStorageService = imageStorageService;
         this.promotionService = promotionService;
         this.globalBannerService = globalBannerService;
@@ -54,16 +50,8 @@ public class AdminController {
             @RequestParam(required = false) Long categoryId,
             Model model
     ) {
-        List<Weapon> weapons;
-
-        if (categoryId == null) {
-            weapons = weaponRepository.findByOrderByNameAsc();
-        } else {
-            weapons = weaponRepository
-                    .findByCategoryIdOrderByNameAsc(categoryId);
-        }
-
-        List<Category> categories = categoryRepository.findAll();
+        List<Weapon> weapons = catalogueService.findWeapons(categoryId);
+        List<Category> categories = catalogueService.findAllCategories();
 
         model.addAttribute("weapons", weapons);
         model.addAttribute("categories", categories);
@@ -96,7 +84,7 @@ public class AdminController {
             @RequestParam String reference,
             @RequestParam String manufacturer,
             @RequestParam Long categoryId,
-            @RequestParam MultipartFile image,
+            @RequestParam(required = false) MultipartFile image,
             HttpSession session
     ) {
         try {
@@ -111,8 +99,8 @@ public class AdminController {
 
             String normalizedReference = reference.trim();
 
-            if (weaponRepository
-                    .findByReference(normalizedReference)
+            if (catalogueService
+                    .findWeaponByReference(normalizedReference)
                     .isPresent()) {
 
                 throw new IllegalArgumentException(
@@ -123,7 +111,9 @@ public class AdminController {
             Category category = findCategory(categoryId);
 
             String imageUrl =
-                    imageStorageService.saveWeaponImage(image);
+                    image == null || image.isEmpty()
+                            ? null
+                            : imageStorageService.saveWeaponImage(image);
 
             Weapon weapon = new Weapon();
 
@@ -136,7 +126,7 @@ public class AdminController {
             weapon.setCategory(category);
             weapon.setImageUrl(imageUrl);
 
-            weaponRepository.save(weapon);
+            catalogueService.saveWeapon(weapon);
 
             globalBannerService.success(
                     session,
@@ -144,7 +134,7 @@ public class AdminController {
                     weapon.getName()
             );
 
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException | IllegalStateException exception) {
 
             globalBannerService.error(
                     session,
@@ -185,7 +175,7 @@ public class AdminController {
             String normalizedReference = reference.trim();
 
             Optional<Weapon> weaponWithSameReference =
-                    weaponRepository.findByReference(
+                    catalogueService.findWeaponByReference(
                             normalizedReference
                     );
 
@@ -216,7 +206,7 @@ public class AdminController {
                 weapon.setImageUrl(imageUrl);
             }
 
-            weaponRepository.save(weapon);
+            catalogueService.saveWeapon(weapon);
 
             globalBannerService.success(
                     session,
@@ -224,7 +214,7 @@ public class AdminController {
                     weapon.getName()
             );
 
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException | IllegalStateException exception) {
 
             globalBannerService.error(
                     session,
@@ -241,8 +231,8 @@ public class AdminController {
             @PathVariable Long weaponId,
             HttpSession session
     ) {
-        Weapon weapon = weaponRepository
-                .findById(weaponId)
+        Weapon weapon = catalogueService
+                .findWeaponById(weaponId)
                 .orElse(null);
 
         if (weapon == null) {
@@ -256,7 +246,7 @@ public class AdminController {
         }
 
         try {
-            weaponRepository.delete(weapon);
+            catalogueService.deleteWeapon(weapon);
 
             globalBannerService.success(
                     session,
@@ -477,8 +467,8 @@ public class AdminController {
     // =========================================================
 
     private Weapon findWeapon(Long weaponId) {
-        return weaponRepository
-                .findById(weaponId)
+        return catalogueService
+                .findWeaponById(weaponId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "error.admin.weaponNotFound"
@@ -487,8 +477,8 @@ public class AdminController {
     }
 
     private Category findCategory(Long categoryId) {
-        return categoryRepository
-                .findById(categoryId)
+        return catalogueService
+                .findCategoryById(categoryId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "error.admin.categoryNotFound"
