@@ -154,19 +154,46 @@
         <h2><spring:message code="home.categories.title"/></h2>
 
         <div class="home-category-grid">
-            <a href="<c:url value='/catalogue'/>"
+            <c:url var="weaponsCategoryUrl" value="/catalogue">
+                <c:if test="${not empty weaponsCategory}">
+                    <c:param name="categoryId" value="${weaponsCategory.id}"/>
+                </c:if>
+            </c:url>
+
+            <c:url var="protectionCategoryUrl" value="/catalogue">
+                <c:if test="${not empty protectionCategory}">
+                    <c:param name="categoryId" value="${protectionCategory.id}"/>
+                </c:if>
+            </c:url>
+
+            <c:url var="maritimeCategoryUrl" value="/catalogue">
+                <c:if test="${not empty maritimeCategory}">
+                    <c:param name="categoryId" value="${maritimeCategory.id}"/>
+                </c:if>
+            </c:url>
+
+            <a href="${weaponsCategoryUrl}"
                class="home-category-card">
-                <h3><spring:message code="home.categories.weapons.title"/></h3>
+                <h3>
+                    <c:choose>
+                        <c:when test="${not empty weaponsCategory}">
+                            <spring:message code="${weaponsCategory.name}" text="${weaponsCategory.name}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <spring:message code="home.categories.weapons.title"/>
+                        </c:otherwise>
+                    </c:choose>
+                </h3>
                 <p><spring:message code="home.categories.weapons.text"/></p>
             </a>
 
-            <a href="<c:url value='/catalogue'/>"
+            <a href="${protectionCategoryUrl}"
                class="home-category-card">
                 <h3><spring:message code="category.protection"/></h3>
                 <p><spring:message code="home.categories.protection.text"/></p>
             </a>
 
-            <a href="<c:url value='/catalogue'/>"
+            <a href="${maritimeCategoryUrl}"
                class="home-category-card">
                 <h3><spring:message code="category.maritime"/></h3>
                 <p><spring:message code="home.categories.maritime.text"/></p>
