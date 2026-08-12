@@ -124,8 +124,8 @@
                             <input type="file"
                                    id="addImage"
                                    name="image"
-                                   accept="image/jpeg,image/png,image/webp"
-                                   required>
+                                   accept="image/jpeg,image/png,image/webp">
+                            <small><spring:message code="admin.imageOptional"/></small>
                         </div>
 
                     </div>
@@ -217,8 +217,9 @@
                             <c:choose>
 
                                 <c:when test="${not empty weapon.imageUrl}">
-                                    <img src="${weapon.imageUrl}"
-                                         alt="${weapon.name}">
+                                    <c:url var="weaponImageUrl" value="${weapon.imageUrl}"/>
+                                    <img src="${weaponImageUrl}"
+                                         alt="<c:out value='${weapon.name}'/>">
                                 </c:when>
 
                                 <c:otherwise>
@@ -239,10 +240,10 @@
                             <div class="admin-product__header">
 
                                 <div>
-                                    <h3>${weapon.name}</h3>
+                                    <h3><c:out value="${weapon.name}"/></h3>
 
                                     <p class="admin-product__reference">
-                                        ${weapon.reference}
+                                        <c:out value="${weapon.reference}"/>
                                     </p>
                                 </div>
 
@@ -262,7 +263,7 @@
 
                                 <span>
                                     <strong><spring:message code="common.manufacturer"/></strong>
-                                    ${weapon.manufacturer}
+                                    <c:out value="${weapon.manufacturer}"/>
                                 </span>
 
                                 <span>
@@ -292,7 +293,7 @@
                                     <div class="admin-product-edit__content">
 
                                         <h3>
-                                            <spring:message code="admin.editProduct" arguments="${weapon.name}"/>
+                                            <spring:message code="admin.editProduct" arguments="${weapon.name}" htmlEscape="true"/>
                                         </h3>
 
                                         <form method="post"
@@ -310,7 +311,7 @@
                                                     <input type="text"
                                                            id="name-${weapon.id}"
                                                            name="name"
-                                                           value="${weapon.name}"
+                                                           value="<c:out value='${weapon.name}'/>"
                                                            maxlength="150"
                                                            required>
                                                 </div>
@@ -324,7 +325,7 @@
                                                     <input type="text"
                                                            id="reference-${weapon.id}"
                                                            name="reference"
-                                                           value="${weapon.reference}"
+                                                           value="<c:out value='${weapon.reference}'/>"
                                                            maxlength="100"
                                                            required>
                                                 </div>
@@ -338,7 +339,7 @@
                                                     <input type="text"
                                                            id="manufacturer-${weapon.id}"
                                                            name="manufacturer"
-                                                           value="${weapon.manufacturer}"
+                                                           value="<c:out value='${weapon.manufacturer}'/>"
                                                            maxlength="100"
                                                            required>
                                                 </div>
@@ -410,7 +411,7 @@
                                                               name="description"
                                                               rows="4"
                                                               maxlength="1000"
-                                                              required>${weapon.description}</textarea>
+                                                              required><c:out value="${weapon.description}"/></textarea>
 
                                                 </div>
 
@@ -475,7 +476,7 @@
                                 </h3>
 
                                 <p>
-                                    <spring:message code="admin.deleteProductQuestion" arguments="${weapon.name}"/>
+                                    <spring:message code="admin.deleteProductQuestion" arguments="${weapon.name}" htmlEscape="true"/>
                                 </p>
 
                                 <p class="admin-dialog__warning">
@@ -665,18 +666,14 @@
         <c:forEach var="promo"
                    items="${promotions}">
 
-            <article class="admin-promo">
+            <article class="admin-promo ${promo.active ? 'admin-promo--active' : 'admin-promo--inactive'}">
 
                 <div class="admin-promo__main">
 
-                    <h3>
-                        ${promo.title}
-                    </h3>
+                    <h3><c:out value="${promo.title}"/></h3>
 
                     <c:if test="${not empty promo.description}">
-                        <p>
-                            ${promo.description}
-                        </p>
+                        <p><c:out value="${promo.description}"/></p>
                     </c:if>
 
 
@@ -767,6 +764,11 @@
 
                 <%-- Editable promotion --%>
 
+                <details class="admin-promo-edit">
+                    <summary class="btn btn--primary">
+                        <spring:message code="admin.editPromotion"/>
+                    </summary>
+
                 <form method="post"
                       action="<c:url value='/admin/promotions/update/${promo.id}'/>"
                       class="admin-product-form form--light">
@@ -782,7 +784,7 @@
                             <input type="text"
                                    id="promo-title-${promo.id}"
                                    name="title"
-                                   value="${promo.title}"
+                                   value="<c:out value='${promo.title}'/>"
                                    maxlength="150"
                                    required>
 
@@ -842,7 +844,7 @@
 
                             <textarea id="promo-description-${promo.id}"
                                       name="description"
-                                      rows="4">${promo.description}</textarea>
+                                      rows="4"><c:out value="${promo.description}"/></textarea>
 
                         </div>
 
@@ -882,12 +884,13 @@
 
                         <button type="submit"
                                 class="btn btn--primary">
-                            <spring:message code="common.save"/>
+                            <spring:message code="admin.savePromotion"/>
                         </button>
 
                     </div>
 
                 </form>
+                </details>
 
 
                 <%-- Delete promotion --%>
@@ -900,7 +903,7 @@
 
                     <button type="submit"
                             class="btn btn--delete">
-                        <spring:message code="common.delete"/>
+                        <spring:message code="admin.deletePromotion"/>
                     </button>
 
                 </form>

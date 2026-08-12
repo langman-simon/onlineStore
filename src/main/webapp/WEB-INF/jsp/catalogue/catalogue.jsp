@@ -77,7 +77,8 @@
                                     <span class="catalogue-selector__preview">
                                         <c:choose>
                                             <c:when test="${not empty weapon.imageUrl}">
-                                                <img src="${weapon.imageUrl}" alt="">
+                                                <c:url var="weaponImageUrl" value="${weapon.imageUrl}"/>
+                                                <img src="${weaponImageUrl}" alt="">
                                             </c:when>
 
                                             <c:otherwise>
@@ -139,7 +140,8 @@
                                     <div class="catalogue-product__image">
                                         <c:choose>
                                             <c:when test="${not empty weapon.imageUrl}">
-                                                <img src="${weapon.imageUrl}"
+                                                <c:url var="weaponImageUrl" value="${weapon.imageUrl}"/>
+                                                <img src="${weaponImageUrl}"
                                                      alt="<c:out value='${weapon.name}'/>"/>
                                             </c:when>
 

@@ -6,7 +6,8 @@
     <div class="product-details__image">
         <c:choose>
             <c:when test="${not empty weapon.imageUrl}">
-                <img src="${weapon.imageUrl}"
+                <c:url var="weaponImageUrl" value="${weapon.imageUrl}"/>
+                <img src="${weaponImageUrl}"
                      alt="<c:out value='${weapon.name}'/>"/>
             </c:when>
 
@@ -92,6 +93,11 @@
                 <p class="error">
                     <spring:message code="product.unavailable"/>
                 </p>
+
+                <a class="btn btn--primary btn--large"
+                   href="<c:url value='/catalogue'/>">
+                    <spring:message code="common.backCatalogue"/>
+                </a>
             </c:otherwise>
         </c:choose>
     </div>
