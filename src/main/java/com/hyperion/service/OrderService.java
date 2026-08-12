@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -48,45 +51,20 @@ public class OrderService {
             );
         }
 
-        BigDecimal originalPrice =
-                cart.getTotalPrice();
-
-        BigDecimal discountAmount =
-                promotionService.calculateDiscount(
-                        originalPrice,
-                        authenticated
-                );
-
-        BigDecimal finalPrice =
-                promotionService.calculateFinalPrice(
-                        originalPrice,
-                        authenticated
-                );
-
-        CustomerOrder order =
-                new CustomerOrder(
-                        originalPrice,
-                        discountAmount,
-                        finalPrice
-                );
-
-        order.setUser(user);
+        List<OrderItem> orderItems = new ArrayList<>();
+        BigDecimal originalPrice = BigDecimal.ZERO;
 
         for (CartItem cartItem : cart.getItems()) {
+            Long weaponId = cartItem.getWeapon().getId();
 
-            Long weaponId =
-                    cartItem.getWeapon().getId();
+            Weapon weapon = weaponRepository.findById(weaponId)
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "error.product.notFound"
+                            )
+                    );
 
-            Weapon weapon =
-                    weaponRepository.findById(weaponId)
-                            .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "error.product.notFound"
-                                    )
-                            );
-
-            int quantity =
-                    cartItem.getQuantity();
+            int quantity = cartItem.getQuantity();
 
             if (quantity <= 0) {
                 throw new IllegalArgumentException(
@@ -100,27 +78,84 @@ public class OrderService {
                 );
             }
 
-            OrderItem orderItem =
-                    new OrderItem(
-                            weapon,
-                            quantity
-                    );
+            OrderItem orderItem = new OrderItem(
+                    weapon,
+                    quantity
+            );
 
-            order.addItem(orderItem);
+            orderItems.add(orderItem);
+            originalPrice = originalPrice.add(
+                    orderItem.getSubtotal()
+            );
         }
+
+        BigDecimal discountAmount =
+                promotionService.calculateDiscount(
+                        originalPrice,
+                        authenticated
+                );
+
+        BigDecimal finalPrice =
+                promotionService.calculateFinalPrice(
+                        originalPrice,
+                        authenticated
+                );
+
+        CustomerOrder order = new CustomerOrder(
+                originalPrice,
+                discountAmount,
+                finalPrice
+        );
+        order.setUser(user);
+        orderItems.forEach(order::addItem);
 
         CustomerOrder savedOrder =
                 customerOrderRepository.save(order);
 
         cart.clear();
-
         return savedOrder;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CustomerOrder> findOrdersForUser(
+            String userLogin
+    ) {
+        return customerOrderRepository
+                .findByUserLoginOrderByCreatedAtDesc(userLogin);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<CustomerOrder> findOrderForUser(
+            Long orderId,
+            String userLogin
+    ) {
+        return customerOrderRepository.findByIdAndUserLogin(
+                orderId,
+                userLogin
+        );
     }
 
     @Transactional
     public CustomerOrder validatePayment(
-            Long orderId
+            Long orderId,
+            BigDecimal paidAmount,
+            String paymentReference
     ) {
+        if (paidAmount == null) {
+            throw new IllegalArgumentException(
+                    "error.payment.amountMissing"
+            );
+        }
+
+        if (paymentReference == null
+                || paymentReference.isBlank()) {
+            throw new IllegalArgumentException(
+                    "error.payment.referenceMissing"
+            );
+        }
+
+        String normalizedReference = paymentReference.trim();
+
         CustomerOrder order =
                 customerOrderRepository.findById(orderId)
                         .orElseThrow(() ->
@@ -130,25 +165,41 @@ public class OrderService {
                         );
 
         if ("PAID".equals(order.getStatus())) {
+            if (normalizedReference.equals(
+                    order.getPaymentReference()
+            )) {
+                return order;
+            }
+
             throw new IllegalArgumentException(
                     "error.order.alreadyPaid"
             );
         }
 
+        if (customerOrderRepository
+                .existsByPaymentReference(normalizedReference)) {
+            throw new IllegalArgumentException(
+                    "error.payment.duplicateReference"
+            );
+        }
+
+        if (order.getTotalPrice().compareTo(paidAmount) != 0) {
+            throw new IllegalArgumentException(
+                    "error.payment.amountMismatch"
+            );
+        }
+
         for (OrderItem orderItem : order.getItems()) {
-
-            Weapon weapon =
-                    weaponRepository.findById(
-                                    orderItem.getWeapon().getId()
+            Weapon weapon = weaponRepository.findById(
+                            orderItem.getWeapon().getId()
+                    )
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "error.product.notFound"
                             )
-                            .orElseThrow(() ->
-                                    new IllegalArgumentException(
-                                            "error.product.notFound"
-                                    )
-                            );
+                    );
 
-            int quantity =
-                    orderItem.getQuantity();
+            int quantity = orderItem.getQuantity();
 
             if (weapon.getStock() < quantity) {
                 throw new IllegalArgumentException(
@@ -161,6 +212,7 @@ public class OrderService {
             );
         }
 
+        order.setPaymentReference(normalizedReference);
         order.setStatus("PAID");
 
         return customerOrderRepository.save(order);
@@ -172,22 +224,15 @@ public class OrderService {
             String userLogin
     ) {
         CustomerOrder order =
-                customerOrderRepository.findById(orderId)
+                customerOrderRepository.findByIdAndUserLogin(
+                                orderId,
+                                userLogin
+                        )
                         .orElseThrow(() ->
                                 new IllegalArgumentException(
                                         "error.order.notFound"
                                 )
                         );
-
-        if (order.getUser() == null
-                || !order.getUser()
-                .getLogin()
-                .equals(userLogin)) {
-
-            throw new IllegalArgumentException(
-                    "error.order.cancelForbidden"
-            );
-        }
 
         if ("PAID".equals(order.getStatus())) {
             throw new IllegalArgumentException(

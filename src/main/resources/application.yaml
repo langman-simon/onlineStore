@@ -42,6 +42,7 @@ app:
 
 paypal:
   sandbox-url: https://www.sandbox.paypal.com/cgi-bin/webscr
+  ipn-verification-url: https://ipnpb.sandbox.paypal.com/cgi-bin/webscr
   seller-email: sb-h943ag52349284@business.example.com
   client-id: AZ3M0eBXJYOiQBviuSBMj
   currency: EUR

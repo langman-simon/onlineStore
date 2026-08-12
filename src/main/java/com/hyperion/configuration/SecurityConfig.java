@@ -54,6 +54,11 @@ public class SecurityConfig {
     ) throws Exception {
 
         http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(
+                                "/payment/paypal/ipn"
+                        )
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")

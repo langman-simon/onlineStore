@@ -62,6 +62,13 @@
             <spring:message code="common.total"/> :
             <strong>${order.totalPrice} €</strong>
         </p>
+        <c:if test="${not empty order.paymentReference}">
+            <p>
+                <spring:message code="order.paymentReference"/> :
+                <strong><c:out value="${order.paymentReference}"/></strong>
+            </p>
+        </c:if>
+
         <p class="${order.status == 'PAID' ? 'success' : 'error'}">
             <c:choose>
                 <c:when test="${order.status == 'PAID'}">
@@ -91,7 +98,12 @@
                 <input type="hidden" name="cmd" value="_xclick">
                 <input type="hidden" name="amount" value="${order.totalPrice}">
                 <input type="hidden" name="item_name" value="${paypalItemName}">
-                <input type="hidden" name="currency_code" value="EUR">
+                <input type="hidden" name="currency_code" value="${paypalCurrency}">
+                <input type="hidden" name="custom" value="${order.id}">
+                <input type="hidden" name="invoice" value="HYP-${order.id}">
+                <input type="hidden"
+                       name="notify_url"
+                       value="${baseUrl}/payment/paypal/ipn">
                 <input type="hidden"
                        name="lc"
                        value="${pageContext.response.locale.language == 'en' ? 'US' : 'FR'}">

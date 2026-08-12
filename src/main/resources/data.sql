@@ -418,6 +418,7 @@ INSERT INTO customer_orders (
     discount_amount,
     total_price,
     status,
+    payment_reference,
     user_id
 )
 VALUES
@@ -428,6 +429,7 @@ VALUES
         0.00,
         1899.95,
         'PAID',
+        'DEMO-PAYPAL-ORDER-1',
         (SELECT id FROM users WHERE login = 'user')
     ),
     (
@@ -437,6 +439,7 @@ VALUES
         0.00,
         1299.00,
         'PENDING_PAYMENT',
+        NULL,
         (SELECT id FROM users WHERE login = 'user')
     )
 ON CONFLICT (id) DO UPDATE
@@ -446,6 +449,7 @@ ON CONFLICT (id) DO UPDATE
         discount_amount = EXCLUDED.discount_amount,
         total_price = EXCLUDED.total_price,
         status = EXCLUDED.status,
+        payment_reference = EXCLUDED.payment_reference,
         user_id = EXCLUDED.user_id;
 
 -- =========================================================

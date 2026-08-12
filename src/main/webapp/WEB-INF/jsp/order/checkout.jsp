@@ -48,7 +48,7 @@
                     <spring:message code="cart.delivery"/>
                     <c:choose>
                         <c:when test="${freeDelivery}">
-                            <span class="strikethrough">500.00 €</span>
+                            <span class="strikethrough">${standardDeliveryFee} €</span>
                             <span class="free-delivery">
                                 <spring:message code="common.free"/>
                             </span>

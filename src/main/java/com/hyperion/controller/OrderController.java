@@ -3,7 +3,6 @@ package com.hyperion.controller;
 import com.hyperion.cart.Cart;
 import com.hyperion.model.CustomerOrder;
 import com.hyperion.model.User;
-import com.hyperion.repository.CustomerOrderRepository;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.OrderService;
 import com.hyperion.service.PromotionService;
@@ -11,7 +10,6 @@ import com.hyperion.service.UserService;
 import com.hyperion.session.SessionCart;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -31,7 +29,6 @@ public class OrderController {
 
     private final OrderService orderService;
     private final SessionCart sessionCart;
-    private final CustomerOrderRepository customerOrderRepository;
     private final UserService userService;
     private final PromotionService promotionService;
     private final GlobalBannerService globalBannerService;
@@ -42,20 +39,21 @@ public class OrderController {
     @Value("${paypal.seller-email}")
     private String paypalSellerEmail;
 
+    @Value("${paypal.currency}")
+    private String paypalCurrency;
+
     @Value("${app.base-url}")
     private String baseUrl;
 
     public OrderController(
             OrderService orderService,
             SessionCart sessionCart,
-            CustomerOrderRepository customerOrderRepository,
             UserService userService,
             PromotionService promotionService,
             GlobalBannerService globalBannerService
     ) {
         this.orderService = orderService;
         this.sessionCart = sessionCart;
-        this.customerOrderRepository = customerOrderRepository;
         this.userService = userService;
         this.promotionService = promotionService;
         this.globalBannerService = globalBannerService;
@@ -78,30 +76,23 @@ public class OrderController {
             return "redirect:/cart";
         }
 
-        boolean authenticated =
-                isAuthenticated(authentication);
-
-        BigDecimal originalPrice =
-                cart.getTotalPrice();
-
+        boolean authenticated = isAuthenticated(authentication);
+        BigDecimal originalPrice = cart.getTotalPrice();
         BigDecimal discountAmount =
                 promotionService.calculateDiscount(
                         originalPrice,
                         authenticated
                 );
-
         BigDecimal finalPrice =
                 promotionService.calculateFinalPrice(
                         originalPrice,
                         authenticated
                 );
-
         BigDecimal deliveryFee =
                 promotionService.calculateDeliveryFee(
                         originalPrice,
                         authenticated
                 );
-
         boolean freeDelivery =
                 promotionService.isFreeDeliveryApplied(
                         originalPrice,
@@ -114,11 +105,12 @@ public class OrderController {
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("finalPrice", finalPrice);
         model.addAttribute("freeDelivery", freeDelivery);
-
         model.addAttribute(
-                "titleKey",
-                "page.checkout"
+                "standardDeliveryFee",
+                promotionService.getStandardDeliveryFee()
         );
+
+        model.addAttribute("titleKey", "page.checkout");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/order/checkout.jsp"
@@ -141,12 +133,11 @@ public class OrderController {
                             )
                     );
 
-            CustomerOrder order =
-                    orderService.validateOrder(
-                            sessionCart.getCart(),
-                            user,
-                            isAuthenticated(authentication)
-                    );
+            CustomerOrder order = orderService.validateOrder(
+                    sessionCart.getCart(),
+                    user,
+                    isAuthenticated(authentication)
+            );
 
             globalBannerService.success(
                     session,
@@ -173,10 +164,7 @@ public class OrderController {
             HttpSession session
     ) {
         Optional<CustomerOrder> orderOpt =
-                findOrderForCurrentUser(
-                        id,
-                        authentication
-                );
+                findOrderForCurrentUser(id, authentication);
 
         if (orderOpt.isEmpty()) {
             globalBannerService.error(
@@ -190,20 +178,11 @@ public class OrderController {
         CustomerOrder order = orderOpt.get();
 
         model.addAttribute("order", order);
-        model.addAttribute(
-                "paypalSandboxUrl",
-                paypalSandboxUrl
-        );
-        model.addAttribute(
-                "paypalSellerEmail",
-                paypalSellerEmail
-        );
+        model.addAttribute("paypalSandboxUrl", paypalSandboxUrl);
+        model.addAttribute("paypalSellerEmail", paypalSellerEmail);
+        model.addAttribute("paypalCurrency", paypalCurrency);
         model.addAttribute("baseUrl", baseUrl);
-
-        model.addAttribute(
-                "titleKey",
-                "page.orderDetails"
-        );
+        model.addAttribute("titleKey", "page.orderDetails");
         model.addAttribute(
                 "body",
                 "/WEB-INF/jsp/order/details.jsp"
@@ -219,10 +198,7 @@ public class OrderController {
             HttpSession session
     ) {
         Optional<CustomerOrder> orderOpt =
-                findOrderForCurrentUser(
-                        id,
-                        authentication
-                );
+                findOrderForCurrentUser(id, authentication);
 
         if (orderOpt.isEmpty()) {
             globalBannerService.error(
@@ -233,18 +209,15 @@ public class OrderController {
             return "redirect:/order";
         }
 
-        try {
-            orderService.validatePayment(id);
-
+        if ("PAID".equals(orderOpt.get().getStatus())) {
             globalBannerService.success(
                     session,
                     "message.order.paymentValidated"
             );
-
-        } catch (IllegalArgumentException exception) {
-            globalBannerService.error(
+        } else {
+            globalBannerService.info(
                     session,
-                    exception.getMessage()
+                    "message.order.paymentPendingVerification"
             );
         }
 
@@ -257,13 +230,7 @@ public class OrderController {
             Authentication authentication,
             HttpSession session
     ) {
-        Optional<CustomerOrder> orderOpt =
-                findOrderForCurrentUser(
-                        id,
-                        authentication
-                );
-
-        if (orderOpt.isEmpty()) {
+        if (findOrderForCurrentUser(id, authentication).isEmpty()) {
             globalBannerService.error(
                     session,
                     "error.order.notFound"
@@ -286,10 +253,9 @@ public class OrderController {
             Model model
     ) {
         List<CustomerOrder> orders =
-                customerOrderRepository
-                        .findByUserLoginOrderByCreatedAtDesc(
-                                authentication.getName()
-                        );
+                orderService.findOrdersForUser(
+                        authentication.getName()
+                );
 
         model.addAttribute("orders", orders);
         model.addAttribute("titleKey", "page.orders");
@@ -299,40 +265,6 @@ public class OrderController {
         );
 
         return "template/template";
-    }
-
-    private Optional<CustomerOrder> findOrderForCurrentUser(
-            Long id,
-            Authentication authentication
-    ) {
-        Optional<CustomerOrder> orderOpt =
-                customerOrderRepository.findById(id);
-
-        if (orderOpt.isEmpty()) {
-            return Optional.empty();
-        }
-
-        CustomerOrder order = orderOpt.get();
-
-        if (!order.getUser()
-                .getLogin()
-                .equals(authentication.getName())) {
-
-            throw new AccessDeniedException(
-                    "error.accessDenied"
-            );
-        }
-
-        return orderOpt;
-    }
-
-    private boolean isAuthenticated(
-            Authentication authentication
-    ) {
-        return authentication != null
-                && authentication.isAuthenticated()
-                && !(authentication
-                instanceof AnonymousAuthenticationToken);
     }
 
     @PostMapping("/{id}/cancel")
@@ -353,7 +285,6 @@ public class OrderController {
             );
 
         } catch (IllegalArgumentException exception) {
-
             globalBannerService.error(
                     session,
                     exception.getMessage()
@@ -363,4 +294,22 @@ public class OrderController {
         return "redirect:/order";
     }
 
+    private Optional<CustomerOrder> findOrderForCurrentUser(
+            Long id,
+            Authentication authentication
+    ) {
+        return orderService.findOrderForUser(
+                id,
+                authentication.getName()
+        );
+    }
+
+    private boolean isAuthenticated(
+            Authentication authentication
+    ) {
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication
+                instanceof AnonymousAuthenticationToken);
+    }
 }
