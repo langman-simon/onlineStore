@@ -78,7 +78,8 @@
                                         <c:choose>
                                             <c:when test="${not empty weapon.imageUrl}">
                                                 <c:url var="weaponImageUrl" value="${weapon.imageUrl}"/>
-                                                <img src="${weaponImageUrl}" alt="">
+                                                <img src="${weaponImageUrl}"
+                                                     alt="<c:out value='${weapon.name}'/>"/>
                                             </c:when>
 
                                             <c:otherwise>
