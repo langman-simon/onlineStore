@@ -76,10 +76,18 @@ public class AuthController {
             HttpSession session
     ) {
         if (result.hasErrors()) {
-            globalBannerService.error(
-                    session,
-                    "error.form.invalid"
-            );
+            result.getAllErrors().stream()
+                    .findFirst()
+                    .ifPresentOrElse(
+                            error -> globalBannerService.error(
+                                    session,
+                                    error
+                            ),
+                            () -> globalBannerService.error(
+                                    session,
+                                    "error.form.invalid"
+                            )
+                    );
 
             prepareRegisterPage(model);
 

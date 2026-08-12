@@ -30,9 +30,16 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             AuthenticationException exception
     ) throws IOException, ServletException {
 
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        String messageCode = isBlank(username) || isBlank(password)
+                ? "error.login.required"
+                : "message.login.failure";
+
         globalBannerService.error(
                 request.getSession(),
-                "message.login.failure"
+                messageCode
         );
 
         String targetUrl = "/login";
@@ -49,6 +56,10 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         response.sendRedirect(
                 request.getContextPath() + targetUrl
         );
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private boolean isSafeLocalRedirect(String redirect) {

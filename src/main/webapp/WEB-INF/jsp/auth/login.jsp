@@ -18,7 +18,8 @@
 
             <form method="post"
                   action="<c:url value='/login'/>"
-                  class="auth-form">
+                  class="auth-form"
+                  novalidate>
 
                 <c:if test="${not empty param.redirect}">
                     <input type="hidden"
