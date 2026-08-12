@@ -7,9 +7,12 @@
     <h1><spring:message code="cart.title"/></h1>
 
     <c:if test="${empty cart.items}">
-        <p class="cart-empty">
-            <spring:message code="cart.empty"/>
-        </p>
+        <div class="cart-empty">
+            <p><spring:message code="cart.empty"/></p>
+            <a href="<c:url value='/catalogue'/>" class="btn btn--primary">
+                <spring:message code="common.backCatalogue"/>
+            </a>
+        </div>
     </c:if>
 
     <c:if test="${not empty cart.items}">
