@@ -91,13 +91,13 @@ public class OrderService {
 
         BigDecimal discountAmount =
                 promotionService.calculateDiscount(
-                        originalPrice,
+                        cart.getItems(),
                         authenticated
                 );
 
         BigDecimal finalPrice =
                 promotionService.calculateFinalPrice(
-                        originalPrice,
+                        cart.getItems(),
                         authenticated
                 );
 

@@ -105,32 +105,15 @@ public class CartController {
     ) {
         boolean authenticated = isAuthenticated(authentication);
 
-        BigDecimal originalPrice =
-                sessionCart.getCart().getTotalPrice();
+        var cartItems = sessionCart.getCart().getItems();
 
-        BigDecimal discountAmount =
-                promotionService.calculateDiscount(
-                        originalPrice,
-                        authenticated
-                );
-
-        BigDecimal deliveryFee =
-                promotionService.calculateDeliveryFee(
-                        originalPrice,
-                        authenticated
-                );
-
-        BigDecimal finalPrice =
-                promotionService.calculateFinalPrice(
-                        originalPrice,
-                        authenticated
-                );
-
-        boolean freeDelivery =
-                promotionService.isFreeDeliveryApplied(
-                        originalPrice,
-                        authenticated
-                );
+        BigDecimal originalPrice = sessionCart.getCart().getTotalPrice();
+        BigDecimal discountAmount = promotionService.calculateDiscount(cartItems, authenticated);
+        String discountLabel = promotionService.getAppliedDiscountLabel(cartItems, authenticated);
+        BigDecimal finalPrice = promotionService.calculateFinalPrice(cartItems, authenticated);
+        boolean freeDelivery = promotionService.isFreeDeliveryApplied(cartItems, authenticated);
+        BigDecimal standardDeliveryFee = promotionService.getStandardDeliveryFee();
+        BigDecimal deliveryFee = freeDelivery ? BigDecimal.ZERO : standardDeliveryFee;
 
         model.addAttribute("titleKey", "page.cart");
         model.addAttribute(
@@ -140,15 +123,14 @@ public class CartController {
         model.addAttribute("cart", sessionCart.getCart());
         model.addAttribute("originalPrice", originalPrice);
         model.addAttribute("discountAmount", discountAmount);
+        model.addAttribute("discountLabel", discountLabel);
         model.addAttribute("deliveryFee", deliveryFee);
         model.addAttribute("finalPrice", finalPrice);
         model.addAttribute("freeDelivery", freeDelivery);
-        model.addAttribute(
-                "standardDeliveryFee",
-                promotionService.getStandardDeliveryFee()
-        );
+        model.addAttribute("standardDeliveryFee", standardDeliveryFee);
 
         BigDecimal freeDeliveryThreshold =
+                promotionService.getFreeDeliveryThreshold();
                 promotionService.getFreeDeliveryThreshold();
 
         BigDecimal remainingForFreeDelivery = freeDelivery

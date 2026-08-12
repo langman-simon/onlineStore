@@ -575,6 +575,43 @@
                                    step="0.01">
                         </div>
 
+                        <div class="form-group">
+
+                            <label for="promoTargetCategory">
+                                Catégorie ciblée
+                            </label>
+
+                                <select id="promoTargetCategory" name="targetCategoryId">
+                                    <option value="">Aucune (promo sur tout le site)</option>
+
+                                <c:forEach var="category" items="${categories}">
+                                            <option value="${category.id}">
+                                                 <spring:message code="${category.name}" text="${category.name}"/>
+                                            </option>
+                                </c:forEach>
+                                </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="promoTargetWeapon">
+                                Produit ciblé
+                            </label>
+
+                            <select id="promoTargetWeapon" name="targetWeaponId">
+                                <option value="">Aucun (pas de produit précis)</option>
+
+                                <c:forEach var="weapon" items="${weapons}">
+                                    <option value="${weapon.id}">
+                                        <c:out value="${weapon.name}"/>
+                                    </option>
+                                </c:forEach>
+                            </select>
+
+                            <small>Si un produit est choisi, la catégorie ci-dessus est ignorée.</small>
+
+                        </div>
 
                         <div class="form-group">
                             <label for="promoStart">
@@ -807,6 +844,47 @@
 
                         </div>
 
+                        <div class="form-group">
+
+                            <label for="promo-target-category-${promo.id}">
+                                Catégorie ciblée
+                            </label>
+
+                            <select id="promo-target-category-${promo.id}" name="targetCategoryId">
+                                <option value="">Aucune (promo sur tout le site)</option>
+
+                                <c:forEach var="category" items="${categories}">
+                                    <option value="${category.id}"
+                                        <c:if test="${promo.targetCategory != null && promo.targetCategory.id == category.id}">
+                                            selected
+                                        </c:if>>
+                                        <spring:message code="${category.name}" text="${category.name}"/>
+                                    </option>
+                                </c:forEach>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="promo-target-weapon-${promo.id}">
+                                Produit ciblé
+                            </label>
+
+                            <select id="promo-target-weapon-${promo.id}" name="targetWeaponId">
+                                <option value="">Aucun (pas de produit précis)</option>
+
+                                <c:forEach var="weapon" items="${weapons}">
+                                    <option value="${weapon.id}"
+                                        <c:if test="${promo.targetWeapon != null && promo.targetWeapon.id == weapon.id}">
+                                            selected
+                                        </c:if>>
+                                        <c:out value="${weapon.name}"/>
+                                    </option>
+                                </c:forEach>
+                            </select>
+
+                        </div>
 
                         <div class="form-group">
 

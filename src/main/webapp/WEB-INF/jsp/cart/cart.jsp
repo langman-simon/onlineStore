@@ -109,7 +109,14 @@
 
             <c:if test="${discountAmount > 0}">
                 <p class="discount">
-                    <spring:message code="cart.loyaltyDiscount"/>
+                    <c:choose>
+                        <c:when test="${not empty discountLabel}">
+                            <strong>${discountLabel}</strong> :
+                        </c:when>
+                        <c:otherwise>
+                            <spring:message code="cart.loyaltyDiscount"/>
+                        </c:otherwise>
+                    </c:choose>
                     <span>- ${discountAmount} €</span>
                 </p>
             </c:if>
