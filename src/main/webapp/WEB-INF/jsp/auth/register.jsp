@@ -10,6 +10,7 @@
 <spring:message code="auth.register.addressPlaceholder" var="addressPlaceholder"/>
 <spring:message code="auth.register.phonePlaceholder" var="phonePlaceholder"/>
 <spring:message code="auth.register.secondaryPhonePlaceholder" var="secondaryPhonePlaceholder"/>
+<c:url var="registerUrl" value="/register"/>
 
 <section class="auth-page">
     <div class="auth-box auth-box--register">
@@ -23,100 +24,112 @@
                 </p>
             </div>
 
-            <form method="post"
-                  action="<c:url value='/register'/>"
-                  class="auth-form auth-form--register">
+            <form:form method="post"
+                       action="${registerUrl}"
+                       modelAttribute="registrationForm"
+                       class="auth-form auth-form--register">
 
                 <div class="auth-form-grid">
                     <div class="form-group">
                         <label for="firstName"><spring:message code="auth.firstName"/></label>
-                        <input id="firstName"
-                               type="text"
-                               name="firstName"
-                               value="<c:out value='${registrationForm.firstName}'/>"
-                               placeholder="${firstNamePlaceholder}"
-                               autocomplete="given-name"
-                               required
-                               autofocus>
+                        <form:input path="firstName"
+                                    id="firstName"
+                                    placeholder="${firstNamePlaceholder}"
+                                    autocomplete="given-name"
+                                    minlength="2"
+                                    maxlength="50"
+                                    required="required"
+                                    autofocus="autofocus"/>
+                        <form:errors path="firstName" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
                         <label for="lastName"><spring:message code="auth.lastName"/></label>
-                        <input id="lastName"
-                               type="text"
-                               name="lastName"
-                               value="<c:out value='${registrationForm.lastName}'/>"
-                               placeholder="${lastNamePlaceholder}"
-                               autocomplete="family-name"
-                               required>
+                        <form:input path="lastName"
+                                    id="lastName"
+                                    placeholder="${lastNamePlaceholder}"
+                                    autocomplete="family-name"
+                                    minlength="2"
+                                    maxlength="50"
+                                    required="required"/>
+                        <form:errors path="lastName" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
                         <label for="username"><spring:message code="auth.username"/></label>
-                        <input id="username"
-                               type="text"
-                               name="username"
-                               value="<c:out value='${registrationForm.username}'/>"
-                               placeholder="${usernamePlaceholder}"
-                               autocomplete="username"
-                               required>
+                        <form:input path="username"
+                                    id="username"
+                                    placeholder="${usernamePlaceholder}"
+                                    autocomplete="username"
+                                    minlength="3"
+                                    maxlength="50"
+                                    required="required"/>
+                        <form:errors path="username" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
                         <label for="email"><spring:message code="auth.email"/></label>
-                        <input id="email"
-                               type="email"
-                               name="email"
-                               value="<c:out value='${registrationForm.email}'/>"
-                               placeholder="${emailPlaceholder}"
-                               autocomplete="email"
-                               required>
+                        <form:input path="email"
+                                    id="email"
+                                    type="email"
+                                    placeholder="${emailPlaceholder}"
+                                    autocomplete="email"
+                                    maxlength="100"
+                                    required="required"/>
+                        <form:errors path="email" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
                         <label for="password"><spring:message code="auth.password"/></label>
-                        <input id="password"
-                               type="password"
-                               name="password"
-                               placeholder="${passwordPlaceholder}"
-                               autocomplete="new-password"
-                               required>
+                        <form:password path="password"
+                                       id="password"
+                                       placeholder="${passwordPlaceholder}"
+                                       autocomplete="new-password"
+                                       minlength="8"
+                                       maxlength="72"
+                                       required="required"/>
+                        <form:errors path="password" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
                         <label for="passwordConfirmation">
                             <spring:message code="auth.passwordConfirmation"/>
                         </label>
-                        <input id="passwordConfirmation"
-                               type="password"
-                               name="passwordConfirmation"
-                               placeholder="${passwordConfirmationPlaceholder}"
-                               autocomplete="new-password"
-                               required>
+                        <form:password path="passwordConfirmation"
+                                       id="passwordConfirmation"
+                                       placeholder="${passwordConfirmationPlaceholder}"
+                                       autocomplete="new-password"
+                                       minlength="8"
+                                       maxlength="72"
+                                       required="required"/>
+                        <form:errors path="passwordConfirmation" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group auth-form-grid__full">
                         <label for="deliveryAddress">
                             <spring:message code="auth.deliveryAddress"/>
                         </label>
-                        <input id="deliveryAddress"
-                               type="text"
-                               name="deliveryAddress"
-                               value="<c:out value='${registrationForm.deliveryAddress}'/>"
-                               placeholder="${addressPlaceholder}"
-                               autocomplete="street-address"
-                               required>
+                        <form:input path="deliveryAddress"
+                                    id="deliveryAddress"
+                                    placeholder="${addressPlaceholder}"
+                                    autocomplete="street-address"
+                                    minlength="5"
+                                    maxlength="150"
+                                    required="required"/>
+                        <form:errors path="deliveryAddress" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
                         <label for="phone"><spring:message code="auth.phone"/></label>
-                        <input id="phone"
-                               type="tel"
-                               name="phone"
-                               value="<c:out value='${registrationForm.phone}'/>"
-                               placeholder="${phonePlaceholder}"
-                               autocomplete="tel"
-                               required>
+                        <form:input path="phone"
+                                    id="phone"
+                                    type="tel"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{8,20}"
+                                    placeholder="${phonePlaceholder}"
+                                    autocomplete="tel"
+                                    required="required"/>
+                        <form:errors path="phone" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
@@ -126,12 +139,14 @@
                                 <spring:message code="common.optional"/>
                             </span>
                         </label>
-                        <input id="secondaryPhone"
-                               type="tel"
-                               name="secondaryPhone"
-                               value="<c:out value='${registrationForm.secondaryPhone}'/>"
-                               placeholder="${secondaryPhonePlaceholder}"
-                               autocomplete="tel">
+                        <form:input path="secondaryPhone"
+                                    id="secondaryPhone"
+                                    type="tel"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{8,20}"
+                                    placeholder="${secondaryPhonePlaceholder}"
+                                    autocomplete="tel"/>
+                        <form:errors path="secondaryPhone" cssClass="field-error"/>
                     </div>
                 </div>
 
@@ -140,7 +155,7 @@
                 <button type="submit" class="btn btn--primary btn--large">
                     <spring:message code="auth.register.submit"/>
                 </button>
-            </form>
+            </form:form>
 
             <div class="auth-footer">
                 <span><spring:message code="auth.register.already"/></span>

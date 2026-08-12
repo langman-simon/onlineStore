@@ -1,11 +1,13 @@
 package com.hyperion.controller;
 
+import com.hyperion.dto.ProfileForm;
 import com.hyperion.model.User;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -13,11 +15,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Optional;
 
 @Controller
 public class ProfileController {
@@ -42,12 +43,11 @@ public class ProfileController {
             Model model,
             HttpSession session
     ) {
-        String currentLogin = authentication.getName();
+        User user = userService
+                .findByLogin(authentication.getName())
+                .orElse(null);
 
-        Optional<User> userOpt =
-                userService.findByLogin(currentLogin);
-
-        if (userOpt.isEmpty()) {
+        if (user == null) {
             globalBannerService.error(
                     session,
                     "error.account.notFound"
@@ -56,43 +56,46 @@ public class ProfileController {
             return "redirect:/";
         }
 
-        model.addAttribute("user", userOpt.get());
-        model.addAttribute("titleKey", "page.account");
         model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/account/account.jsp"
+                "profileForm",
+                ProfileForm.from(user)
         );
-
+        prepareAccountPage(model);
         return "template/template";
     }
 
     @PostMapping("/account")
     public String updateAccount(
             Authentication authentication,
-            @RequestParam String login,
-            @RequestParam String lastName,
-            @RequestParam String firstName,
-            @RequestParam String deliveryAddress,
-            @RequestParam String email,
-            @RequestParam String phone,
-            @RequestParam(required = false) String secondaryPhone,
+            @Valid @ModelAttribute("profileForm") ProfileForm form,
+            BindingResult result,
+            Model model,
             HttpServletRequest request,
             HttpServletResponse response,
             HttpSession session
     ) {
+        if (result.hasErrors()) {
+            globalBannerService.error(
+                    session,
+                    "error.form.invalid"
+            );
+            prepareAccountPage(model);
+            return "template/template";
+        }
+
         String currentLogin = authentication.getName();
-        String normalizedLogin = login.trim();
+        String normalizedLogin = form.getLogin().trim();
 
         try {
             userService.updateProfile(
                     currentLogin,
                     normalizedLogin,
-                    lastName,
-                    firstName,
-                    deliveryAddress,
-                    email,
-                    phone,
-                    secondaryPhone
+                    form.getLastName().trim(),
+                    form.getFirstName().trim(),
+                    form.getDeliveryAddress().trim(),
+                    form.getEmail().trim(),
+                    form.getPhone().trim(),
+                    normalizeOptional(form.getSecondaryPhone())
             );
 
             Authentication newAuthentication =
@@ -104,10 +107,7 @@ public class ProfileController {
 
             SecurityContext securityContext =
                     SecurityContextHolder.getContext();
-
-            securityContext.setAuthentication(
-                    newAuthentication
-            );
+            securityContext.setAuthentication(newAuthentication);
 
             securityContextRepository.saveContext(
                     securityContext,
@@ -128,5 +128,19 @@ public class ProfileController {
         }
 
         return "redirect:/account";
+    }
+
+    private String normalizeOptional(String value) {
+        return value == null || value.isBlank()
+                ? null
+                : value.trim();
+    }
+
+    private void prepareAccountPage(Model model) {
+        model.addAttribute("titleKey", "page.account");
+        model.addAttribute(
+                "body",
+                "/WEB-INF/jsp/account/account.jsp"
+        );
     }
 }

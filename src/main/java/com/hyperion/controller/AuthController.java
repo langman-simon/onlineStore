@@ -88,6 +88,10 @@ public class AuthController {
 
         if (!form.getPassword()
                 .equals(form.getPasswordConfirmation())) {
+            result.rejectValue(
+                    "passwordConfirmation",
+                    "error.password.mismatch"
+            );
 
             globalBannerService.error(
                     session,
