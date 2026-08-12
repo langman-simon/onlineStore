@@ -16,7 +16,7 @@
 - Journaliser ou enregistrer la référence du paiement. ✅
 - no sync des promotions. [NIS]
 - promotions sur des produits et catégories particuliers. [NIS]
-- refaire interface promotions administration, plus voyant. [SIM]
+- refaire interface promotions administration, plus voyant. ✅
 - trad properties are empty ?.... ✅
 - trad don't work... ✅
 - footer more visible ✅
