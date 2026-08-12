@@ -17,7 +17,6 @@ class PromotionServiceImplTest {
 
     @BeforeEach
     void setup() {
-        // On mock le repository car ton service en a besoin
         promotionRepository = Mockito.mock(PromotionRepository.class);
         promotionService = new PromotionServiceImpl(promotionRepository);
     }
