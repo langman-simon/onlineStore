@@ -89,29 +89,37 @@
 
         <c:if test="${not empty promotions}">
             <div class="home-active-promos">
-                <h3><spring:message code="home.promotions.title"/></h3>
+                <div class="ornament-divider"><span></span></div>
 
-                <c:forEach var="promo" items="${promotions}">
-                    <div class="home-promo-card">
-                        <strong><c:out value="${promo.title}"/></strong>
+                <h2><spring:message code="home.promotions.title"/></h2>
 
-                        <c:if test="${not empty promo.description}">
-                            <p><c:out value="${promo.description}"/></p>
-                        </c:if>
+                <div class="home-features">
+                    <c:forEach var="promo" items="${promotions}">
+                        <article class="home-feature">
+                            <h3><c:out value="${promo.title}"/></h3>
 
-                        <c:if test="${promo.discountPercentage != null}">
-                            <span class="home-promo-badge">
-                                -${promo.discountPercentage}%
-                            </span>
-                        </c:if>
+                            <c:if test="${not empty promo.description}">
+                                <p><c:out value="${promo.description}"/></p>
+                            </c:if>
 
-                        <c:if test="${promo.freeDelivery}">
-                            <span class="home-promo-badge">
-                                <spring:message code="home.loyalty.freeDelivery.title"/>
-                            </span>
-                        </c:if>
-                    </div>
-                </c:forEach>
+                            <c:if test="${promo.discountPercentage != null || promo.freeDelivery}">
+                                <div class="home-promo-badges">
+                                    <c:if test="${promo.discountPercentage != null}">
+                                        <span class="home-promo-badge">
+                                            -${promo.discountPercentage}%
+                                        </span>
+                                    </c:if>
+
+                                    <c:if test="${promo.freeDelivery}">
+                                        <span class="home-promo-badge">
+                                            <spring:message code="home.loyalty.freeDelivery.title"/>
+                                        </span>
+                                    </c:if>
+                                </div>
+                            </c:if>
+                        </article>
+                    </c:forEach>
+                </div>
             </div>
         </c:if>
     </section>

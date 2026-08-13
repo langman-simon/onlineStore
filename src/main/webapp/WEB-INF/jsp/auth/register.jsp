@@ -27,7 +27,8 @@
             <form:form method="post"
                        action="${registerUrl}"
                        modelAttribute="registrationForm"
-                       class="auth-form auth-form--register">
+                       class="auth-form auth-form--register"
+                       novalidate="novalidate">
 
                 <div class="auth-form-grid">
                     <div class="form-group">
@@ -40,7 +41,6 @@
                                     maxlength="50"
                                     required="required"
                                     autofocus="autofocus"/>
-                        <form:errors path="firstName" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
@@ -52,7 +52,6 @@
                                     minlength="2"
                                     maxlength="50"
                                     required="required"/>
-                        <form:errors path="lastName" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
@@ -64,7 +63,6 @@
                                     minlength="3"
                                     maxlength="50"
                                     required="required"/>
-                        <form:errors path="username" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
@@ -76,7 +74,6 @@
                                     autocomplete="email"
                                     maxlength="100"
                                     required="required"/>
-                        <form:errors path="email" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
@@ -88,7 +85,6 @@
                                        minlength="8"
                                        maxlength="72"
                                        required="required"/>
-                        <form:errors path="password" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
@@ -102,7 +98,6 @@
                                        minlength="8"
                                        maxlength="72"
                                        required="required"/>
-                        <form:errors path="passwordConfirmation" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group auth-form-grid__full">
@@ -116,7 +111,6 @@
                                     minlength="5"
                                     maxlength="150"
                                     required="required"/>
-                        <form:errors path="deliveryAddress" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
@@ -129,7 +123,6 @@
                                     placeholder="${phonePlaceholder}"
                                     autocomplete="tel"
                                     required="required"/>
-                        <form:errors path="phone" cssClass="field-error"/>
                     </div>
 
                     <div class="form-group">
@@ -146,7 +139,6 @@
                                     pattern="[0-9]{8,20}"
                                     placeholder="${secondaryPhonePlaceholder}"
                                     autocomplete="tel"/>
-                        <form:errors path="secondaryPhone" cssClass="field-error"/>
                     </div>
                 </div>
 

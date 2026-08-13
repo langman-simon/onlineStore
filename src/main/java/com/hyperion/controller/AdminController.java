@@ -299,7 +299,8 @@ public class AdminController {
             );
 
             if (targetCategoryId != null && targetWeaponId != null) {
-                throw new IllegalArgumentException("error.admin.promotionTargetConflict");
+                globalBannerService.error(session, "message.admin.noBothChoice");
+                return "redirect:/admin";
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
@@ -384,7 +385,8 @@ public class AdminController {
             );
 
             if (targetCategoryId != null && targetWeaponId != null) {
-                throw new IllegalArgumentException("error.admin.promotionTargetConflict");
+                globalBannerService.error(session, "message.admin.noBothChoice");
+                return "redirect:/admin";
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;

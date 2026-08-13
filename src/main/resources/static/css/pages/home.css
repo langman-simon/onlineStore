@@ -132,6 +132,31 @@
     transform: translateY(-3px);
 }
 
+
+/* ---------- PROMOTIONS ---------- */
+
+.home-active-promos {
+    margin-top: 4rem;
+}
+
+.home-promo-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.home-promo-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    color: var(--gold-deep);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
 /* ---------- APPEL À L'ACTION ---------- */
 
 .home-call-to-action {

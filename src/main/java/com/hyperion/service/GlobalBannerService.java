@@ -2,6 +2,7 @@ package com.hyperion.service;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -39,6 +40,17 @@ public class GlobalBannerService {
                 messageCode,
                 "error",
                 arguments
+        );
+    }
+
+    public void error(
+            HttpSession session,
+            MessageSourceResolvable message
+    ) {
+        setMessage(
+                session,
+                message,
+                "error"
         );
     }
 
@@ -91,10 +103,40 @@ public class GlobalBannerService {
         String message = messageSource.getMessage(
                 messageCode,
                 arguments,
-                messageCode,
                 locale
         );
 
+        storeMessage(
+                session,
+                message,
+                type
+        );
+    }
+
+    private void setMessage(
+            HttpSession session,
+            MessageSourceResolvable resolvable,
+            String type
+    ) {
+        Locale locale = resolveLocale(session);
+
+        String message = messageSource.getMessage(
+                resolvable,
+                locale
+        );
+
+        storeMessage(
+                session,
+                message,
+                type
+        );
+    }
+
+    private void storeMessage(
+            HttpSession session,
+            String message,
+            String type
+    ) {
         session.setAttribute(
                 "globalBannerMessage",
                 message

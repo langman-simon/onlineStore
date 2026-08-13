@@ -106,14 +106,15 @@
     color: var(--ink);
 }
 
-/* Promotion add panel opens from the left edge of its button. */
+/* Keep the promotion form inside the admin layout: the button is aligned
+   to the right, so the panel must expand towards the left. */
 .admin-promotions .admin-add-panel {
     width: fit-content;
 }
 
 .admin-promotions .admin-add-panel__content {
-    right: auto;
-    left: 0;
+    right: 0;
+    left: auto;
 }
 
 /* =========================================================
