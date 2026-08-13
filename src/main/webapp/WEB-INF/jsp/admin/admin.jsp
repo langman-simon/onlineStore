@@ -1067,4 +1067,50 @@
         });
 
     });
+
+    function setupPromotionTargetExclusivity(categorySelectId, weaponSelectId) {
+        const categorySelect = document.getElementById(categorySelectId);
+        const weaponSelect = document.getElementById(weaponSelectId);
+
+        if (!categorySelect || !weaponSelect) {
+            return;
+        }
+
+        function syncFields() {
+            const hasCategory = categorySelect.value !== "";
+            const hasWeapon = weaponSelect.value !== "";
+
+            weaponSelect.disabled = hasCategory;
+            categorySelect.disabled = hasWeapon;
+        }
+
+        categorySelect.addEventListener("change", syncFields);
+        weaponSelect.addEventListener("change", syncFields);
+
+        syncFields();
+    }
+
+    setupPromotionTargetExclusivity("promoTargetCategory", "promoTargetWeapon");
+
+    document.querySelectorAll("[id^='promo-target-category-']").forEach(function (categorySelect) {
+        const promoId = categorySelect.id.replace("promo-target-category-", "");
+        const weaponSelect = document.getElementById("promo-target-weapon-" + promoId);
+
+        if (!weaponSelect) {
+            return;
+        }
+
+        function syncFields() {
+            const hasCategory = categorySelect.value !== "";
+            const hasWeapon = weaponSelect.value !== "";
+
+            weaponSelect.disabled = hasCategory;
+            categorySelect.disabled = hasWeapon;
+        }
+
+        categorySelect.addEventListener("change", syncFields);
+        weaponSelect.addEventListener("change", syncFields);
+
+        syncFields();
+    });
 </script>
