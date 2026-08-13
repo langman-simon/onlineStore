@@ -185,9 +185,7 @@ public class AdminController {
                     .getId()
                     .equals(weaponId)) {
 
-                throw new IllegalArgumentException(
-                        "error.admin.referenceOther"
-                );
+                globalBannerService.error(session, "error.admin.referenceOther");
             }
 
             weapon.setName(name.trim());
@@ -299,7 +297,7 @@ public class AdminController {
             );
 
             if (targetCategoryId != null && targetWeaponId != null) {
-                throw new IllegalArgumentException("Choisissez soit une catégorie, soit un produit, pas les deux.");
+                globalBannerService.error(session, "message.admin.noBothChoice");
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
@@ -384,7 +382,7 @@ public class AdminController {
             );
 
             if (targetCategoryId != null && targetWeaponId != null) {
-                throw new IllegalArgumentException("Choisissez soit une catégorie, soit un produit, pas les deux.");
+                globalBannerService.error(session, "Choisissez soit une catégorie, soit un produit, pas les deux.");
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
