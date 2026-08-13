@@ -299,7 +299,7 @@ public class AdminController {
             );
 
             if (targetCategoryId != null && targetWeaponId != null) {
-                throw new IllegalArgumentException("Choisissez soit une catégorie, soit un produit, pas les deux.");
+                throw new IllegalArgumentException("error.admin.promotionTargetConflict");
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
@@ -384,7 +384,7 @@ public class AdminController {
             );
 
             if (targetCategoryId != null && targetWeaponId != null) {
-                throw new IllegalArgumentException("Choisissez soit une catégorie, soit un produit, pas les deux.");
+                throw new IllegalArgumentException("error.admin.promotionTargetConflict");
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
@@ -573,7 +573,6 @@ public class AdminController {
         }
 
         if (reference.trim().length() > 100) {
-
             throw new IllegalArgumentException(
                     "error.admin.referenceLength"
             );
