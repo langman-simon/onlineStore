@@ -7,25 +7,24 @@
 
         <div>
             <p class="admin-hero__eyebrow">
-                Espace administrateur
+                <spring:message code="admin.eyebrow"/>
             </p>
 
-            <h1>Gestion du catalogue</h1>
+            <h1><spring:message code="admin.title"/></h1>
 
             <p class="admin-hero__description">
-                Gérez les produits, les stocks et les informations
-                du catalogue Hyperion.
+                <spring:message code="admin.hero.description"/>
             </p>
         </div>
 
         <details class="admin-add-panel">
             <summary class="btn btn--primary">
-                Ajouter un produit
+                <spring:message code="admin.openAddProduct"/>
             </summary>
 
             <div class="admin-add-panel__content">
 
-                <h2>Nouveau produit</h2>
+                <h2><spring:message code="admin.newProduct"/></h2>
 
                 <form method="post"
                       action="<c:url value='/admin/weapons/add'/>"
@@ -35,7 +34,7 @@
                     <div class="admin-product-form__grid">
 
                         <div class="form-group">
-                            <label for="addName">Nom</label>
+                            <label for="addName"><spring:message code="common.name"/></label>
 
                             <input type="text"
                                    id="addName"
@@ -45,7 +44,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addReference">Référence</label>
+                            <label for="addReference"><spring:message code="common.reference"/></label>
 
                             <input type="text"
                                    id="addReference"
@@ -56,7 +55,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addManufacturer">Fabricant</label>
+                            <label for="addManufacturer"><spring:message code="common.manufacturer"/></label>
 
                             <input type="text"
                                    id="addManufacturer"
@@ -66,21 +65,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addCategoryId">Catégorie</label>
+                            <label for="addCategoryId"><spring:message code="common.category"/></label>
 
                             <select id="addCategoryId"
                                     name="categoryId"
                                     required>
 
                                 <option value="" disabled selected>
-                                    Choisir une catégorie
+                                    <spring:message code="admin.chooseCategory"/>
                                 </option>
 
                                 <c:forEach var="category"
                                            items="${categories}">
 
                                     <option value="${category.id}">
-                                        ${category.name}
+                                        <spring:message code="${category.name}" text="${category.name}"/>
                                     </option>
 
                                 </c:forEach>
@@ -89,7 +88,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addPrice">Prix</label>
+                            <label for="addPrice"><spring:message code="common.price"/></label>
 
                             <input type="number"
                                    id="addPrice"
@@ -100,7 +99,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="addStock">Stock</label>
+                            <label for="addStock"><spring:message code="common.stock"/></label>
 
                             <input type="number"
                                    id="addStock"
@@ -110,7 +109,7 @@
                         </div>
 
                         <div class="form-group admin-product-form__full">
-                            <label for="addDescription">Description</label>
+                            <label for="addDescription"><spring:message code="common.description"/></label>
 
                             <textarea id="addDescription"
                                       name="description"
@@ -120,13 +119,13 @@
                         </div>
 
                         <div class="form-group admin-product-form__full">
-                            <label for="addImage">Image</label>
+                            <label for="addImage"><spring:message code="common.image"/></label>
 
                             <input type="file"
                                    id="addImage"
                                    name="image"
-                                   accept="image/jpeg,image/png,image/webp"
-                                   required>
+                                   accept="image/jpeg,image/png,image/webp">
+                            <small><spring:message code="admin.imageOptional"/></small>
                         </div>
 
                     </div>
@@ -135,7 +134,7 @@
 
                     <div class="admin-product-form__actions">
                         <button type="submit" class="btn btn--primary">
-                            Ajouter au catalogue
+                            <spring:message code="admin.addProduct"/>
                         </button>
                     </div>
 
@@ -153,10 +152,10 @@
     <div class="admin-toolbar">
 
         <div>
-            <h2>Produits</h2>
+            <h2><spring:message code="admin.products"/></h2>
 
             <p>
-                ${weapons.size()} produit(s) affiché(s)
+                <spring:message code="admin.productsDisplayed" arguments="${fn:length(weapons)}"/>
             </p>
         </div>
 
@@ -164,7 +163,7 @@
 
             <a href="<c:url value='/admin'/>"
                class="btn btn--filter ${empty selectedCategoryId ? 'is-active' : ''}">
-                Toutes les catégories
+                <spring:message code="catalogue.filter.all"/>
             </a>
 
             <c:forEach var="category" items="${categories}">
@@ -176,7 +175,7 @@
 
                 <a href="${categoryUrl}"
                    class="btn btn--filter ${selectedCategoryId == category.id ? 'is-active' : ''}">
-                    ${category.name}
+                    <spring:message code="${category.name}" text="${category.name}"/>
                 </a>
 
             </c:forEach>
@@ -194,10 +193,10 @@
         <c:when test="${empty weapons}">
 
             <div class="admin-empty">
-                <h2>Aucun produit trouvé</h2>
+                <h2><spring:message code="admin.noProducts"/></h2>
 
                 <p>
-                    Aucun produit ne correspond à la catégorie sélectionnée.
+                    <spring:message code="admin.noProductsText"/>
                 </p>
             </div>
 
@@ -218,13 +217,14 @@
                             <c:choose>
 
                                 <c:when test="${not empty weapon.imageUrl}">
-                                    <img src="${weapon.imageUrl}"
-                                         alt="${weapon.name}">
+                                    <c:url var="weaponImageUrl" value="${weapon.imageUrl}"/>
+                                    <img src="${weaponImageUrl}"
+                                         alt="<c:out value='${weapon.name}'/>">
                                 </c:when>
 
                                 <c:otherwise>
                                     <div class="admin-product__placeholder">
-                                        Aucune image
+                                        <spring:message code="common.noImage"/>
                                     </div>
                                 </c:otherwise>
 
@@ -240,10 +240,10 @@
                             <div class="admin-product__header">
 
                                 <div>
-                                    <h3>${weapon.name}</h3>
+                                    <h3><c:out value="${weapon.name}"/></h3>
 
                                     <p class="admin-product__reference">
-                                        ${weapon.reference}
+                                        <c:out value="${weapon.reference}"/>
                                     </p>
                                 </div>
 
@@ -257,17 +257,17 @@
                             <div class="admin-product__info">
 
                                 <span>
-                                    <strong>Catégorie</strong>
-                                    ${weapon.category.name}
+                                    <strong><spring:message code="common.category"/></strong>
+                                    <spring:message code="${weapon.category.name}" text="${weapon.category.name}"/>
                                 </span>
 
                                 <span>
-                                    <strong>Fabricant</strong>
-                                    ${weapon.manufacturer}
+                                    <strong><spring:message code="common.manufacturer"/></strong>
+                                    <c:out value="${weapon.manufacturer}"/>
                                 </span>
 
                                 <span>
-                                    <strong>Stock</strong>
+                                    <strong><spring:message code="common.stock"/></strong>
                                     ${weapon.stock}
                                 </span>
 
@@ -280,20 +280,20 @@
 
                                 <a href="<c:url value='/weapons/${weapon.id}'/>"
                                    class="btn btn--primary">
-                                    Voir la fiche
+                                    <spring:message code="admin.viewProduct"/>
                                 </a>
 
 
                                 <details class="admin-product-edit">
 
                                     <summary class="btn btn--primary">
-                                        Modifier
+                                        <spring:message code="admin.edit"/>
                                     </summary>
 
                                     <div class="admin-product-edit__content">
 
                                         <h3>
-                                            Modifier ${weapon.name}
+                                            <spring:message code="admin.editProduct" arguments="${weapon.name}" htmlEscape="true"/>
                                         </h3>
 
                                         <form method="post"
@@ -305,13 +305,13 @@
 
                                                 <div class="form-group">
                                                     <label for="name-${weapon.id}">
-                                                        Nom
+                                                        <spring:message code="common.name"/>
                                                     </label>
 
                                                     <input type="text"
                                                            id="name-${weapon.id}"
                                                            name="name"
-                                                           value="${weapon.name}"
+                                                           value="<c:out value='${weapon.name}'/>"
                                                            maxlength="150"
                                                            required>
                                                 </div>
@@ -319,13 +319,13 @@
 
                                                 <div class="form-group">
                                                     <label for="reference-${weapon.id}">
-                                                        Référence
+                                                        <spring:message code="common.reference"/>
                                                     </label>
 
                                                     <input type="text"
                                                            id="reference-${weapon.id}"
                                                            name="reference"
-                                                           value="${weapon.reference}"
+                                                           value="<c:out value='${weapon.reference}'/>"
                                                            maxlength="100"
                                                            required>
                                                 </div>
@@ -333,13 +333,13 @@
 
                                                 <div class="form-group">
                                                     <label for="manufacturer-${weapon.id}">
-                                                        Fabricant
+                                                        <spring:message code="common.manufacturer"/>
                                                     </label>
 
                                                     <input type="text"
                                                            id="manufacturer-${weapon.id}"
                                                            name="manufacturer"
-                                                           value="${weapon.manufacturer}"
+                                                           value="<c:out value='${weapon.manufacturer}'/>"
                                                            maxlength="100"
                                                            required>
                                                 </div>
@@ -347,7 +347,7 @@
 
                                                 <div class="form-group">
                                                     <label for="category-${weapon.id}">
-                                                        Catégorie
+                                                        <spring:message code="common.category"/>
                                                     </label>
 
                                                     <select id="category-${weapon.id}"
@@ -362,7 +362,7 @@
                                                                     selected
                                                                 </c:if>>
 
-                                                                ${category.name}
+                                                                <spring:message code="${category.name}" text="${category.name}"/>
 
                                                             </option>
 
@@ -374,7 +374,7 @@
 
                                                 <div class="form-group">
                                                     <label for="price-${weapon.id}">
-                                                        Prix
+                                                        <spring:message code="common.price"/>
                                                     </label>
 
                                                     <input type="number"
@@ -389,7 +389,7 @@
 
                                                 <div class="form-group">
                                                     <label for="stock-${weapon.id}">
-                                                        Stock
+                                                        <spring:message code="common.stock"/>
                                                     </label>
 
                                                     <input type="number"
@@ -404,14 +404,14 @@
                                                 <div class="form-group admin-product-form__full">
 
                                                     <label for="description-${weapon.id}">
-                                                        Description
+                                                        <spring:message code="common.description"/>
                                                     </label>
 
                                                     <textarea id="description-${weapon.id}"
                                                               name="description"
                                                               rows="4"
                                                               maxlength="1000"
-                                                              required>${weapon.description}</textarea>
+                                                              required><c:out value="${weapon.description}"/></textarea>
 
                                                 </div>
 
@@ -419,7 +419,7 @@
                                                 <div class="form-group admin-product-form__full">
 
                                                     <label for="image-${weapon.id}">
-                                                        Remplacer l'image
+                                                        <spring:message code="admin.replaceImage"/>
                                                     </label>
 
                                                     <input type="file"
@@ -428,7 +428,7 @@
                                                            accept="image/jpeg,image/png,image/webp">
 
                                                     <small>
-                                                        Laissez vide pour conserver l'image actuelle.
+                                                        <spring:message code="admin.keepImage"/>
                                                     </small>
 
                                                 </div>
@@ -441,7 +441,7 @@
 
                                                 <button type="submit"
                                                         class="btn btn--primary">
-                                                    Enregistrer
+                                                    <spring:message code="common.save"/>
                                                 </button>
 
                                             </div>
@@ -456,7 +456,7 @@
                                 <button type="button"
                                         class="btn btn--delete"
                                         onclick="openDeleteDialog('${weapon.id}')">
-                                    Supprimer
+                                    <spring:message code="common.delete"/>
                                 </button>
 
                             </div>
@@ -472,16 +472,15 @@
                             <div class="admin-dialog__content">
 
                                 <h3>
-                                    Supprimer le produit
+                                    <spring:message code="admin.deleteProduct"/>
                                 </h3>
 
                                 <p>
-                                    Voulez-vous supprimer
-                                    <strong>${weapon.name}</strong> ?
+                                    <spring:message code="admin.deleteProductQuestion" arguments="${weapon.name}" htmlEscape="true"/>
                                 </p>
 
                                 <p class="admin-dialog__warning">
-                                    Cette action est définitive.
+                                    <spring:message code="admin.deleteWarning"/>
                                 </p>
 
                                 <div class="admin-dialog__actions">
@@ -489,7 +488,7 @@
                                     <button type="button"
                                             class="btn btn--primary"
                                             onclick="closeDeleteDialog('${weapon.id}')">
-                                        Annuler
+                                        <spring:message code="common.cancel"/>
                                     </button>
 
                                     <form method="post"
@@ -499,7 +498,7 @@
 
                                         <button type="submit"
                                                 class="btn btn--delete">
-                                            Confirmer
+                                            <spring:message code="admin.confirm"/>
                                         </button>
 
                                     </form>
@@ -532,17 +531,17 @@
 
     <div class="admin-promotions__header">
 
-        <h2>Promotions</h2>
+        <h2><spring:message code="admin.promotions"/></h2>
 
         <details class="admin-add-panel">
 
             <summary class="btn btn--primary">
-                Ajouter une promotion
+                <spring:message code="admin.addPromotion"/>
             </summary>
 
             <div class="admin-add-panel__content">
 
-                <h3>Nouvelle promotion</h3>
+                <h3><spring:message code="admin.newPromotion"/></h3>
 
                 <form method="post"
                       action="<c:url value='/admin/promotions/add'/>"
@@ -552,7 +551,7 @@
 
                         <div class="form-group">
                             <label for="promoTitle">
-                                Titre
+                                <spring:message code="admin.promotionTitle"/>
                             </label>
 
                             <input type="text"
@@ -565,7 +564,7 @@
 
                         <div class="form-group">
                             <label for="promoDiscount">
-                                Réduction (%)
+                                <spring:message code="admin.promotionDiscount"/>
                             </label>
 
                             <input type="number"
@@ -576,10 +575,47 @@
                                    step="0.01">
                         </div>
 
+                        <div class="form-group">
+
+                            <label for="promoTargetCategory">
+                                Catégorie ciblée
+                            </label>
+
+                                <select id="promoTargetCategory" name="targetCategoryId">
+                                    <option value="">Aucune (promo sur tout le site)</option>
+
+                                <c:forEach var="category" items="${categories}">
+                                            <option value="${category.id}">
+                                                 <spring:message code="${category.name}" text="${category.name}"/>
+                                            </option>
+                                </c:forEach>
+                                </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="promoTargetWeapon">
+                                Produit ciblé
+                            </label>
+
+                            <select id="promoTargetWeapon" name="targetWeaponId">
+                                <option value="">Aucun (pas de produit précis)</option>
+
+                                <c:forEach var="weapon" items="${weapons}">
+                                    <option value="${weapon.id}">
+                                        <c:out value="${weapon.name}"/>
+                                    </option>
+                                </c:forEach>
+                            </select>
+
+                            <small>Si un produit est choisi, la catégorie ci-dessus est ignorée.</small>
+
+                        </div>
 
                         <div class="form-group">
                             <label for="promoStart">
-                                Date de début
+                                <spring:message code="admin.promotionStart"/>
                             </label>
 
                             <input type="date"
@@ -590,7 +626,7 @@
 
                         <div class="form-group">
                             <label for="promoEnd">
-                                Date de fin
+                                <spring:message code="admin.promotionEnd"/>
                             </label>
 
                             <input type="date"
@@ -602,7 +638,7 @@
                         <div class="form-group admin-product-form__full form--light">
 
                             <label for="promoDescription">
-                                Description
+                                <spring:message code="common.description"/>
                             </label>
 
                             <textarea id="promoDescription"
@@ -615,7 +651,7 @@
                         <div class="form-group">
 
                             <label for="promoFreeDelivery">
-                                Livraison gratuite
+                                <spring:message code="admin.promotionFreeDelivery"/>
                             </label>
 
                             <input type="checkbox"
@@ -628,7 +664,7 @@
                         <div class="form-group">
 
                             <label for="promoActive">
-                                Promotion active
+                                <spring:message code="admin.promotionActive"/>
                             </label>
 
                             <input type="checkbox"
@@ -646,7 +682,7 @@
 
                         <button type="submit"
                                 class="btn btn--primary">
-                            Ajouter la promotion
+                            <spring:message code="admin.addPromotion"/>
                         </button>
 
                     </div>
@@ -667,25 +703,21 @@
         <c:forEach var="promo"
                    items="${promotions}">
 
-            <article class="admin-promo">
+            <article class="admin-promo ${promo.active ? 'admin-promo--active' : 'admin-promo--inactive'}">
 
                 <div class="admin-promo__main">
 
-                    <h3>
-                        ${promo.title}
-                    </h3>
+                    <h3><c:out value="${promo.title}"/></h3>
 
                     <c:if test="${not empty promo.description}">
-                        <p>
-                            ${promo.description}
-                        </p>
+                        <p><c:out value="${promo.description}"/></p>
                     </c:if>
 
 
                     <div class="admin-promo__metadata">
 
                         <p>
-                            <strong>Réduction :</strong>
+                            <strong><spring:message code="admin.promotionDiscountLabel"/></strong>
 
                             <c:choose>
 
@@ -694,7 +726,7 @@
                                 </c:when>
 
                                 <c:otherwise>
-                                    Aucune
+                                    <spring:message code="common.none"/>
                                 </c:otherwise>
 
                             </c:choose>
@@ -702,16 +734,16 @@
 
 
                         <p>
-                            <strong>Livraison gratuite :</strong>
+                            <strong><spring:message code="admin.promotionFreeDeliveryLabel"/></strong>
 
                             <c:choose>
 
                                 <c:when test="${promo.freeDelivery}">
-                                    Oui
+                                    <spring:message code="common.yes"/>
                                 </c:when>
 
                                 <c:otherwise>
-                                    Non
+                                    <spring:message code="common.no"/>
                                 </c:otherwise>
 
                             </c:choose>
@@ -719,46 +751,62 @@
 
 
                         <p>
-                            <strong>Début :</strong>
+                            <strong><spring:message code="admin.promotionStartLabel"/></strong>
 
                             <c:choose>
                                 <c:when test="${promo.startDate != null}">
                                     ${promo.startDate}
                                 </c:when>
                                 <c:otherwise>
-                                    Non défini
+                                    <spring:message code="admin.notDefined"/>
                                 </c:otherwise>
                             </c:choose>
                         </p>
 
 
                         <p>
-                            <strong>Fin :</strong>
+                            <strong><spring:message code="admin.promotionEndLabel"/></strong>
 
                             <c:choose>
                                 <c:when test="${promo.endDate != null}">
                                     ${promo.endDate}
                                 </c:when>
                                 <c:otherwise>
-                                    Non définie
+                                    <spring:message code="admin.notDefinedF"/>
                                 </c:otherwise>
                             </c:choose>
                         </p>
 
 
                         <p>
-                            <strong>Statut :</strong>
+                            <strong><spring:message code="admin.promotionStatusLabel"/></strong>
 
                             <c:choose>
 
                                 <c:when test="${promo.active}">
-                                    Active
+                                    <spring:message code="admin.promotionActiveLabel"/>
                                 </c:when>
 
                                 <c:otherwise>
-                                    Inactive
+                                    <spring:message code="admin.promotionInactiveLabel"/>
                                 </c:otherwise>
 
+                            </c:choose>
+                        </p>
+
+                        <p>
+                            <strong>Cible :</strong>
+
+                            <c:choose>
+                                <c:when test="${promo.targetWeapon != null}">
+                                    Produit : <c:out value="${promo.targetWeapon.name}"/>
+                                </c:when>
+                                <c:when test="${promo.targetCategory != null}">
+                                    Catégorie : <spring:message code="${promo.targetCategory.name}" text="${promo.targetCategory.name}"/>
+                                </c:when>
+                                <c:otherwise>
+                                    Tout le site
+                                </c:otherwise>
                             </c:choose>
                         </p>
 
@@ -769,6 +817,11 @@
 
                 <%-- Editable promotion --%>
 
+                <details class="admin-promo-edit">
+                    <summary class="btn btn--primary">
+                        <spring:message code="admin.editPromotion"/>
+                    </summary>
+
                 <form method="post"
                       action="<c:url value='/admin/promotions/update/${promo.id}'/>"
                       class="admin-product-form form--light">
@@ -778,13 +831,13 @@
                         <div class="form-group">
 
                             <label for="promo-title-${promo.id}">
-                                Titre
+                                <spring:message code="admin.promotionTitle"/>
                             </label>
 
                             <input type="text"
                                    id="promo-title-${promo.id}"
                                    name="title"
-                                   value="${promo.title}"
+                                   value="<c:out value='${promo.title}'/>"
                                    maxlength="150"
                                    required>
 
@@ -794,7 +847,7 @@
                         <div class="form-group">
 
                             <label for="promo-discount-${promo.id}">
-                                Réduction (%)
+                                <spring:message code="admin.promotionDiscount"/>
                             </label>
 
                             <input type="number"
@@ -807,11 +860,52 @@
 
                         </div>
 
+                        <div class="form-group">
+
+                            <label for="promo-target-category-${promo.id}">
+                                Catégorie ciblée
+                            </label>
+
+                            <select id="promo-target-category-${promo.id}" name="targetCategoryId">
+                                <option value="">Aucune (promo sur tout le site)</option>
+
+                                <c:forEach var="category" items="${categories}">
+                                    <option value="${category.id}"
+                                        <c:if test="${promo.targetCategory != null && promo.targetCategory.id == category.id}">
+                                            selected
+                                        </c:if>>
+                                        <spring:message code="${category.name}" text="${category.name}"/>
+                                    </option>
+                                </c:forEach>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="promo-target-weapon-${promo.id}">
+                                Produit ciblé
+                            </label>
+
+                            <select id="promo-target-weapon-${promo.id}" name="targetWeaponId">
+                                <option value="">Aucun (pas de produit précis)</option>
+
+                                <c:forEach var="weapon" items="${weapons}">
+                                    <option value="${weapon.id}"
+                                        <c:if test="${promo.targetWeapon != null && promo.targetWeapon.id == weapon.id}">
+                                            selected
+                                        </c:if>>
+                                        <c:out value="${weapon.name}"/>
+                                    </option>
+                                </c:forEach>
+                            </select>
+
+                        </div>
 
                         <div class="form-group">
 
                             <label for="promo-start-${promo.id}">
-                                Date de début
+                                <spring:message code="admin.promotionStart"/>
                             </label>
 
                             <input type="date"
@@ -825,7 +919,7 @@
                         <div class="form-group">
 
                             <label for="promo-end-${promo.id}">
-                                Date de fin
+                                <spring:message code="admin.promotionEnd"/>
                             </label>
 
                             <input type="date"
@@ -839,12 +933,12 @@
                         <div class="form-group admin-product-form__full">
 
                             <label for="promo-description-${promo.id}">
-                                Description
+                                <spring:message code="common.description"/>
                             </label>
 
                             <textarea id="promo-description-${promo.id}"
                                       name="description"
-                                      rows="4">${promo.description}</textarea>
+                                      rows="4"><c:out value="${promo.description}"/></textarea>
 
                         </div>
 
@@ -852,7 +946,7 @@
                         <div class="form-group">
 
                             <label for="promo-free-delivery-${promo.id}">
-                                Livraison gratuite
+                                <spring:message code="admin.promotionFreeDelivery"/>
                             </label>
 
                             <input type="checkbox"
@@ -866,7 +960,7 @@
                         <div class="form-group">
 
                             <label for="promo-active-${promo.id}">
-                                Promotion active
+                                <spring:message code="admin.promotionActive"/>
                             </label>
 
                             <input type="checkbox"
@@ -884,12 +978,13 @@
 
                         <button type="submit"
                                 class="btn btn--primary">
-                            Enregistrer
+                            <spring:message code="admin.savePromotion"/>
                         </button>
 
                     </div>
 
                 </form>
+                </details>
 
 
                 <%-- Delete promotion --%>
@@ -902,7 +997,7 @@
 
                     <button type="submit"
                             class="btn btn--delete">
-                        Supprimer
+                        <spring:message code="admin.deletePromotion"/>
                     </button>
 
                 </form>
@@ -971,5 +1066,51 @@
             panel.removeAttribute("open");
         });
 
+    });
+
+    function setupPromotionTargetExclusivity(categorySelectId, weaponSelectId) {
+        const categorySelect = document.getElementById(categorySelectId);
+        const weaponSelect = document.getElementById(weaponSelectId);
+
+        if (!categorySelect || !weaponSelect) {
+            return;
+        }
+
+        function syncFields() {
+            const hasCategory = categorySelect.value !== "";
+            const hasWeapon = weaponSelect.value !== "";
+
+            weaponSelect.disabled = hasCategory;
+            categorySelect.disabled = hasWeapon;
+        }
+
+        categorySelect.addEventListener("change", syncFields);
+        weaponSelect.addEventListener("change", syncFields);
+
+        syncFields();
+    }
+
+    setupPromotionTargetExclusivity("promoTargetCategory", "promoTargetWeapon");
+
+    document.querySelectorAll("[id^='promo-target-category-']").forEach(function (categorySelect) {
+        const promoId = categorySelect.id.replace("promo-target-category-", "");
+        const weaponSelect = document.getElementById("promo-target-weapon-" + promoId);
+
+        if (!weaponSelect) {
+            return;
+        }
+
+        function syncFields() {
+            const hasCategory = categorySelect.value !== "";
+            const hasWeapon = weaponSelect.value !== "";
+
+            weaponSelect.disabled = hasCategory;
+            categorySelect.disabled = hasWeapon;
+        }
+
+        categorySelect.addEventListener("change", syncFields);
+        weaponSelect.addEventListener("change", syncFields);
+
+        syncFields();
     });
 </script>

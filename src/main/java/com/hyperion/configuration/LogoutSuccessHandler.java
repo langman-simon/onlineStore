@@ -21,7 +21,6 @@ public class LogoutSuccessHandler
             GlobalBannerService globalBannerService
     ) {
         this.globalBannerService = globalBannerService;
-
         setDefaultTargetUrl("/");
     }
 
@@ -32,21 +31,21 @@ public class LogoutSuccessHandler
             Authentication authentication
     ) throws IOException, ServletException {
 
+        HttpSession session = request.getSession(true);
         String username = authentication != null
                 ? authentication.getName()
                 : null;
 
-        HttpSession session = request.getSession(true);
-
         if (username == null || username.isBlank()) {
             globalBannerService.success(
                     session,
-                    "Déconnexion réussie. Au revoir !"
+                    "message.logout.success"
             );
         } else {
             globalBannerService.success(
                     session,
-                    "Déconnexion réussie. Au revoir " + username + " !"
+                    "message.logout.successUser",
+                    username
             );
         }
 

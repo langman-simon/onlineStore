@@ -3,12 +3,12 @@ package com.hyperion.controller;
 import com.hyperion.model.Category;
 import com.hyperion.model.Promotion;
 import com.hyperion.model.Weapon;
-import com.hyperion.repository.CategoryRepository;
-import com.hyperion.repository.WeaponRepository;
+import com.hyperion.service.CatalogueService;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.ImageStorageService;
 import com.hyperion.service.PromotionService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,21 +28,18 @@ import java.util.Optional;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final WeaponRepository weaponRepository;
-    private final CategoryRepository categoryRepository;
+    private final CatalogueService catalogueService;
     private final ImageStorageService imageStorageService;
     private final PromotionService promotionService;
     private final GlobalBannerService globalBannerService;
 
     public AdminController(
-            WeaponRepository weaponRepository,
-            CategoryRepository categoryRepository,
+            CatalogueService catalogueService,
             ImageStorageService imageStorageService,
             PromotionService promotionService,
             GlobalBannerService globalBannerService
     ) {
-        this.weaponRepository = weaponRepository;
-        this.categoryRepository = categoryRepository;
+        this.catalogueService = catalogueService;
         this.imageStorageService = imageStorageService;
         this.promotionService = promotionService;
         this.globalBannerService = globalBannerService;
@@ -52,16 +50,8 @@ public class AdminController {
             @RequestParam(required = false) Long categoryId,
             Model model
     ) {
-        List<Weapon> weapons;
-
-        if (categoryId == null) {
-            weapons = weaponRepository.findByOrderByNameAsc();
-        } else {
-            weapons = weaponRepository
-                    .findByCategoryIdOrderByNameAsc(categoryId);
-        }
-
-        List<Category> categories = categoryRepository.findAll();
+        List<Weapon> weapons = catalogueService.findWeapons(categoryId);
+        List<Category> categories = catalogueService.findAllCategories();
 
         model.addAttribute("weapons", weapons);
         model.addAttribute("categories", categories);
@@ -69,8 +59,8 @@ public class AdminController {
         model.addAttribute("promotions", promotionService.findAll());
 
         model.addAttribute(
-                "title",
-                "Administration du catalogue"
+                "titleKey",
+                "page.admin"
         );
 
         model.addAttribute(
@@ -94,7 +84,7 @@ public class AdminController {
             @RequestParam String reference,
             @RequestParam String manufacturer,
             @RequestParam Long categoryId,
-            @RequestParam MultipartFile image,
+            @RequestParam(required = false) MultipartFile image,
             HttpSession session
     ) {
         try {
@@ -107,24 +97,23 @@ public class AdminController {
                     manufacturer
             );
 
-            validateRequiredImage(image);
-
             String normalizedReference = reference.trim();
 
-            if (weaponRepository
-                    .findByReference(normalizedReference)
+            if (catalogueService
+                    .findWeaponByReference(normalizedReference)
                     .isPresent()) {
 
                 throw new IllegalArgumentException(
-                        "Une arme possède déjà la référence "
-                                + normalizedReference + "."
+                        "error.admin.referenceExists"
                 );
             }
 
             Category category = findCategory(categoryId);
 
             String imageUrl =
-                    imageStorageService.saveWeaponImage(image);
+                    image == null || image.isEmpty()
+                            ? null
+                            : imageStorageService.saveWeaponImage(image);
 
             Weapon weapon = new Weapon();
 
@@ -137,28 +126,21 @@ public class AdminController {
             weapon.setCategory(category);
             weapon.setImageUrl(imageUrl);
 
-            weaponRepository.save(weapon);
+            catalogueService.saveWeapon(weapon);
 
             globalBannerService.success(
                     session,
-                    "Le produit \"" + weapon.getName()
-                            + "\" a été ajouté au catalogue."
+                    "message.admin.weaponAdded",
+                    weapon.getName()
             );
 
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException | IllegalStateException exception) {
 
             globalBannerService.error(
                     session,
                     exception.getMessage()
             );
 
-        } catch (Exception exception) {
-
-            globalBannerService.error(
-                    session,
-                    "Une erreur est survenue pendant "
-                            + "l'ajout du produit."
-            );
         }
 
         return "redirect:/admin";
@@ -193,7 +175,7 @@ public class AdminController {
             String normalizedReference = reference.trim();
 
             Optional<Weapon> weaponWithSameReference =
-                    weaponRepository.findByReference(
+                    catalogueService.findWeaponByReference(
                             normalizedReference
                     );
 
@@ -204,8 +186,7 @@ public class AdminController {
                     .equals(weaponId)) {
 
                 throw new IllegalArgumentException(
-                        "Une autre arme possède déjà la référence "
-                                + normalizedReference + "."
+                        "error.admin.referenceOther"
                 );
             }
 
@@ -225,28 +206,21 @@ public class AdminController {
                 weapon.setImageUrl(imageUrl);
             }
 
-            weaponRepository.save(weapon);
+            catalogueService.saveWeapon(weapon);
 
             globalBannerService.success(
                     session,
-                    "Le produit \"" + weapon.getName()
-                            + "\" a été modifié."
+                    "message.admin.weaponUpdated",
+                    weapon.getName()
             );
 
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException | IllegalStateException exception) {
 
             globalBannerService.error(
                     session,
                     exception.getMessage()
             );
 
-        } catch (Exception exception) {
-
-            globalBannerService.error(
-                    session,
-                    "Une erreur est survenue pendant "
-                            + "la modification du produit."
-            );
         }
 
         return "redirect:/admin";
@@ -257,36 +231,34 @@ public class AdminController {
             @PathVariable Long weaponId,
             HttpSession session
     ) {
-        Weapon weapon = weaponRepository
-                .findById(weaponId)
+        Weapon weapon = catalogueService
+                .findWeaponById(weaponId)
                 .orElse(null);
 
         if (weapon == null) {
 
             globalBannerService.error(
                     session,
-                    "Le produit demandé n'existe pas."
+                    "error.admin.weaponNotFound"
             );
 
             return "redirect:/admin";
         }
 
         try {
-            weaponRepository.delete(weapon);
+            catalogueService.deleteWeapon(weapon);
 
             globalBannerService.success(
                     session,
-                    "Le produit \"" + weapon.getName()
-                            + "\" a été supprimé."
+                    "message.admin.weaponDeleted",
+                    weapon.getName()
             );
 
-        } catch (Exception exception) {
+        } catch (DataIntegrityViolationException exception) {
 
             globalBannerService.error(
                     session,
-                    "Impossible de supprimer ce produit. "
-                            + "Il est peut-être utilisé "
-                            + "dans une commande."
+                    "error.admin.weaponDelete"
             );
         }
 
@@ -312,11 +284,9 @@ public class AdminController {
             String startDate,
             @RequestParam(required = false)
             String endDate,
-            @RequestParam(
-                    required = false,
-                    defaultValue = "true"
-            )
-            boolean active,
+            @RequestParam(required = false) Long targetCategoryId,
+            @RequestParam(required = false) Long targetWeaponId,
+            @RequestParam(required = false, defaultValue = "false") boolean active,
             HttpSession session
     ) {
         try {
@@ -328,29 +298,47 @@ public class AdminController {
                     discount
             );
 
+            if (targetCategoryId != null && targetWeaponId != null) {
+                globalBannerService.error(session, "message.admin.noBothChoice");
+                return "redirect:/admin";
+            }
+
+            Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
+            Weapon targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
+
+            LocalDate parsedStartDate =
+                    parseDate(startDate);
+
+            LocalDate parsedEndDate =
+                    parseDate(endDate);
+
+            validatePromotionDates(
+                    parsedStartDate,
+                    parsedEndDate
+            );
+
             Promotion promotion = new Promotion();
 
             promotion.setTitle(title.trim());
 
             promotion.setDescription(
-                    description != null
-                            ? description.trim()
-                            : null
+                    normalizeOptionalText(description)
             );
 
             promotion.setDiscountPercentage(discount);
             promotion.setFreeDelivery(freeDelivery);
-            promotion.setStartDate(parseDate(startDate));
-            promotion.setEndDate(parseDate(endDate));
+            promotion.setStartDate(parsedStartDate);
+            promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
+            promotion.setTargetCategory(targetCategory);
+            promotion.setTargetWeapon(targetWeapon);
 
             promotionService.save(promotion);
 
             globalBannerService.success(
                     session,
-                    "La promotion \""
-                            + promotion.getTitle()
-                            + "\" a été ajoutée."
+                    "message.admin.promotionAdded",
+                    promotion.getTitle()
             );
 
         } catch (IllegalArgumentException exception) {
@@ -360,13 +348,6 @@ public class AdminController {
                     exception.getMessage()
             );
 
-        } catch (Exception exception) {
-
-            globalBannerService.error(
-                    session,
-                    "Une erreur est survenue pendant "
-                            + "l'ajout de la promotion."
-            );
         }
 
         return "redirect:/admin";
@@ -389,11 +370,9 @@ public class AdminController {
             String startDate,
             @RequestParam(required = false)
             String endDate,
-            @RequestParam(
-                    required = false,
-                    defaultValue = "true"
-            )
-            boolean active,
+            @RequestParam(required = false) Long targetCategoryId,
+            @RequestParam(required = false) Long targetWeaponId,
+            @RequestParam(required = false, defaultValue = "false") boolean active,
             HttpSession session
     ) {
         try {
@@ -405,30 +384,48 @@ public class AdminController {
                     discount
             );
 
+            if (targetCategoryId != null && targetWeaponId != null) {
+                globalBannerService.error(session, "message.admin.noBothChoice");
+                return "redirect:/admin";
+            }
+
+            Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
+            Weapon targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
+
+            LocalDate parsedStartDate =
+                    parseDate(startDate);
+
+            LocalDate parsedEndDate =
+                    parseDate(endDate);
+
+            validatePromotionDates(
+                    parsedStartDate,
+                    parsedEndDate
+            );
+
             Promotion promotion =
                     findPromotion(promotionId);
 
             promotion.setTitle(title.trim());
 
             promotion.setDescription(
-                    description != null
-                            ? description.trim()
-                            : null
+                    normalizeOptionalText(description)
             );
 
             promotion.setDiscountPercentage(discount);
             promotion.setFreeDelivery(freeDelivery);
-            promotion.setStartDate(parseDate(startDate));
-            promotion.setEndDate(parseDate(endDate));
+            promotion.setStartDate(parsedStartDate);
+            promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
+            promotion.setTargetCategory(targetCategory);
+            promotion.setTargetWeapon(targetWeapon);
 
             promotionService.save(promotion);
 
             globalBannerService.success(
                     session,
-                    "La promotion \""
-                            + promotion.getTitle()
-                            + "\" a été modifiée."
+                    "message.admin.promotionUpdated",
+                    promotion.getTitle()
             );
 
         } catch (IllegalArgumentException exception) {
@@ -438,13 +435,6 @@ public class AdminController {
                     exception.getMessage()
             );
 
-        } catch (Exception exception) {
-
-            globalBannerService.error(
-                    session,
-                    "Une erreur est survenue pendant "
-                            + "la modification de la promotion."
-            );
         }
 
         return "redirect:/admin";
@@ -462,7 +452,7 @@ public class AdminController {
 
             globalBannerService.error(
                     session,
-                    "La promotion demandée n'existe pas."
+                    "error.admin.promotionNotFound"
             );
 
             return "redirect:/admin";
@@ -473,16 +463,15 @@ public class AdminController {
 
             globalBannerService.success(
                     session,
-                    "La promotion \""
-                            + promotion.get().getTitle()
-                            + "\" a été supprimée."
+                    "message.admin.promotionDeleted",
+                    promotion.get().getTitle()
             );
 
-        } catch (Exception exception) {
+        } catch (DataIntegrityViolationException exception) {
 
             globalBannerService.error(
                     session,
-                    "Impossible de supprimer cette promotion."
+                    "error.admin.promotionDelete"
             );
         }
 
@@ -494,22 +483,21 @@ public class AdminController {
     // =========================================================
 
     private Weapon findWeapon(Long weaponId) {
-        return weaponRepository
-                .findById(weaponId)
+        return catalogueService
+                .findWeaponById(weaponId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "Le produit demandé n'existe pas."
+                                "error.admin.weaponNotFound"
                         )
                 );
     }
 
     private Category findCategory(Long categoryId) {
-        return categoryRepository
-                .findById(categoryId)
+        return catalogueService
+                .findCategoryById(categoryId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "La catégorie sélectionnée "
-                                        + "n'existe pas."
+                                "error.admin.categoryNotFound"
                         )
                 );
     }
@@ -519,8 +507,7 @@ public class AdminController {
                 .findById(promotionId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
-                                "La promotion demandée "
-                                        + "n'existe pas."
+                                "error.admin.promotionNotFound"
                         )
                 );
     }
@@ -536,60 +523,60 @@ public class AdminController {
         if (name == null || name.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "Le nom du produit est obligatoire."
+                    "error.admin.nameRequired"
             );
         }
 
         if (name.trim().length() > 150) {
 
             throw new IllegalArgumentException(
-                    "Le nom du produit ne peut pas dépasser "
-                            + "150 caractères."
+                    "error.admin.nameLength"
             );
         }
 
         if (description == null || description.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "La description est obligatoire."
+                    "error.admin.descriptionRequired"
             );
         }
 
         if (description.trim().length() > 1000) {
 
             throw new IllegalArgumentException(
-                    "La description ne peut pas dépasser "
-                            + "1000 caractères."
+                    "error.admin.descriptionLength"
             );
         }
 
-        if (price == null
-                || price.compareTo(BigDecimal.ZERO) < 0) {
-
+        if (price == null) {
             throw new IllegalArgumentException(
-                    "Le prix ne peut pas être négatif."
+                    "error.admin.priceRequired"
+            );
+        }
+
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException(
+                    "error.admin.priceNegative"
             );
         }
 
         if (stock < 0) {
 
             throw new IllegalArgumentException(
-                    "Le stock ne peut pas être négatif."
+                    "error.admin.stockNegative"
             );
         }
 
         if (reference == null || reference.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "La référence est obligatoire."
+                    "error.admin.referenceRequired"
             );
         }
 
         if (reference.trim().length() > 100) {
-
             throw new IllegalArgumentException(
-                    "La référence ne peut pas dépasser "
-                            + "100 caractères."
+                    "error.admin.referenceLength"
             );
         }
 
@@ -597,26 +584,14 @@ public class AdminController {
                 || manufacturer.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "Le fabricant est obligatoire."
+                    "error.admin.manufacturerRequired"
             );
         }
 
         if (manufacturer.trim().length() > 100) {
 
             throw new IllegalArgumentException(
-                    "Le fabricant ne peut pas dépasser "
-                            + "100 caractères."
-            );
-        }
-    }
-
-    private void validateRequiredImage(
-            MultipartFile image
-    ) {
-        if (image == null || image.isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Une image est obligatoire."
+                    "error.admin.manufacturerLength"
             );
         }
     }
@@ -628,15 +603,14 @@ public class AdminController {
         if (title == null || title.isBlank()) {
 
             throw new IllegalArgumentException(
-                    "Le titre de la promotion est obligatoire."
+                    "error.admin.promotionTitleRequired"
             );
         }
 
         if (title.trim().length() > 150) {
 
             throw new IllegalArgumentException(
-                    "Le titre ne peut pas dépasser "
-                            + "150 caractères."
+                    "error.admin.promotionTitleLength"
             );
         }
 
@@ -651,8 +625,7 @@ public class AdminController {
         )) {
 
             throw new IllegalArgumentException(
-                    "Le pourcentage de réduction doit être "
-                            + "compris entre 0 et 100."
+                    "error.admin.discountRange"
             );
         }
     }
@@ -674,7 +647,7 @@ public class AdminController {
         } catch (NumberFormatException exception) {
 
             throw new IllegalArgumentException(
-                    "Le pourcentage de réduction est invalide."
+                    "error.admin.discountInvalid"
             );
         }
     }
@@ -684,6 +657,35 @@ public class AdminController {
             return null;
         }
 
-        return LocalDate.parse(date);
+        try {
+            return LocalDate.parse(date);
+
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException(
+                    "error.admin.dateInvalid"
+            );
+        }
+    }
+
+    private void validatePromotionDates(
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        if (startDate != null
+                && endDate != null
+                && startDate.isAfter(endDate)) {
+
+            throw new IllegalArgumentException(
+                    "error.admin.dateOrder"
+            );
+        }
+    }
+
+    private String normalizeOptionalText(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        return value.trim();
     }
 }

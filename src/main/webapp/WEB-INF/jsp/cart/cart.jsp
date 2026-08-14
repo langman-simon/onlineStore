@@ -3,26 +3,28 @@
 
 <section class="cart-page">
 
-    <p class="eyebrow">Votre sélection</p>
-    <h1>Votre panier</h1>
+    <p class="eyebrow"><spring:message code="cart.eyebrow"/></p>
+    <h1><spring:message code="cart.title"/></h1>
 
     <c:if test="${empty cart.items}">
-        <p class="cart-empty">
-            Votre panier est vide.
-        </p>
+        <div class="cart-empty">
+            <p><spring:message code="cart.empty"/></p>
+            <a href="<c:url value='/catalogue'/>" class="btn btn--primary">
+                <spring:message code="common.backCatalogue"/>
+            </a>
+        </div>
     </c:if>
 
     <c:if test="${not empty cart.items}">
-
         <table>
             <thead>
             <tr>
-                <th>Produit</th>
-                <th>Prix unitaire</th>
-                <th>Quantité</th>
-                <th>Sous-total</th>
-                <th>Modifier</th>
-                <th>Supprimer</th>
+                <th><spring:message code="common.product"/></th>
+                <th><spring:message code="common.unitPrice"/></th>
+                <th><spring:message code="common.quantity"/></th>
+                <th><spring:message code="common.subtotal"/></th>
+                <th><spring:message code="cart.modify"/></th>
+                <th><spring:message code="common.delete"/></th>
             </tr>
             </thead>
 
@@ -31,38 +33,32 @@
                 <tr>
                     <td>
                         <a href="<c:url value='/weapons/${item.weapon.id}'/>">
-                            ${item.weapon.name}
+                            <c:out value="${item.weapon.name}"/>
                         </a>
                     </td>
 
-                    <td>
-                        ${item.weapon.price} €
-                    </td>
+                    <td>${item.weapon.price} €</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.subtotal} €</td>
 
                     <td>
-                        ${item.quantity}
-                    </td>
-
-                    <td>
-                        ${item.subtotal} €
-                    </td>
-
-                    <td>
-                        <form method="post" class="cart-quantity-form"
+                        <form method="post"
+                              class="cart-quantity-form"
                               action="<c:url value='/cart/update/${item.weapon.id}'/>">
 
                             <input type="number"
                                    name="quantity"
                                    class="quantity-input"
                                    value="${item.quantity}"
-                                   min="0"
+                                   min="1"
                                    max="${item.weapon.stock}"
                                    required>
 
                             <sec:csrfInput/>
 
-                            <button type="submit" class="btn btn--primary btn--full">
-                                Mettre à jour
+                            <button type="submit"
+                                    class="btn btn--primary btn--full">
+                                <spring:message code="common.update"/>
                             </button>
                         </form>
                     </td>
@@ -70,11 +66,11 @@
                     <td>
                         <form method="post"
                               action="<c:url value='/cart/remove/${item.weapon.id}'/>">
-
                             <sec:csrfInput/>
 
-                            <button type="submit" class="btn btn--primary btn--full btn--delete">
-                                Supprimer
+                            <button type="submit"
+                                    class="btn btn--primary btn--full btn--delete">
+                                <spring:message code="common.delete"/>
                             </button>
                         </form>
                     </td>
@@ -85,22 +81,26 @@
 
         <div class="cart-summary">
             <p>
-                Nombre total d'articles :
+                <spring:message code="cart.totalItems"/>
                 <strong>${cart.totalQuantity}</strong>
             </p>
 
             <p>
-                Sous-total :
+                <spring:message code="common.subtotal"/> :
                 <strong>${originalPrice} €</strong>
             </p>
 
             <p>
-                Frais de livraison :
+                <spring:message code="cart.delivery"/>
+
                 <c:choose>
                     <c:when test="${freeDelivery}">
                         <span class="strikethrough">${standardDeliveryFee} €</span>
-                        <span class="free-delivery">Offerts !</span>
+                        <span class="free-delivery">
+                            <spring:message code="common.free"/>
+                        </span>
                     </c:when>
+
                     <c:otherwise>
                         <span>${deliveryFee} €</span>
                     </c:otherwise>
@@ -109,116 +109,94 @@
 
             <c:if test="${discountAmount > 0}">
                 <p class="discount">
-                    Réduction fidélité :
+                    <c:choose>
+                        <c:when test="${not empty discountLabel}">
+                            <strong>${discountLabel}</strong> :
+                        </c:when>
+                        <c:otherwise>
+                            <spring:message code="cart.loyaltyDiscount"/>
+                        </c:otherwise>
+                    </c:choose>
                     <span>- ${discountAmount} €</span>
                 </p>
             </c:if>
 
             <p>
-                Total :
+                <spring:message code="cart.totalAfterPromotions"/>
                 <strong>${finalPrice} €</strong>
             </p>
         </div>
 
-<div class="promo-summary">
-    <h2>Promotions appliquées</h2>
-
-    <c:if test="${discountAmount > 0}">
-        <p>
-            <strong>Réduction fidélité :</strong>
-            - ${discountAmount} €
-        </p>
-    </c:if>
-
-    <c:choose>
-        <c:when test="${freeDelivery}">
-            <p>
-                <strong>Livraison :</strong>
-                <span class="strikethrough">${standardDeliveryFee} €</span>
-                <span class="free-delivery">Offerte</span>
-            </p>
-        </c:when>
-        <c:otherwise>
-            <p>
-                <strong>Frais de livraison :</strong>
-                ${deliveryFee} €
-            </p>
-        </c:otherwise>
-    </c:choose>
-
- <hr>
-
-    <c:choose>
-        <c:when test="${authenticated}">
-
+        <sec:authorize access="isAuthenticated()">
             <c:if test="${not empty remainingForFreeDelivery && remainingForFreeDelivery > 0}">
                 <p class="promo-incentive">
-                    Plus que <strong>${remainingForFreeDelivery} €</strong>
-                    d'achat pour bénéficier de la livraison offerte !
+                    <spring:message code="cart.freeDelivery.before"/>
+                    <strong>${remainingForFreeDelivery} €</strong>
+                    <spring:message code="cart.freeDelivery.after"/>
                 </p>
             </c:if>
 
             <c:if test="${not empty remainingForNextTier}">
                 <p class="promo-incentive">
-                    Plus que <strong>${remainingForNextTier} €</strong>
-                    d'achat pour passer à <strong>-${nextTierRate}%</strong> de réduction !
+                    <spring:message code="cart.nextTier.before"/>
+                    <strong>${remainingForNextTier} €</strong>
+                    <spring:message code="cart.nextTier.middle"/>
+                    <strong>-${nextTierRate}%</strong>
+                    <spring:message code="cart.nextTier.after"/>
                 </p>
             </c:if>
+        </sec:authorize>
 
-        </c:when>
-        <c:otherwise>
-            <p class="promo-incentive">
-                <a href="<c:url value='/login'/>">Connectez-vous</a>
-                pour bénéficier des réductions fidélité et de la livraison offerte.
-            </p>
-        </c:otherwise>
-    </c:choose>
+        <sec:authorize access="isAnonymous()">
+            <c:url var="loginFromCartUrl" value="/login">
+                <c:param name="redirect" value="/cart"/>
+            </c:url>
 
-    <hr>
+            <div class="cart-login-prompt">
+                <span><spring:message code="cart.loginPrompt"/></span>
+                <a href="${loginFromCartUrl}" class="link--accent">
+                    <spring:message code="common.login"/>
+                </a>
+            </div>
+        </sec:authorize>
 
-    <p>
-        <strong>Total après promotions :</strong>
-        ${finalPrice} €
-    </p>
-</div>
+        <hr>
 
-<div class="cart-actions">
+        <div class="cart-actions">
+            <sec:authorize access="isAuthenticated()">
+                <form method="get"
+                      action="<c:url value='/order/checkout'/>"
+                      class="cart-checkout-form">
+                    <button type="submit" class="btn btn--primary">
+                        <spring:message code="cart.checkout"/>
+                    </button>
+                </form>
+            </sec:authorize>
 
-    <a href="<c:url value='/catalogue'/>"
-       class="btn btn--primary">
-        Retour au catalogue
-    </a>
+            <sec:authorize access="isAnonymous()">
+                <c:url var="checkoutLoginUrl" value="/login">
+                    <c:param name="redirect" value="/order/checkout"/>
+                </c:url>
 
-    <form method="post"
-          action="<c:url value='/cart/clear'/>">
+                <a href="${checkoutLoginUrl}" class="btn btn--primary">
+                    <spring:message code="cart.checkout"/>
+                </a>
+            </sec:authorize>
 
-        <input type="hidden"
-               name="${_csrf.parameterName}"
-               value="${_csrf.token}">
+            <a href="<c:url value='/catalogue'/>" class="btn btn--primary">
+                <spring:message code="common.backCatalogue"/>
+            </a>
 
-        <button type="submit"
-                class="btn btn--delete">
-            Vider le panier
-        </button>
+            <form method="post"
+                  action="<c:url value='/cart/clear'/>"
+                  class="cart-clear-form">
+                <sec:csrfInput/>
 
-    </form>
-
-    <form method="post"
-          action="<c:url value='/order/confirm'/>">
-
-        <input type="hidden"
-               name="${_csrf.parameterName}"
-               value="${_csrf.token}">
-
-        <button type="submit"
-                class="btn btn--primary">
-            Continuer vers la commande
-        </button>
-
-    </form>
-
-</div>
-
+                <button type="submit" class="btn btn--delete">
+                    <spring:message code="cart.clear"/>
+                </button>
+            </form>
+        </div>
     </c:if>
 
 </section>

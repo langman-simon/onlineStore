@@ -17,7 +17,6 @@ class PromotionServiceImplTest {
 
     @BeforeEach
     void setup() {
-        // On mock le repository car ton service en a besoin
         promotionRepository = Mockito.mock(PromotionRepository.class);
         promotionService = new PromotionServiceImpl(promotionRepository);
     }
@@ -179,7 +178,7 @@ class PromotionServiceImplTest {
 
     @Test
     void shouldThrowWhenCartTotalIsNull() {
-        assertThatThrownBy(() -> promotionService.calculateFinalPrice(null, true))
+        assertThatThrownBy(() -> promotionService.calculateFinalPrice((BigDecimal) null, true))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

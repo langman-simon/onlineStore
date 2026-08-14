@@ -1,197 +1,161 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/importTags.jsp" %>
 
+<spring:message code="auth.register.firstNamePlaceholder" var="firstNamePlaceholder"/>
+<spring:message code="auth.register.lastNamePlaceholder" var="lastNamePlaceholder"/>
+<spring:message code="auth.register.usernamePlaceholder" var="usernamePlaceholder"/>
+<spring:message code="auth.register.emailPlaceholder" var="emailPlaceholder"/>
+<spring:message code="auth.register.passwordPlaceholder" var="passwordPlaceholder"/>
+<spring:message code="auth.register.passwordConfirmationPlaceholder" var="passwordConfirmationPlaceholder"/>
+<spring:message code="auth.register.addressPlaceholder" var="addressPlaceholder"/>
+<spring:message code="auth.register.phonePlaceholder" var="phonePlaceholder"/>
+<spring:message code="auth.register.secondaryPhonePlaceholder" var="secondaryPhonePlaceholder"/>
+<c:url var="registerUrl" value="/register"/>
+
 <section class="auth-page">
-
     <div class="auth-box auth-box--register">
-
         <div class="auth-card">
 
             <div class="auth-heading">
-
-                <p class="eyebrow">
-                    Nouveau client
-                </p>
-
-                <h1>
-                    Inscription
-                </h1>
-
+                <p class="eyebrow"><spring:message code="auth.register.eyebrow"/></p>
+                <h1><spring:message code="auth.register.title"/></h1>
                 <p class="auth-introduction">
-                    Créez votre compte Hyperion.
+                    <spring:message code="auth.register.intro"/>
                 </p>
-
             </div>
 
-            <form method="post"
-                  action="<c:url value='/register'/>"
-                  class="auth-form auth-form--register">
+            <form:form method="post"
+                       action="${registerUrl}"
+                       modelAttribute="registrationForm"
+                       class="auth-form auth-form--register"
+                       novalidate="novalidate">
 
                 <div class="auth-form-grid">
-
                     <div class="form-group">
-
-                        <label for="firstName">
-                            Prénom
-                        </label>
-
-                        <input id="firstName"
-                               type="text"
-                               name="firstName"
-                               placeholder="Votre prénom"
-                               autocomplete="given-name"
-                               required
-                               autofocus>
-
+                        <label for="firstName"><spring:message code="auth.firstName"/></label>
+                        <form:input path="firstName"
+                                    id="firstName"
+                                    placeholder="${firstNamePlaceholder}"
+                                    autocomplete="given-name"
+                                    minlength="2"
+                                    maxlength="50"
+                                    required="required"
+                                    autofocus="autofocus"/>
                     </div>
 
                     <div class="form-group">
-
-                        <label for="lastName">
-                            Nom
-                        </label>
-
-                        <input id="lastName"
-                               type="text"
-                               name="lastName"
-                               placeholder="Votre nom"
-                               autocomplete="family-name"
-                               required>
-
+                        <label for="lastName"><spring:message code="auth.lastName"/></label>
+                        <form:input path="lastName"
+                                    id="lastName"
+                                    placeholder="${lastNamePlaceholder}"
+                                    autocomplete="family-name"
+                                    minlength="2"
+                                    maxlength="50"
+                                    required="required"/>
                     </div>
 
                     <div class="form-group">
-
-                        <label for="username">
-                            Pseudo
-                        </label>
-
-                        <input id="username"
-                               type="text"
-                               name="username"
-                               placeholder="Choisissez un pseudo"
-                               autocomplete="username"
-                               required>
-
+                        <label for="username"><spring:message code="auth.username"/></label>
+                        <form:input path="username"
+                                    id="username"
+                                    placeholder="${usernamePlaceholder}"
+                                    autocomplete="username"
+                                    minlength="3"
+                                    maxlength="50"
+                                    required="required"/>
                     </div>
 
                     <div class="form-group">
-
-                        <label for="email">
-                            Adresse e-mail
-                        </label>
-
-                        <input id="email"
-                               type="email"
-                               name="email"
-                               placeholder="exemple@hyperion.com"
-                               autocomplete="email"
-                               required>
-
+                        <label for="email"><spring:message code="auth.email"/></label>
+                        <form:input path="email"
+                                    id="email"
+                                    type="email"
+                                    placeholder="${emailPlaceholder}"
+                                    autocomplete="email"
+                                    maxlength="100"
+                                    required="required"/>
                     </div>
 
                     <div class="form-group">
-
-                        <label for="password">
-                            Mot de passe
-                        </label>
-
-                        <input id="password"
-                               type="password"
-                               name="password"
-                               placeholder="Choisissez un mot de passe"
-                               autocomplete="new-password"
-                               required>
-
+                        <label for="password"><spring:message code="auth.password"/></label>
+                        <form:password path="password"
+                                       id="password"
+                                       placeholder="${passwordPlaceholder}"
+                                       autocomplete="new-password"
+                                       minlength="8"
+                                       maxlength="72"
+                                       required="required"/>
                     </div>
 
                     <div class="form-group">
-
                         <label for="passwordConfirmation">
-                            Confirmation du mot de passe
+                            <spring:message code="auth.passwordConfirmation"/>
                         </label>
-
-                        <input id="passwordConfirmation"
-                               type="password"
-                               name="passwordConfirmation"
-                               placeholder="Confirmez le mot de passe"
-                               autocomplete="new-password"
-                               required>
-
+                        <form:password path="passwordConfirmation"
+                                       id="passwordConfirmation"
+                                       placeholder="${passwordConfirmationPlaceholder}"
+                                       autocomplete="new-password"
+                                       minlength="8"
+                                       maxlength="72"
+                                       required="required"/>
                     </div>
 
                     <div class="form-group auth-form-grid__full">
-
                         <label for="deliveryAddress">
-                            Adresse de livraison
+                            <spring:message code="auth.deliveryAddress"/>
                         </label>
-
-                        <input id="deliveryAddress"
-                               type="text"
-                               name="deliveryAddress"
-                               placeholder="Rue, numéro, ville et code postal"
-                               autocomplete="street-address"
-                               required>
-
+                        <form:input path="deliveryAddress"
+                                    id="deliveryAddress"
+                                    placeholder="${addressPlaceholder}"
+                                    autocomplete="street-address"
+                                    minlength="5"
+                                    maxlength="150"
+                                    required="required"/>
                     </div>
 
                     <div class="form-group">
-
-                        <label for="phone">
-                            Téléphone
-                        </label>
-
-                        <input id="phone"
-                               type="tel"
-                               name="phone"
-                               placeholder="Numéro principal"
-                               autocomplete="tel"
-                               required>
-
+                        <label for="phone"><spring:message code="auth.phone"/></label>
+                        <form:input path="phone"
+                                    id="phone"
+                                    type="tel"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{8,20}"
+                                    placeholder="${phonePlaceholder}"
+                                    autocomplete="tel"
+                                    required="required"/>
                     </div>
 
                     <div class="form-group">
-
                         <label for="secondaryPhone">
-                            Téléphone secondaire
+                            <spring:message code="auth.secondaryPhone"/>
                             <span class="optional-field">
-                                Facultatif
+                                <spring:message code="common.optional"/>
                             </span>
                         </label>
-
-                        <input id="secondaryPhone"
-                               type="tel"
-                               name="secondaryPhone"
-                               placeholder="Numéro secondaire"
-                               autocomplete="tel">
-
+                        <form:input path="secondaryPhone"
+                                    id="secondaryPhone"
+                                    type="tel"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{8,20}"
+                                    placeholder="${secondaryPhonePlaceholder}"
+                                    autocomplete="tel"/>
                     </div>
-
                 </div>
 
                 <sec:csrfInput/>
 
-                <button type="submit"
-                        class="btn btn--primary btn--large">
-                    Créer le compte
+                <button type="submit" class="btn btn--primary btn--large">
+                    <spring:message code="auth.register.submit"/>
                 </button>
-
-            </form>
+            </form:form>
 
             <div class="auth-footer">
-
-                <span>
-                    Déjà inscrit ?
-                </span>
-
+                <span><spring:message code="auth.register.already"/></span>
                 <a href="<c:url value='/login'/>">
-                    Se connecter
+                    <spring:message code="common.login"/>
                 </a>
-
             </div>
 
         </div>
-
     </div>
-
 </section>

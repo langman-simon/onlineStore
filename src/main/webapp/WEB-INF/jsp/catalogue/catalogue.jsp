@@ -1,13 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/importTags.jsp" %>
 
+<spring:message code="catalogue.productsAria" var="productsAria"/>
+<spring:message code="catalogue.previous" var="previousProduct"/>
+<spring:message code="catalogue.next" var="nextProduct"/>
+
 <section class="catalogue-page">
 
     <header class="catalogue-header">
-
         <div>
-            <p class="eyebrow">La collection</p>
-            <h1>Catalogue</h1>
+            <p class="eyebrow"><spring:message code="catalogue.eyebrow"/></p>
+            <h1><spring:message code="page.catalogue"/></h1>
         </div>
 
         <form method="get"
@@ -15,7 +18,7 @@
               class="catalogue-filter">
 
             <label for="categoryId">
-                Catégorie
+                <spring:message code="catalogue.filter.category"/>
             </label>
 
             <select id="categoryId"
@@ -24,53 +27,32 @@
                     onchange="this.form.submit()">
 
                 <option value="">
-                    Toutes les catégories
+                    <spring:message code="catalogue.filter.all"/>
                 </option>
 
-                <c:forEach var="category"
-                           items="${categories}">
-
+                <c:forEach var="category" items="${categories}">
                     <option value="${category.id}"
-                        <c:if test="${selectedCategoryId == category.id}">
-                            selected
-                        </c:if>>
-
-                        ${category.name}
-
+                        <c:if test="${selectedCategoryId == category.id}">selected</c:if>>
+                        <spring:message code="${category.name}" text="${category.name}"/>
                     </option>
-
                 </c:forEach>
-
             </select>
-
         </form>
-
     </header>
 
     <c:choose>
-
         <c:when test="${empty weapons}">
-
             <p class="catalogue-empty">
-                Aucun produit disponible dans cette catégorie.
+                <spring:message code="catalogue.empty"/>
             </p>
-
         </c:when>
 
         <c:otherwise>
-
-            <div class="catalogue-explorer"
-                 id="catalogueExplorer">
-
-                <%-- =========================================
-                     LATERAL LIST
-                     ========================================= --%>
+            <div class="catalogue-explorer" id="catalogueExplorer">
 
                 <aside class="catalogue-sidebar">
-
                     <div class="catalogue-sidebar__heading">
-                        <span>Produits</span>
-
+                        <span><spring:message code="catalogue.products"/></span>
                         <span class="catalogue-sidebar__count">
                             ${fn:length(weapons)}
                         </span>
@@ -78,7 +60,7 @@
 
                     <div class="catalogue-product-list"
                          role="tablist"
-                         aria-label="Produits du catalogue">
+                         aria-label="${productsAria}">
 
                         <c:forEach var="weapon"
                                    items="${weapons}"
@@ -93,220 +75,155 @@
 
                                 <span class="catalogue-selector__marker">
                                     <span class="catalogue-selector__preview">
-
                                         <c:choose>
-
                                             <c:when test="${not empty weapon.imageUrl}">
-                                                <img src="${weapon.imageUrl}"
-                                                     alt="">
+                                                <c:url var="weaponImageUrl" value="${weapon.imageUrl}"/>
+                                                <img src="${weaponImageUrl}"
+                                                     alt="<c:out value='${weapon.name}'/>"/>
                                             </c:when>
 
                                             <c:otherwise>
-                                                <span class="catalogue-selector__placeholder">
-                                                    H
-                                                </span>
+                                                <span class="catalogue-selector__placeholder">H</span>
                                             </c:otherwise>
-
                                         </c:choose>
-
                                     </span>
                                 </span>
 
                                 <span class="catalogue-selector__information">
-
                                     <span class="catalogue-selector__name">
-                                        ${weapon.name}
+                                        <c:out value="${weapon.name}"/>
                                     </span>
 
                                     <span class="catalogue-selector__meta">
-                                        ${weapon.category.name}
+                                        <spring:message code="${weapon.category.name}"
+                                                        text="${weapon.category.name}"/>
                                     </span>
-
                                 </span>
 
                                 <span class="catalogue-selector__price">
                                     ${weapon.price} €
                                 </span>
-
                             </button>
-
                         </c:forEach>
-
                     </div>
-
                 </aside>
 
-                <%-- =========================================
-                     PRODUCT SCENE
-                     ========================================= --%>
-
                 <div class="catalogue-stage">
-
-                    <div class="catalogue-stage__background"
-                         aria-hidden="true">
-
+                    <div class="catalogue-stage__background" aria-hidden="true">
                         <span></span>
                         <span></span>
                         <span></span>
-
                     </div>
 
-                    <div class="catalogue-stage__counter"
-                         aria-live="polite">
-
-                        <span id="catalogueCurrentIndex">
-                            01
-                        </span>
-
-                        <span class="catalogue-stage__counter-separator">
-                            /
-                        </span>
-
+                    <div class="catalogue-stage__counter" aria-live="polite">
+                        <span id="catalogueCurrentIndex">01</span>
+                        <span class="catalogue-stage__counter-separator">/</span>
                         <span>
-                            <fmt:formatNumber value="${fn:length(weapons)}"
-                                              pattern="00"/>
+                            <fmt:formatNumber value="${fn:length(weapons)}" pattern="00"/>
                         </span>
-
                     </div>
 
                     <div class="catalogue-products">
-
                         <c:forEach var="weapon"
                                    items="${weapons}"
                                    varStatus="status">
 
                             <article id="catalogue-product-${weapon.id}"
-                                     class="catalogue-product
-                                            ${status.first ? 'is-active' : ''}"
+                                     class="catalogue-product ${status.first ? 'is-active' : ''}"
                                      data-catalogue-product
                                      data-index="${status.index}"
                                      role="tabpanel"
                                      aria-hidden="${not status.first}">
 
                                 <div class="catalogue-product__visual">
-
-                                    <div class="catalogue-product__orbit"
-                                         aria-hidden="true">
-                                    </div>
+                                    <div class="catalogue-product__orbit" aria-hidden="true"></div>
 
                                     <div class="catalogue-product__image">
-
                                         <c:choose>
-
                                             <c:when test="${not empty weapon.imageUrl}">
-                                                <img src="${weapon.imageUrl}"
-                                                     alt="${weapon.name}">
+                                                <c:url var="weaponImageUrl" value="${weapon.imageUrl}"/>
+                                                <img src="${weaponImageUrl}"
+                                                     alt="<c:out value='${weapon.name}'/>"/>
                                             </c:when>
 
                                             <c:otherwise>
                                                 <div class="catalogue-product__placeholder">
                                                     <span>Hyperion</span>
-                                                    <strong>${weapon.name}</strong>
+                                                    <strong><c:out value="${weapon.name}"/></strong>
                                                 </div>
                                             </c:otherwise>
-
                                         </c:choose>
 
-                                        <div class="catalogue-product__shade">
-                                        </div>
-
+                                        <div class="catalogue-product__shade"></div>
                                     </div>
-
                                 </div>
 
                                 <div class="catalogue-product__content">
-
                                     <p class="catalogue-product__category">
-                                        ${weapon.category.name}
+                                        <spring:message code="${weapon.category.name}"
+                                                        text="${weapon.category.name}"/>
                                     </p>
 
-                                    <h2>
-                                        ${weapon.name}
-                                    </h2>
+                                    <h2><c:out value="${weapon.name}"/></h2>
 
                                     <c:if test="${not empty weapon.description}">
                                         <p class="catalogue-product__description">
-                                            ${weapon.description}
+                                            <c:out value="${weapon.description}"/>
                                         </p>
                                     </c:if>
 
                                     <div class="catalogue-product__facts">
-
                                         <div class="catalogue-product__fact">
-
-                                            <span>Prix</span>
-
-                                            <strong>
-                                                ${weapon.price} €
-                                            </strong>
-
+                                            <span><spring:message code="common.price"/></span>
+                                            <strong>${weapon.price} €</strong>
                                         </div>
 
                                         <div class="catalogue-product__fact">
-
-                                            <span>Disponibilité</span>
+                                            <span><spring:message code="catalogue.availability"/></span>
 
                                             <c:choose>
-
                                                 <c:when test="${weapon.stock > 0}">
                                                     <strong class="stock-available">
-                                                        ${weapon.stock} en stock
+                                                        ${weapon.stock} <spring:message code="common.available"/>
                                                     </strong>
                                                 </c:when>
 
                                                 <c:otherwise>
                                                     <strong class="stock-unavailable">
-                                                        Rupture de stock
+                                                        <spring:message code="common.unavailable"/>
                                                     </strong>
                                                 </c:otherwise>
-
                                             </c:choose>
-
                                         </div>
-
                                     </div>
 
                                     <a class="btn btn--primary btn--full"
                                        href="<c:url value='/weapons/${weapon.id}'/>">
-
-                                        <span>
-                                            Voir le produit
-                                        </span>
-
+                                        <span><spring:message code="catalogue.viewProduct"/></span>
                                     </a>
-
                                 </div>
-
                             </article>
-
                         </c:forEach>
-
                     </div>
 
                     <div class="catalogue-stage__controls">
-
                         <button type="button"
                                 class="catalogue-control"
                                 id="cataloguePrevious"
-                                aria-label="Produit précédent">
+                                aria-label="${previousProduct}">
                             ←
                         </button>
 
                         <button type="button"
                                 class="catalogue-control"
                                 id="catalogueNext"
-                                aria-label="Produit suivant">
+                                aria-label="${nextProduct}">
                             →
                         </button>
-
                     </div>
-
                 </div>
-
             </div>
-
         </c:otherwise>
-
     </c:choose>
 
 </section>

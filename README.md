@@ -37,8 +37,6 @@ CREATE DATABASE hyperion;
 ALTER USER postgres WITH PASSWORD 'mdp';
 ```
 
-> ⚠️ **Important:** We use **`mdp`** as the default local password for simplicity across the team. Make sure your local PostgreSQL instance matches this setup.
-
 ---
 
 ## ⚙️ 2. Application Configuration

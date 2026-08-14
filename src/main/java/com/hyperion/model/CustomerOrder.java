@@ -24,6 +24,9 @@ public class CustomerOrder {
     @Column(nullable = false, length = 30)
     private String status;
 
+    @Column(name = "payment_reference", unique = true, length = 100)
+    private String paymentReference;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -79,6 +82,14 @@ public class CustomerOrder {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPaymentReference() {
+        return paymentReference;
+    }
+
+    public void setPaymentReference(String paymentReference) {
+        this.paymentReference = paymentReference;
     }
 
     public List<OrderItem> getItems() {

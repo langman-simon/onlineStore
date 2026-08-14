@@ -1,11 +1,16 @@
 package com.hyperion.dto;
 
+import com.hyperion.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class RegistrationForm {
+public class ProfileForm {
+
+    @NotBlank(message = "{validation.username.required}")
+    @Size(min = 3, max = 50, message = "{validation.username.size}")
+    private String login;
 
     @NotBlank(message = "{validation.lastName.required}")
     @Size(min = 2, max = 50, message = "{validation.lastName.size}")
@@ -31,22 +36,31 @@ public class RegistrationForm {
     )
     private String phone;
 
-    @NotBlank(message = "{validation.username.required}")
-    @Size(min = 3, max = 50, message = "{validation.username.size}")
-    private String username;
-
-    @NotBlank(message = "{validation.password.required}")
-    @Size(min = 8, max = 72, message = "{validation.password.size}")
-    private String password;
-
-    @NotBlank(message = "{validation.passwordConfirmation.required}")
-    private String passwordConfirmation;
-
     @Pattern(
             regexp = "^$|\\d{8,20}",
             message = "{validation.secondaryPhone.format}"
     )
     private String secondaryPhone;
+
+    public static ProfileForm from(User user) {
+        ProfileForm form = new ProfileForm();
+        form.setLogin(user.getLogin());
+        form.setLastName(user.getLastName());
+        form.setFirstName(user.getFirstName());
+        form.setDeliveryAddress(user.getDeliveryAddress());
+        form.setEmail(user.getEmail());
+        form.setPhone(user.getPhone());
+        form.setSecondaryPhone(user.getSecondaryPhone());
+        return form;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
     public String getLastName() {
         return lastName;
@@ -86,30 +100,6 @@ public class RegistrationForm {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPasswordConfirmation() {
-        return passwordConfirmation;
-    }
-
-    public void setPasswordConfirmation(String passwordConfirmation) {
-        this.passwordConfirmation = passwordConfirmation;
     }
 
     public String getSecondaryPhone() {

@@ -57,44 +57,81 @@ INSERT INTO categories (
 )
 VALUES
     (
-        'Armes de poing',
+        'category.handguns',
         'Pistolets et armes compactes'
     ),
     (
-        'Fusils',
+        'category.rifles',
         'Fusils classiques, automatiques et armes longues'
     ),
     (
-        'Pistolets-mitrailleurs',
+        'category.submachineGuns',
         'Armes automatiques compactes'
     ),
     (
-        'Armes de précision',
+        'category.precisionWeapons',
         'Fusils de précision et armes à longue portée'
     ),
     (
-        'Lanceurs',
+        'category.launchers',
         'Lance-roquettes et lance-missiles'
     ),
     (
-        'Munitions et explosifs',
+        'category.ammunitionExplosives',
         'Munitions, grenades et charges explosives'
     ),
     (
-        'Protections',
+        'category.protection',
         'Équipements de protection individuelle'
     ),
     (
-        'Équipements maritimes',
+        'category.maritime',
         'Sous-marins, croiseurs et bâtiments militaires'
     ),
     (
-        'Bizarrerie',
+        'category.oddities',
         'Matériels en développement ou absurde, ou les deux'
     )
 ON CONFLICT (name) DO UPDATE
     SET
         description = EXCLUDED.description;
+
+
+-- Migrate legacy French category rows without violating the unique name constraint.
+WITH category_mapping(old_name, new_name) AS (
+    VALUES
+        ('Armes de poing', 'category.handguns'),
+        ('Fusils', 'category.rifles'),
+        ('Pistolets-mitrailleurs', 'category.submachineGuns'),
+        ('Armes de précision', 'category.precisionWeapons'),
+        ('Lanceurs', 'category.launchers'),
+        ('Munitions et explosifs', 'category.ammunitionExplosives'),
+        ('Protections', 'category.protection'),
+        ('Équipements maritimes', 'category.maritime'),
+        ('Bizarrerie', 'category.oddities')
+)
+UPDATE weapons AS weapon
+SET category_id = new_category.id
+FROM categories AS old_category
+JOIN category_mapping AS mapping
+    ON mapping.old_name = old_category.name
+JOIN categories AS new_category
+    ON new_category.name = mapping.new_name
+WHERE weapon.category_id = old_category.id;
+
+-- Remove legacy rows after every weapon points to the canonical i18n category.
+DELETE FROM categories
+WHERE name IN (
+    'Armes de poing',
+    'Fusils',
+    'Pistolets-mitrailleurs',
+    'Armes de précision',
+    'Lanceurs',
+    'Munitions et explosifs',
+    'Protections',
+    'Équipements maritimes',
+    'Bizarrerie'
+);
 
 -- =========================================================
 -- PRODUITS
@@ -115,7 +152,7 @@ VALUES
         'Pistolet historique fabriqué selon un modèle datant de 1884.',
         49.99,
         8,
-        (SELECT id FROM categories WHERE name = 'Armes de poing'),
+        (SELECT id FROM categories WHERE name = 'category.handguns'),
         'Hyperion Heritage',
         'HYP-001',
         '/images/1884_pistol.webp'
@@ -125,7 +162,7 @@ VALUES
         'Fusil traditionnel utilisant une charge de poudre.',
         89.99,
         6,
-        (SELECT id FROM categories WHERE name = 'Fusils'),
+        (SELECT id FROM categories WHERE name = 'category.rifles'),
         'Hyperion Heritage',
         'HYP-002',
         '/images/powder_rifle.webp'
@@ -135,7 +172,7 @@ VALUES
         'Fusil automatique moderne destiné aux opérations terrestres.',
         219.00,
         12,
-        (SELECT id FROM categories WHERE name = 'Fusils'),
+        (SELECT id FROM categories WHERE name = 'category.rifles'),
         'Hyperion Defence',
         'HYP-003',
         '/images/modern_automatic_rifle.webp'
@@ -145,7 +182,7 @@ VALUES
         'Fusil automatique robuste et polyvalent.',
         189.00,
         15,
-        (SELECT id FROM categories WHERE name = 'Fusils'),
+        (SELECT id FROM categories WHERE name = 'category.rifles'),
         'Hyperion Defence',
         'HYP-004',
         '/images/ak_47.webp'
@@ -158,7 +195,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Pistolets-mitrailleurs'
+            WHERE name = 'category.submachineGuns'
         ),
         'Hyperion Tactical',
         'HYP-005',
@@ -172,7 +209,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Armes de précision'
+            WHERE name = 'category.precisionWeapons'
         ),
         'Hyperion Precision',
         'HYP-006',
@@ -183,7 +220,7 @@ VALUES
         'Lance-roquettes portable destiné aux cibles blindées.',
         449.00,
         4,
-        (SELECT id FROM categories WHERE name = 'Lanceurs'),
+        (SELECT id FROM categories WHERE name = 'category.launchers'),
         'Hyperion Heavy Weapons',
         'HYP-007',
         '/images/rpg_47.webp'
@@ -193,7 +230,7 @@ VALUES
         'Système de lancement de missiles à longue portée.',
         1250.00,
         3,
-        (SELECT id FROM categories WHERE name = 'Lanceurs'),
+        (SELECT id FROM categories WHERE name = 'category.launchers'),
         'Hyperion Heavy Weapons',
         'HYP-008',
         '/images/missile_launcher.webp'
@@ -206,7 +243,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Munitions et explosifs'
+            WHERE name = 'category.ammunitionExplosives'
         ),
         'Hyperion Ammunition',
         'HYP-009',
@@ -220,7 +257,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Munitions et explosifs'
+            WHERE name = 'category.ammunitionExplosives'
         ),
         'Hyperion Explosives',
         'HYP-010',
@@ -234,7 +271,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Munitions et explosifs'
+            WHERE name = 'category.ammunitionExplosives'
         ),
         'Hyperion Explosives',
         'HYP-011',
@@ -245,7 +282,7 @@ VALUES
         'Protection renforcée conçue pour résister aux impacts lourds.',
         1299.00,
         14,
-        (SELECT id FROM categories WHERE name = 'Protections'),
+        (SELECT id FROM categories WHERE name = 'category.protection'),
         'Hyperion Armour',
         'HYP-012',
         '/images/heavy_bulletproof.webp'
@@ -258,7 +295,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Équipements maritimes'
+            WHERE name = 'category.maritime'
         ),
         'Hyperion Naval Systems',
         'HYP-013',
@@ -272,7 +309,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Équipements maritimes'
+            WHERE name = 'category.maritime'
         ),
         'Hyperion Naval Systems',
         'HYP-014',
@@ -286,7 +323,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Équipements maritimes'
+            WHERE name = 'category.maritime'
         ),
         'Hyperion Naval Systems',
         'HYP-015',
@@ -300,7 +337,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Équipements maritimes'
+            WHERE name = 'category.maritime'
         ),
         'Hyperion Future Systems',
         'HYP-016',
@@ -314,7 +351,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Équipements maritimes'
+            WHERE name = 'category.maritime'
         ),
         'Hyperion Naval Systems',
         'HYP-017',
@@ -328,7 +365,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Munitions et explosifs'
+            WHERE name = 'category.ammunitionExplosives'
         ),
         'Hyperion Experimental',
         'HYP-018',
@@ -342,7 +379,7 @@ VALUES
         (
             SELECT id
             FROM categories
-            WHERE name = 'Munitions et explosifs'
+            WHERE name = 'category.ammunitionExplosives'
         ),
         'Hyperion Experimental',
         'HYP-019',
@@ -354,7 +391,7 @@ VALUES
     789.56,
     1,
     (
-    SELECT id FROM categories WHERE name = 'Bizarrerie'
+    SELECT id FROM categories WHERE name = 'category.oddities'
     ),
     'Krupp',
     'HYP-020',
@@ -381,6 +418,7 @@ INSERT INTO customer_orders (
     discount_amount,
     total_price,
     status,
+    payment_reference,
     user_id
 )
 VALUES
@@ -391,6 +429,7 @@ VALUES
         0.00,
         1899.95,
         'PAID',
+        'DEMO-PAYPAL-ORDER-1',
         (SELECT id FROM users WHERE login = 'user')
     ),
     (
@@ -400,6 +439,7 @@ VALUES
         0.00,
         1299.00,
         'PENDING_PAYMENT',
+        NULL,
         (SELECT id FROM users WHERE login = 'user')
     )
 ON CONFLICT (id) DO UPDATE
@@ -409,6 +449,7 @@ ON CONFLICT (id) DO UPDATE
         discount_amount = EXCLUDED.discount_amount,
         total_price = EXCLUDED.total_price,
         status = EXCLUDED.status,
+        payment_reference = EXCLUDED.payment_reference,
         user_id = EXCLUDED.user_id;
 
 -- =========================================================

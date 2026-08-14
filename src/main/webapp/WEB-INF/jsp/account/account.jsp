@@ -1,110 +1,104 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../include/importTags.jsp" %>
 
-<section class="account-page">
+<c:url var="accountUrl" value="/account"/>
 
+<section class="account-page">
     <div class="account-card">
 
         <header class="account-card__header">
-            <p class="eyebrow">Profil</p>
-            <h1>Mon compte</h1>
-            <p>Modifiez vos informations personnelles et vos coordonnées.</p>
+            <p class="eyebrow"><spring:message code="account.eyebrow"/></p>
+            <h1><spring:message code="account.title"/></h1>
+            <p><spring:message code="account.intro"/></p>
         </header>
 
-        <c:if test="${not empty success}">
-            <p class="form-message form-message--success">
-                    ${success}
-            </p>
-        </c:if>
-
-        <c:if test="${not empty error}">
-            <p class="form-message form-message--error">
-                    ${error}
-            </p>
-        </c:if>
-
-        <form method="post"
-              action="<c:url value='/account'/>"
-              class="account-form">
+        <form:form method="post"
+                   action="${accountUrl}"
+                   modelAttribute="profileForm"
+                   class="account-form">
 
             <div class="form-group account-form__full">
-                <label for="login">Pseudo</label>
-
-                <input type="text"
-                       id="login"
-                       name="login"
-                       value="${user.login}"
-                       autocomplete="username"
-                       required>
+                <label for="login"><spring:message code="auth.username"/></label>
+                <form:input path="login"
+                            id="login"
+                            autocomplete="username"
+                            minlength="3"
+                            maxlength="50"
+                            required="required"/>
+                <form:errors path="login" cssClass="field-error"/>
             </div>
 
             <div class="form-group">
-                <label for="firstName">Prénom</label>
-
-                <input type="text"
-                       id="firstName"
-                       name="firstName"
-                       value="${user.firstName}"
-                       autocomplete="given-name"
-                       required>
+                <label for="firstName"><spring:message code="auth.firstName"/></label>
+                <form:input path="firstName"
+                            id="firstName"
+                            autocomplete="given-name"
+                            minlength="2"
+                            maxlength="50"
+                            required="required"/>
+                <form:errors path="firstName" cssClass="field-error"/>
             </div>
 
             <div class="form-group">
-                <label for="lastName">Nom</label>
-
-                <input type="text"
-                       id="lastName"
-                       name="lastName"
-                       value="${user.lastName}"
-                       autocomplete="family-name"
-                       required>
+                <label for="lastName"><spring:message code="auth.lastName"/></label>
+                <form:input path="lastName"
+                            id="lastName"
+                            autocomplete="family-name"
+                            minlength="2"
+                            maxlength="50"
+                            required="required"/>
+                <form:errors path="lastName" cssClass="field-error"/>
             </div>
 
             <div class="form-group account-form__full">
                 <label for="deliveryAddress">
-                    Adresse de livraison
+                    <spring:message code="auth.deliveryAddress"/>
                 </label>
-
-                <input type="text"
-                       id="deliveryAddress"
-                       name="deliveryAddress"
-                       value="${user.deliveryAddress}"
-                       autocomplete="street-address"
-                       required>
+                <form:input path="deliveryAddress"
+                            id="deliveryAddress"
+                            autocomplete="street-address"
+                            minlength="5"
+                            maxlength="150"
+                            required="required"/>
+                <form:errors path="deliveryAddress" cssClass="field-error"/>
             </div>
 
             <div class="form-group account-form__full">
-                <label for="email">Adresse e-mail</label>
-
-                <input type="email"
-                       id="email"
-                       name="email"
-                       value="${user.email}"
-                       autocomplete="email"
-                       required>
+                <label for="email"><spring:message code="auth.email"/></label>
+                <form:input path="email"
+                            id="email"
+                            type="email"
+                            autocomplete="email"
+                            maxlength="100"
+                            required="required"/>
+                <form:errors path="email" cssClass="field-error"/>
             </div>
 
             <div class="form-group">
-                <label for="phone">Téléphone</label>
-
-                <input type="tel"
-                       id="phone"
-                       name="phone"
-                       value="${user.phone}"
-                       autocomplete="tel"
-                       required>
+                <label for="phone"><spring:message code="auth.phone"/></label>
+                <form:input path="phone"
+                            id="phone"
+                            type="tel"
+                            inputmode="numeric"
+                            pattern="[0-9]{8,20}"
+                            autocomplete="tel"
+                            required="required"/>
+                <form:errors path="phone" cssClass="field-error"/>
             </div>
 
             <div class="form-group">
                 <label for="secondaryPhone">
-                    Téléphone secondaire
-                    <span class="form-label-optional">Facultatif</span>
+                    <spring:message code="auth.secondaryPhone"/>
+                    <span class="form-label-optional">
+                        <spring:message code="common.optional"/>
+                    </span>
                 </label>
-
-                <input type="tel"
-                       id="secondaryPhone"
-                       name="secondaryPhone"
-                       value="${user.secondaryPhone}">
+                <form:input path="secondaryPhone"
+                            id="secondaryPhone"
+                            type="tel"
+                            inputmode="numeric"
+                            pattern="[0-9]{8,20}"/>
+                <form:errors path="secondaryPhone" cssClass="field-error"/>
             </div>
 
             <sec:csrfInput/>
@@ -112,17 +106,14 @@
             <div class="account-form__actions">
                 <a href="<c:url value='/'/>"
                    class="btn account-form__cancel">
-                    Annuler
+                    <spring:message code="common.cancel"/>
                 </a>
 
-                <button type="submit"
-                        class="btn btn--primary">
-                    Enregistrer les modifications
+                <button type="submit" class="btn btn--primary">
+                    <spring:message code="account.save"/>
                 </button>
             </div>
-
-        </form>
+        </form:form>
 
     </div>
-
 </section>

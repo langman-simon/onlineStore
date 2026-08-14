@@ -9,7 +9,7 @@ public class CompanyController {
 
     @GetMapping("/company")
     public String company(Model model) {
-        model.addAttribute("title", "Notre société");
+        model.addAttribute("titleKey", "page.company");
         model.addAttribute("body", "/WEB-INF/jsp/company/company.jsp");
 
         return "template/template";
