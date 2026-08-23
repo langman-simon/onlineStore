@@ -26,13 +26,64 @@
 }
 
 .catalogue-filter {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(180px, 1.2fr) minmax(180px, 1fr) minmax(180px, 1fr) auto;
     align-items: end;
     gap: 0.85rem;
+
+    width: min(100%, 860px);
 }
 
-.catalogue-filter select {
-    min-width: 220px;
+.catalogue-filter__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.catalogue-filter__field label {
+    color: var(--text-muted);
+
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.catalogue-filter__control {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0 0.8rem;
+
+    color: var(--text);
+    background-color: var(--panel);
+
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+
+    font: inherit;
+}
+
+.catalogue-filter__control:focus {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+}
+
+.catalogue-filter__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.catalogue-filter__actions .btn {
+    white-space: nowrap;
+}
+
+.catalogue-filter__reset {
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--rule);
 }
 
 .catalogue-empty {
@@ -879,13 +930,13 @@
     }
 
     .catalogue-filter {
-        align-items: stretch;
-        flex-direction: column;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
     }
 
-    .catalogue-filter select {
-        width: 100%;
-        min-width: 0;
+    .catalogue-filter__field--search,
+    .catalogue-filter__actions {
+        grid-column: 1 / -1;
     }
 
     .catalogue-explorer {
@@ -951,6 +1002,19 @@
 }
 
 @media (max-width: 560px) {
+
+    .catalogue-filter {
+        grid-template-columns: 1fr;
+    }
+
+    .catalogue-filter__field--search,
+    .catalogue-filter__actions {
+        grid-column: auto;
+    }
+
+    .catalogue-filter__actions {
+        flex-wrap: wrap;
+    }
 
     .catalogue-explorer {
         border-radius: 16px;

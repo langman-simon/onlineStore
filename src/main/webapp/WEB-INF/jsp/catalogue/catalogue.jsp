@@ -4,6 +4,7 @@
 <spring:message code="catalogue.productsAria" var="productsAria"/>
 <spring:message code="catalogue.previous" var="previousProduct"/>
 <spring:message code="catalogue.next" var="nextProduct"/>
+<spring:message code="catalogue.filter.searchPlaceholder" var="searchPlaceholder"/>
 
 <section class="catalogue-page">
 
@@ -17,26 +18,78 @@
               action="<c:url value='/catalogue'/>"
               class="catalogue-filter">
 
-            <label for="categoryId">
-                <spring:message code="catalogue.filter.category"/>
-            </label>
+            <div class="catalogue-filter__field catalogue-filter__field--search">
+                <label for="search">
+                    <spring:message code="catalogue.filter.search"/>
+                </label>
 
-            <select id="categoryId"
-                    name="categoryId"
-                    class="btn btn--primary btn--filter"
-                    onchange="this.form.submit()">
+                <input id="search"
+                       name="search"
+                       type="search"
+                       value="${fn:escapeXml(searchQuery)}"
+                       placeholder="${searchPlaceholder}"
+                       class="catalogue-filter__control"/>
+            </div>
 
-                <option value="">
-                    <spring:message code="catalogue.filter.all"/>
-                </option>
+            <div class="catalogue-filter__field">
+                <label for="categoryId">
+                    <spring:message code="catalogue.filter.category"/>
+                </label>
 
-                <c:forEach var="category" items="${categories}">
-                    <option value="${category.id}"
-                        <c:if test="${selectedCategoryId == category.id}">selected</c:if>>
-                        <spring:message code="${category.name}" text="${category.name}"/>
+                <select id="categoryId"
+                        name="categoryId"
+                        class="catalogue-filter__control">
+
+                    <option value="">
+                        <spring:message code="catalogue.filter.all"/>
                     </option>
-                </c:forEach>
-            </select>
+
+                    <c:forEach var="category" items="${categories}">
+                        <option value="${category.id}"
+                            <c:if test="${selectedCategoryId == category.id}">selected</c:if>>
+                            <spring:message code="${category.name}" text="${category.name}"/>
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+
+            <div class="catalogue-filter__field">
+                <label for="sort">
+                    <spring:message code="catalogue.filter.sort"/>
+                </label>
+
+                <select id="sort"
+                        name="sort"
+                        class="catalogue-filter__control">
+                    <option value="nameAsc"
+                        <c:if test="${selectedSort == 'nameAsc'}">selected</c:if>>
+                        <spring:message code="catalogue.filter.nameAsc"/>
+                    </option>
+                    <option value="nameDesc"
+                        <c:if test="${selectedSort == 'nameDesc'}">selected</c:if>>
+                        <spring:message code="catalogue.filter.nameDesc"/>
+                    </option>
+                    <option value="priceAsc"
+                        <c:if test="${selectedSort == 'priceAsc'}">selected</c:if>>
+                        <spring:message code="catalogue.filter.priceAsc"/>
+                    </option>
+                    <option value="priceDesc"
+                        <c:if test="${selectedSort == 'priceDesc'}">selected</c:if>>
+                        <spring:message code="catalogue.filter.priceDesc"/>
+                    </option>
+                </select>
+            </div>
+
+            <div class="catalogue-filter__actions">
+                <button type="submit" class="btn btn--primary">
+                    <spring:message code="catalogue.filter.apply"/>
+                </button>
+
+                <a href="<c:url value='/catalogue'/>"
+                   class="btn catalogue-filter__reset">
+                    <spring:message code="catalogue.filter.reset"/>
+                </a>
+            </div>
         </form>
     </header>
 

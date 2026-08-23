@@ -10,6 +10,12 @@ public interface CatalogueService {
 
     List<Weapon> findWeapons(Long categoryId);
 
+    List<Weapon> findWeapons(
+            Long categoryId,
+            String search,
+            String sort
+    );
+
     List<Category> findAllCategories();
 
     Optional<Weapon> findWeaponById(Long weaponId);

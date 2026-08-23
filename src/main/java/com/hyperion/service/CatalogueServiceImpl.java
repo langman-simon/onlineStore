@@ -4,6 +4,7 @@ import com.hyperion.model.Category;
 import com.hyperion.model.Weapon;
 import com.hyperion.repository.CategoryRepository;
 import com.hyperion.repository.WeaponRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +26,56 @@ public class CatalogueServiceImpl implements CatalogueService {
 
     @Override
     public List<Weapon> findWeapons(Long categoryId) {
-        if (categoryId == null) {
-            return weaponRepository.findByOrderByNameAsc();
+        return findWeapons(categoryId, "", "nameAsc");
+    }
+
+    @Override
+    public List<Weapon> findWeapons(
+            Long categoryId,
+            String search,
+            String sort
+    ) {
+        String searchQuery = search == null ? "" : search.trim();
+        Sort weaponSort = resolveSort(sort);
+
+        if (categoryId == null && searchQuery.isEmpty()) {
+            return weaponRepository.findAll(weaponSort);
         }
 
-        return weaponRepository.findByCategoryIdOrderByNameAsc(categoryId);
+        if (categoryId == null) {
+            return weaponRepository.findByNameContainingIgnoreCase(
+                    searchQuery,
+                    weaponSort
+            );
+        }
+
+        if (searchQuery.isEmpty()) {
+            return weaponRepository.findByCategoryId(
+                    categoryId,
+                    weaponSort
+            );
+        }
+
+        return weaponRepository.findByCategoryIdAndNameContainingIgnoreCase(
+                categoryId,
+                searchQuery,
+                weaponSort
+        );
+    }
+
+    private Sort resolveSort(String sort) {
+        if (sort == null) {
+            return Sort.by(Sort.Direction.ASC, "name");
+        }
+
+        return switch (sort) {
+            case "nameDesc" -> Sort.by(Sort.Direction.DESC, "name");
+            case "priceAsc" -> Sort.by(Sort.Direction.ASC, "price")
+                    .and(Sort.by(Sort.Direction.ASC, "name"));
+            case "priceDesc" -> Sort.by(Sort.Direction.DESC, "price")
+                    .and(Sort.by(Sort.Direction.ASC, "name"));
+            default -> Sort.by(Sort.Direction.ASC, "name");
+        };
     }
 
     @Override
