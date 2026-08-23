@@ -13,6 +13,13 @@ Mot de passe : mdptest1
 
 http://localhost:8080/
 
+## Demo accounts
+
+| Role | Login | Password |
+| --- | --- | --- |
+| Administrator | `admin` | `mdp` |
+| User | `user` | `mdp` |
+
 ## 🛠️ Prerequisites
 
 Before running the application, ensure you have the following installed on your machine:
@@ -41,20 +48,24 @@ ALTER USER postgres WITH PASSWORD 'mdp';
 
 ## ⚙️ 2. Application Configuration
 
-Verify that your `src/main/resources/application.properties` file contains the correct database credentials:
+Verify that your `src/main/resources/application.yaml` file contains the correct database credentials:
 
-```properties
-spring.application.name=hyperion
+```yaml
+spring:
+  application:
+    name: Hyperion
 
-# PostgreSQL Local Connection
-spring.datasource.url=jdbc:postgresql://localhost:5432/hyperion
-spring.datasource.username=postgres
-spring.datasource.password=mdp
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hyperion
+    username: postgres
+    password: mdp
+    driver-class-name: org.postgresql.Driver
 
-# Hibernate DDL Auto-Generation
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 ```
 
 ---
