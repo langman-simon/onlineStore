@@ -18,6 +18,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 
 class OrderServiceTest {
 
@@ -58,12 +60,12 @@ class OrderServiceTest {
         when(weaponRepository.findById(10L))
                 .thenReturn(Optional.of(databaseWeapon));
         when(promotionService.calculateDiscount(
-                new BigDecimal("40.00"),
-                true
+                anyList(),
+                eq(true)
         )).thenReturn(BigDecimal.ZERO);
         when(promotionService.calculateFinalPrice(
-                new BigDecimal("40.00"),
-                true
+                anyList(),
+                eq(true)
         )).thenReturn(new BigDecimal("40.00"));
         when(customerOrderRepository.save(any(CustomerOrder.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));

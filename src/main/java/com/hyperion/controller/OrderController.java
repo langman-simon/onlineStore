@@ -77,6 +77,11 @@ public class OrderController {
         }
 
         boolean authenticated = isAuthenticated(authentication);
+        String deliveryAddress = authenticated
+                ? userService.findByLogin(authentication.getName())
+                .map(User::getDeliveryAddress)
+                .orElse(null)
+                : null;
         BigDecimal originalPrice = cart.getTotalPrice();
         BigDecimal discountAmount =
                 promotionService.calculateDiscount(
@@ -104,6 +109,7 @@ public class OrderController {
                         : promotionService.getStandardDeliveryFee();
 
         model.addAttribute("cart", cart);
+        model.addAttribute("deliveryAddress", deliveryAddress);
         model.addAttribute("originalPrice", originalPrice);
         model.addAttribute("discountAmount", discountAmount);
         model.addAttribute("discountLabel", discountLabel);

@@ -39,6 +39,12 @@
             </table>
 
             <div class="order-total">
+            <c:if test="${not empty deliveryAddress}">
+                <p>
+                    <spring:message code="checkout.deliveryAddress"/> :
+                    <strong><c:out value="${deliveryAddress}"/></strong>
+                </p>
+            </c:if>
                 <p>
                     <spring:message code="common.subtotal"/> :
                     <span>${originalPrice} €</span>
