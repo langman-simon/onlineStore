@@ -129,43 +129,17 @@ public class CartController {
         model.addAttribute("freeDelivery", freeDelivery);
         model.addAttribute("standardDeliveryFee", standardDeliveryFee);
 
-        BigDecimal freeDeliveryThreshold =
-                promotionService.getFreeDeliveryThreshold();
-                promotionService.getFreeDeliveryThreshold();
+        BigDecimal remainingForFreeDelivery =
+                promotionService.getRemainingForFreeDelivery(originalPrice, freeDelivery);
 
-        BigDecimal remainingForFreeDelivery = freeDelivery
-                ? BigDecimal.ZERO
-                : freeDeliveryThreshold
-                .subtract(originalPrice)
-                .max(BigDecimal.ZERO);
+        PromotionService.NextTierIncentive nextTierIncentive =
+                promotionService.getNextTierIncentive(originalPrice);
 
-        BigDecimal tier2Threshold =
-                promotionService.getTier2Threshold();
+        BigDecimal remainingForNextTier =
+                nextTierIncentive != null ? nextTierIncentive.remainingAmount() : null;
 
-        BigDecimal tier3Threshold =
-                promotionService.getTier3Threshold();
-
-        BigDecimal remainingForNextTier;
-        BigDecimal nextTierRate;
-
-        if (originalPrice.compareTo(tier3Threshold) >= 0) {
-            remainingForNextTier = null;
-            nextTierRate = null;
-
-        } else if (originalPrice.compareTo(tier2Threshold) >= 0) {
-            remainingForNextTier =
-                    tier3Threshold.subtract(originalPrice);
-
-            nextTierRate =
-                    promotionService.getTier3RatePercent();
-
-        } else {
-            remainingForNextTier =
-                    tier2Threshold.subtract(originalPrice);
-
-            nextTierRate =
-                    promotionService.getTier2RatePercent();
-        }
+        BigDecimal nextTierRate =
+                nextTierIncentive != null ? nextTierIncentive.ratePercent() : null;
 
         model.addAttribute(
                 "remainingForFreeDelivery",

@@ -333,7 +333,7 @@ VALUES
         'Croiseur futuriste',
         'Bâtiment militaire expérimental équipé de technologies avancées.',
         8500.00,
-        1,
+        0,
         (
             SELECT id
             FROM categories
@@ -389,7 +389,7 @@ VALUES
     'Homme invisible',
     'On ne le voit pas, mais lui nous voit',
     789.56,
-    1,
+    0,
     (
     SELECT id FROM categories WHERE name = 'category.oddities'
     ),

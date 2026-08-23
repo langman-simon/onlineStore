@@ -233,6 +233,33 @@ public class PromotionServiceImpl implements PromotionService {
         return TIER_3_RATE.multiply(new BigDecimal("100"));
     }
 
+    @Override
+    public BigDecimal getRemainingForFreeDelivery(BigDecimal cartTotal, boolean freeDeliveryApplied) {
+        if (freeDeliveryApplied) {
+            return BigDecimal.ZERO;
+        }
+        return FREE_DELIVERY_THRESHOLD.subtract(cartTotal).max(BigDecimal.ZERO);
+    }
+
+    @Override
+    public NextTierIncentive getNextTierIncentive(BigDecimal cartTotal) {
+        if (cartTotal.compareTo(TIER_3_THRESHOLD) >= 0) {
+            return null;
+        }
+
+        if (cartTotal.compareTo(TIER_2_THRESHOLD) >= 0) {
+            return new NextTierIncentive(
+                    TIER_3_THRESHOLD.subtract(cartTotal),
+                    getTier3RatePercent()
+            );
+        }
+
+        return new NextTierIncentive(
+                TIER_2_THRESHOLD.subtract(cartTotal),
+                getTier2RatePercent()
+        );
+    }
+
     private BigDecimal tierRateFor(BigDecimal cartTotal) {
         if (cartTotal.compareTo(TIER_3_THRESHOLD) >= 0) {
             return TIER_3_RATE;
