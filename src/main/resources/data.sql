@@ -58,39 +58,39 @@ INSERT INTO categories (
 VALUES
     (
         'category.handguns',
-        'Pistolets et armes compactes'
+        'category.handguns.description'
     ),
     (
         'category.rifles',
-        'Fusils classiques, automatiques et armes longues'
+        'category.rifles.description'
     ),
     (
         'category.submachineGuns',
-        'Armes automatiques compactes'
+        'category.submachineGuns.description'
     ),
     (
         'category.precisionWeapons',
-        'Fusils de précision et armes à longue portée'
+        'category.precisionWeapons.description'
     ),
     (
         'category.launchers',
-        'Lance-roquettes et lance-missiles'
+        'category.launchers.description'
     ),
     (
         'category.ammunitionExplosives',
-        'Munitions, grenades et charges explosives'
+        'category.ammunitionExplosives.description'
     ),
     (
         'category.protection',
-        'Équipements de protection individuelle'
+        'category.protection.description'
     ),
     (
         'category.maritime',
-        'Sous-marins, croiseurs et bâtiments militaires'
+        'category.maritime.description'
     ),
     (
         'category.oddities',
-        'Matériels en développement ou absurde, ou les deux'
+        'category.oddities.description'
     )
 ON CONFLICT (name) DO UPDATE
     SET
@@ -358,32 +358,32 @@ VALUES
         '/images/dreadnought.webp'
     ),
     (
-        'Explosif humain',
-        'Petite unité explosive mobile à usage unique.',
+        'Joel',
+        'Tu ne sais pas ce que c''est de perdre quelqu un.',
         1499.00,
-        7,
+        2,
         (
             SELECT id
             FROM categories
-            WHERE name = 'category.ammunitionExplosives'
+            WHERE name = 'category.oddities'
         ),
         'Hyperion Experimental',
         'HYP-018',
-        '/images/human_bomb_2.webp'
+        '/images/the-last-of-us-joel.webp'
     ),
     (
-        'Bombe humaine',
-        'Unité explosive mobile lourde à usage unique.',
+        'Negan',
+        'Quel nom on lui donne ?',
         1444.00,
         4,
         (
             SELECT id
             FROM categories
-            WHERE name = 'category.ammunitionExplosives'
+            WHERE name = 'category.oddities'
         ),
-        'Hyperion Experimental',
+        'The walking Dead',
         'HYP-019',
-        '/images/human_bomb.webp'
+        '/images/negan.webp'
     ),
     (
     'Homme invisible',
