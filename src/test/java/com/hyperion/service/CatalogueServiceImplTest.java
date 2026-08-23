@@ -6,11 +6,14 @@ import com.hyperion.repository.CategoryRepository;
 import com.hyperion.repository.WeaponRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,6 +28,7 @@ class CatalogueServiceImplTest {
     void setUp() {
         weaponRepository = mock(WeaponRepository.class);
         categoryRepository = mock(CategoryRepository.class);
+
         catalogueService = new CatalogueServiceImpl(
                 weaponRepository,
                 categoryRepository
@@ -34,47 +38,63 @@ class CatalogueServiceImplTest {
     @Test
     void shouldFindAllWeaponsWhenCategoryIsNull() {
         Weapon weapon = new Weapon();
-        when(weaponRepository.findByOrderByNameAsc())
+
+        when(weaponRepository.findAll(any(Sort.class)))
                 .thenReturn(List.of(weapon));
 
         List<Weapon> weapons = catalogueService.findWeapons(null);
 
         assertThat(weapons).containsExactly(weapon);
-        verify(weaponRepository).findByOrderByNameAsc();
+
+        verify(weaponRepository)
+                .findAll(any(Sort.class));
     }
 
     @Test
     void shouldFindWeaponsByCategory() {
         Weapon weapon = new Weapon();
-        when(weaponRepository.findByCategoryIdOrderByNameAsc(1L))
-                .thenReturn(List.of(weapon));
+
+        when(weaponRepository.findByCategoryId(
+                eq(1L),
+                any(Sort.class)
+        )).thenReturn(List.of(weapon));
 
         List<Weapon> weapons = catalogueService.findWeapons(1L);
 
         assertThat(weapons).containsExactly(weapon);
-        verify(weaponRepository)
-                .findByCategoryIdOrderByNameAsc(1L);
+
+        verify(weaponRepository).findByCategoryId(
+                eq(1L),
+                any(Sort.class)
+        );
     }
 
     @Test
     void shouldFindAllCategories() {
         Category category = new Category();
+
         when(categoryRepository.findAllByOrderByNameAsc())
                 .thenReturn(List.of(category));
 
-        List<Category> categories = catalogueService.findAllCategories();
+        List<Category> categories =
+                catalogueService.findAllCategories();
 
-        assertThat(categories).containsExactly(category);
-        verify(categoryRepository).findAllByOrderByNameAsc();
+        assertThat(categories)
+                .containsExactly(category);
+
+        verify(categoryRepository)
+                .findAllByOrderByNameAsc();
     }
 
     @Test
     void shouldFindWeaponById() {
         Weapon weapon = new Weapon();
+
         when(weaponRepository.findById(1L))
                 .thenReturn(Optional.of(weapon));
 
-        Optional<Weapon> result = catalogueService.findWeaponById(1L);
+        Optional<Weapon> result =
+                catalogueService.findWeaponById(1L);
 
         assertThat(result).contains(weapon);
     }
@@ -82,13 +102,17 @@ class CatalogueServiceImplTest {
     @Test
     void shouldSaveWeapon() {
         Weapon weapon = new Weapon();
+
         when(weaponRepository.save(weapon))
                 .thenReturn(weapon);
 
-        Weapon saved = catalogueService.saveWeapon(weapon);
+        Weapon saved =
+                catalogueService.saveWeapon(weapon);
 
         assertThat(saved).isSameAs(weapon);
-        verify(weaponRepository).save(weapon);
+
+        verify(weaponRepository)
+                .save(weapon);
     }
 
     @Test
@@ -97,6 +121,7 @@ class CatalogueServiceImplTest {
 
         catalogueService.deleteWeapon(weapon);
 
-        verify(weaponRepository).delete(weapon);
+        verify(weaponRepository)
+                .delete(weapon);
     }
 }
