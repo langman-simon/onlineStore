@@ -578,11 +578,11 @@
                         <div class="form-group">
 
                             <label for="promoTargetCategory">
-                                Catégorie ciblée
+                                <spring:message code="admin.targetGroup"/>
                             </label>
 
                                 <select id="promoTargetCategory" name="targetCategoryId">
-                                    <option value="">Aucune (promo sur tout le site)</option>
+                                    <option value=""><spring:message code="admin.promotargetCategory"/></option>
 
                                 <c:forEach var="category" items="${categories}">
                                             <option value="${category.id}">
@@ -596,11 +596,11 @@
                         <div class="form-group">
 
                             <label for="promoTargetWeapon">
-                                Produit ciblé
+                                <spring:message code="admin.targetProduct"/>
                             </label>
 
                             <select id="promoTargetWeapon" name="targetWeaponId">
-                                <option value="">Aucun (pas de produit précis)</option>
+                                <option value=""><spring:message code="admin.promoTargetWeapon"/></option>
 
                                 <c:forEach var="weapon" items="${weapons}">
                                     <option value="${weapon.id}">
@@ -609,7 +609,7 @@
                                 </c:forEach>
                             </select>
 
-                            <small>Si un produit est choisi, la catégorie ci-dessus est ignorée.</small>
+                            <small><spring:message code="admin.msgIgnored"/></small>
 
                         </div>
 
