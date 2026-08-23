@@ -1,127 +1,237 @@
-# Hyperion - Local Setup Guide
+# Hyperion
 
-Welcome to the **Hyperion** project! Follow this guide to set up your local development environment and get the application running smoothly.
+Projet réalisé dans le cadre du cours **IG338 - Développement avancé d'application Web** à la Henallux - Département technique IESN.
 
----
+Hyperion est une application Web de vente en ligne sécurisée développée avec Spring Boot. Elle propose un catalogue dynamique, un panier, l'inscription et l'authentification des clients, la prise de commande, un paiement en ligne, des promotions et une interface disponible en français et en anglais.
 
-## sandbox paypal account
+## Technologies
 
-E-mail : paypaltestemail@paypal.com
-Mot de passe : mdptest1
+- Java 26
+- Spring Boot 4.1.0
+- Spring MVC
+- Spring Security
+- Spring Data JPA
+- Hibernate
+- Apache Maven
+- Apache Tomcat embarqué
+- JSP / JSTL / HTML / CSS
+- PostgreSQL
+- Jakarta Bean Validation
+- JUnit
+- Mockito
+- PayPal Sandbox
 
-## web url (homepage)
+## Fonctionnalités principales
 
-http://localhost:8080/
+- Consultation du catalogue sans authentification.
+- Consultation des catégories, des produits d'une catégorie et du détail d'un produit.
+- Ajout d'un produit au panier avec choix de la quantité.
+- Consultation, modification et suppression des articles du panier.
+- Inscription d'un client avec validation des données saisies.
+- Authentification et déconnexion avec Spring Security.
+- Modification du compte utilisateur.
+- Confirmation et enregistrement d'une commande avant paiement.
+- Paiement en ligne via PayPal Sandbox.
+- Mise à jour du statut de la commande après validation du paiement.
+- Promotions calculées dans la couche métier.
+- Interface disponible en français et en anglais.
+- Traduction des libellés statiques, de certains libellés dynamiques issus de la base de données et des messages d'erreur.
+- Affichage d'un message personnalisé pour l'utilisateur authentifié.
 
-## Demo accounts
+## Prérequis
 
-| Role | Login | Password |
-| --- | --- | --- |
-| Administrator | `admin` | `mdp` |
-| User | `user` | `mdp` |
+Installer les outils suivants :
 
-## 🛠️ Prerequisites
+- JDK 26 ;
+- Apache Maven ;
+- PostgreSQL.
 
-Before running the application, ensure you have the following installed on your machine:
-* **Java Development Kit (JDK) 26**
-* **Apache Maven 3.9+** (or use IntelliJ's built-in Maven)
-* **PostgreSQL Server**
+Vérification :
 
----
+```bash
+java -version
+mvn -version
+psql --version
+```
 
-## 💾 1. Database Setup (PostgreSQL)
+## Configuration de PostgreSQL
 
-The application requires a local PostgreSQL database instance.
+La configuration actuelle utilise :
 
-### Step A: Create the Database & User Configuration
-Open your PostgreSQL terminal (`psql`), pgAdmin, or DataGrip, and execute the following commands:
+```text
+Base de données : hyperion
+Hôte : localhost
+Port : 5432
+Utilisateur : postgres
+Mot de passe : mdp
+```
+
+Créer la base de données si nécessaire :
+
+```bash
+sudo -u postgres psql
+```
+
+Puis :
 
 ```sql
--- Create the project database
 CREATE DATABASE hyperion;
-
--- Set the password for the default 'postgres' user
 ALTER USER postgres WITH PASSWORD 'mdp';
 ```
 
----
+La configuration correspondante se trouve dans :
 
-## ⚙️ 2. Application Configuration
+```text
+src/main/resources/application.yaml
+```
 
-Verify that your `src/main/resources/application.yaml` file contains the correct database credentials:
+avec :
 
 ```yaml
 spring:
-  application:
-    name: Hyperion
-
   datasource:
     url: jdbc:postgresql://localhost:5432/hyperion
     username: postgres
     password: mdp
-    driver-class-name: org.postgresql.Driver
+```
 
+Le schéma est créé ou mis à jour par Hibernate grâce à :
+
+```yaml
+spring:
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
     hibernate:
       ddl-auto: update
 ```
 
----
+Le fichier suivant contient les données initiales nécessaires à la démonstration :
 
-## 🚀 Building the Application
+```text
+src/main/resources/data.sql
+```
 
-### Using the Command Line
-Navigate to the project's root directory and run:
+Il est exécuté automatiquement au démarrage de l'application.
+
+## Construction
+
+Depuis la racine du projet :
+
 ```bash
 mvn clean install
 ```
 
-### Using IntelliJ IDEA
-1. Open the project in IntelliJ.
-2. Go to `File` ➔ `Project Structure` ➔ `Project` and ensure the **Project SDK** is set to **Java 26**.
-3. Open the **Maven** tool window on the right side of the IDE.
-4. Expand **Lifecycle**, then double-click **`clean`**, followed by **`install`**.
+Cette commande compile l'application et exécute les tests Maven.
 
-> 💡 **Tip:** During the first build, Hibernate will automatically connect to your local PostgreSQL server and generate all the required database tables for you.
+Pour exécuter uniquement les tests :
 
----
-
-## 🌿 Git Workflow (feature & Main)
-
-### Travailler sur la branche feature
-Fais tes modifications de code dans ton IDE, puis sauvegarde ton travail localement :
 ```bash
-git commit -am "Mon message de commit clair"
+mvn test
 ```
 
-### Récupérer le main distant et fusionner
-Sans quitter ta branche `feature`, va chercher les mises à jour du serveur et fusionne-les pour anticiper les conflits :
+## Lancement
+
+### Maven
+
 ```bash
-git fetch origin
-git merge origin/main -m "sync: fusion du main distant dans la branche feature"
+mvn spring-boot:run
 ```
 
-### Résoudre les conflits (Si nécessaire)
-Si Git indique des conflits, règle-les directement dans IntelliJ, puis valide la résolution :
-```bash
-git commit -am "chore: résolution des conflits avec le main distant"
+### IntelliJ IDEA Ultimate
+
+1. Ouvrir le projet à partir de `pom.xml`.
+2. Configurer le SDK du projet sur Java 26.
+3. Vérifier que PostgreSQL est démarré.
+4. Exécuter la classe `com.hyperion.HyperionApplication`.
+
+L'application est accessible à l'adresse :
+
+```text
+http://localhost:8080/
 ```
 
-### Déployer sur le main local et pousser
-Une fois que ta branche `feature` est propre et à jour, bascule sur `main` pour y injecter ton travail et le pousser sur le serveur :
-```bash
-git switch main
-git merge feature -m "merge branch 'feature' into main"
-git push
-git switch feature
+## Comptes de démonstration
+
+### Client
+
+```text
+Login : user
+Mot de passe : mdp
 ```
 
----
+### Administrateur
 
-### if yours coworker need to see your code PUSH/DELETE your local feature branch to remote repository. 
-```bash
-git push -u origin template
-git push origin --delete template
+```text
+Login : admin
+Mot de passe : mdp
 ```
+
+Les mots de passe enregistrés dans PostgreSQL sont hashés.
+
+## Internationalisation
+
+L'application prend en charge le français et l'anglais.
+
+Les principaux fichiers de traduction sont :
+
+```text
+src/main/resources/i18n/messages_fr.properties
+src/main/resources/i18n/messages_en.properties
+src/main/resources/ValidationMessages_fr.properties
+src/main/resources/ValidationMessages_en.properties
+```
+
+Les catégories stockées en base utilisent des clés de traduction afin que leurs libellés dynamiques puissent être affichés dans la langue sélectionnée.
+
+## Paiement
+
+Le paiement en ligne utilise PayPal Sandbox.
+
+La configuration PayPal se trouve dans :
+
+```text
+src/main/resources/application.yaml
+```
+
+La commande est enregistrée en base de données avant le paiement. Une fois le paiement validé, son statut est mis à jour.
+
+## Architecture
+
+L'application suit une architecture MVC et une séparation en couches de type 3-tiers :
+
+```text
+Controller -> Service -> Repository -> PostgreSQL
+                |
+                v
+              Model
+```
+
+Les principales parties du projet sont organisées comme suit :
+
+```text
+src/
+├── main/
+│   ├── java/com/hyperion/
+│   │   ├── configuration/
+│   │   ├── controller/
+│   │   ├── dto/
+│   │   ├── model/
+│   │   ├── repository/
+│   │   ├── service/
+│   │   └── session/
+│   ├── resources/
+│   │   ├── i18n/
+│   │   ├── static/
+│   │   ├── application.yaml
+│   │   └── data.sql
+│   └── webapp/WEB-INF/jsp/
+└── test/
+```
+
+## Remise
+
+Conformément au cahier des charges, le dépôt GitLab de remise doit contenir au minimum :
+
+- le code source complet de l'application ;
+- le script de création et, le cas échéant, de population de la base de données ;
+- le fichier `pom.xml` nécessaire à la construction avec Maven ;
+- toutes les ressources nécessaires au fonctionnement de l'application.
