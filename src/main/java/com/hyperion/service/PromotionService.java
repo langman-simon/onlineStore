@@ -29,4 +29,8 @@ public interface PromotionService {
     BigDecimal getTier2RatePercent();
     BigDecimal getTier3Threshold();
     BigDecimal getTier3RatePercent();
+    BigDecimal getRemainingForFreeDelivery(BigDecimal cartTotal, boolean freeDeliveryApplied);
+    NextTierIncentive getNextTierIncentive(BigDecimal cartTotal);
+
+    record NextTierIncentive(BigDecimal remainingAmount, BigDecimal ratePercent) {}
 }
