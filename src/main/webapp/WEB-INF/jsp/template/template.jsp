@@ -45,12 +45,12 @@
 
 <jsp:include page="/WEB-INF/jsp/common/header.jsp"/>
 
-<c:if test="${not empty sessionScope.globalBannerMessage}">
+<c:if test="${not empty globalBannerMessage}">
     <spring:message code="common.bannerAria" var="bannerAria"/>
     <spring:message code="common.close" var="bannerClose"/>
 
     <div id="global-banner"
-         class="global-banner global-banner--${sessionScope.globalBannerType}"
+         class="global-banner global-banner--${globalBannerType}"
          role="status"
          aria-live="polite"
          tabindex="0"
@@ -58,15 +58,15 @@
 
         <span class="global-banner__icon" aria-hidden="true">
             <c:choose>
-                <c:when test="${sessionScope.globalBannerType == 'success'}">✓</c:when>
-                <c:when test="${sessionScope.globalBannerType == 'error'}">!</c:when>
-                <c:when test="${sessionScope.globalBannerType == 'warning'}">!</c:when>
+                <c:when test="${globalBannerType == 'success'}">✓</c:when>
+                <c:when test="${globalBannerType == 'error'}">!</c:when>
+                <c:when test="${globalBannerType == 'warning'}">!</c:when>
                 <c:otherwise>i</c:otherwise>
             </c:choose>
         </span>
 
         <span class="global-banner__message">
-            <c:out value="${sessionScope.globalBannerMessage}"/>
+            <c:out value="${globalBannerMessage}"/>
         </span>
 
         <span class="global-banner__hint" aria-hidden="true">
@@ -75,9 +75,6 @@
 
         <div class="global-banner__timer" aria-hidden="true"></div>
     </div>
-
-    <c:remove var="globalBannerMessage" scope="session"/>
-    <c:remove var="globalBannerType" scope="session"/>
 </c:if>
 
 <main>
@@ -88,45 +85,7 @@
 
 <jsp:include page="/WEB-INF/jsp/common/footer.jsp"/>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const banner = document.getElementById("global-banner");
-
-        if (!banner) {
-            return;
-        }
-
-        let closing = false;
-
-        function closeBanner() {
-            if (closing) {
-                return;
-            }
-
-            closing = true;
-            banner.classList.add("global-banner--closing");
-
-            window.setTimeout(function () {
-                banner.remove();
-            }, 350);
-        }
-
-        banner.addEventListener("click", closeBanner);
-
-        banner.addEventListener("keydown", function (event) {
-            if (
-                event.key === "Enter"
-                || event.key === " "
-                || event.key === "Escape"
-            ) {
-                event.preventDefault();
-                closeBanner();
-            }
-        });
-
-        window.setTimeout(closeBanner, 5000);
-    });
-</script>
+<script src="<c:url value='/js/global-banner.js'/>"></script>
 
 <script src="<c:url value='/js/header-menu.js'/>"></script>
 <script src="<c:url value='/js/catalogue-explorer.js'/>"></script>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="company-page">
+
+    <div class="company-hero">
+        <p class="eyebrow" th:text="#{company.eyebrow}">À propos</p>
+        <h1 th:text="#{company.title}">Hyperion</h1>
+        <p th:text="#{company.intro}">Introduction</p>
+    </div>
+
+    <div class="company-content">
+        <article class="company-card">
+            <h2 th:text="#{company.activity.title}">Activité</h2>
+            <p th:text="#{company.activity.text}">Texte</p>
+        </article>
+
+        <article class="company-card">
+            <h2 th:text="#{company.commitment.title}">Engagement</h2>
+            <p th:text="#{company.commitment.text}">Texte</p>
+        </article>
+
+        <article class="company-card">
+            <h2 th:text="#{company.service.title}">Service</h2>
+            <p th:text="#{company.service.text}">Texte</p>
+        </article>
+    </div>
+
+</section>
+
+</body>
+</html>

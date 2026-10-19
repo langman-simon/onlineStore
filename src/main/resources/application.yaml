@@ -2,10 +2,6 @@ spring:
   application:
     name: Hyperion
 
-    #thymeleaf:
-    #  excluded-view-names: template/template   # TEMPORAIRE : ces vues restent en JSP
-
-
   datasource:
     url: jdbc:postgresql://localhost:5432/hyperion
     username: postgres
