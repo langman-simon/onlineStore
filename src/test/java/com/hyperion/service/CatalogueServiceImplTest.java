@@ -6,6 +6,7 @@ import com.hyperion.repository.CategoryRepository;
 import com.hyperion.repository.WeaponRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class CatalogueServiceImplTest {
+
+    // Tri par défaut appliqué par le service : par nom, ordre croissant
+    private static final Sort SORT_BY_NAME_ASC =
+            Sort.by(Sort.Direction.ASC, "name");
 
     private WeaponRepository weaponRepository;
     private CategoryRepository categoryRepository;
@@ -33,27 +38,32 @@ class CatalogueServiceImplTest {
 
     @Test
     void shouldFindAllWeaponsWhenCategoryIsNull() {
+        // Arrange : sans catégorie ni recherche, le service appelle findAll(tri)
         Weapon weapon = new Weapon();
-        when(weaponRepository.findByOrderByNameAsc())
+        when(weaponRepository.findAll(SORT_BY_NAME_ASC))
                 .thenReturn(List.of(weapon));
 
+        // Act
         List<Weapon> weapons = catalogueService.findWeapons(null);
 
+        // Assert
         assertThat(weapons).containsExactly(weapon);
-        verify(weaponRepository).findByOrderByNameAsc();
+        verify(weaponRepository).findAll(SORT_BY_NAME_ASC);
     }
 
     @Test
     void shouldFindWeaponsByCategory() {
+        // Arrange : avec une catégorie, le service appelle findByCategoryId(id, tri)
         Weapon weapon = new Weapon();
-        when(weaponRepository.findByCategoryIdOrderByNameAsc(1L))
+        when(weaponRepository.findByCategoryId(1L, SORT_BY_NAME_ASC))
                 .thenReturn(List.of(weapon));
 
+        // Act
         List<Weapon> weapons = catalogueService.findWeapons(1L);
 
+        // Assert
         assertThat(weapons).containsExactly(weapon);
-        verify(weaponRepository)
-                .findByCategoryIdOrderByNameAsc(1L);
+        verify(weaponRepository).findByCategoryId(1L, SORT_BY_NAME_ASC);
     }
 
     @Test

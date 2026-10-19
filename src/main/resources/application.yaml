@@ -2,6 +2,10 @@ spring:
   application:
     name: Hyperion
 
+    thymeleaf:
+        enabled: false   # temporaire
+
+
   datasource:
     url: jdbc:postgresql://localhost:5432/hyperion
     username: postgres
