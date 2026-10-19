@@ -2,8 +2,8 @@ spring:
   application:
     name: Hyperion
 
-    thymeleaf:
-        enabled: false   # temporaire
+    #thymeleaf:
+    #  excluded-view-names: template/template   # TEMPORAIRE : ces vues restent en JSP
 
 
   datasource:

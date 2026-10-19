@@ -1,10 +1,10 @@
-package com.hyperion.model;
+package com.hyperion.dataAccess.entity;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "categories")
-public class Category {
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,10 +16,10 @@ public class Category {
     @Column(length = 500)
     private String description;
 
-    public Category() {
+    public CategoryEntity() {
     }
 
-    public Category(String name, String description) {
+    public CategoryEntity(String name, String description) {
         this.name = name;
         this.description = description;
     }

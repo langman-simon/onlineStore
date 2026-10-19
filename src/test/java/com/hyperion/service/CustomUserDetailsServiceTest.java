@@ -1,7 +1,7 @@
 package com.hyperion.service;
 
-import com.hyperion.model.User;
-import com.hyperion.repository.UserRepository;
+import com.hyperion.dataAccess.entity.UserEntity;
+import com.hyperion.dataAccess.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +27,7 @@ class CustomUserDetailsServiceTest {
 
     @Test
     void shouldLoadRegularUserWithUserRole() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setLogin("neo");
         user.setPassword("hashed-password");
         user.setAdmin(false);
@@ -48,7 +48,7 @@ class CustomUserDetailsServiceTest {
 
     @Test
     void shouldLoadAdminWithAdminAndUserRoles() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setLogin("admin");
         user.setPassword("hashed-password");
         user.setAdmin(true);

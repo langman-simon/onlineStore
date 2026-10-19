@@ -23,35 +23,35 @@ configurations {
 }
 
 dependencies {
-    // Web (Spring MVC + Tomcat embarqué)
+    // Web
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     // Validation des formulaires (@NotBlank, @Size, @Email…)
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // Base de données : JPA/Hibernate + driver PostgreSQL
+    // Base de donnée
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.postgresql:postgresql'
 
     // Sécurité
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    // Thymeleaf + layout (labo 2) + sec:authorize (labo 7)
-    //implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    //implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-    //implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    // Thymeleaf + layout
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
-    // MapStruct : génère les conversions Entity <-> Model (labo 6)
+    // MapStruct
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
     testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
-    // TEMPORAIRE : pour que les JSP marchent encore pendant la migration
+    //  pour que les JSP marchent encore pendant la migration (temporaire)
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
     implementation 'org.springframework.security:spring-security-taglibs'
 
-    // Tests : JUnit + Mockito + AssertJ
+    // Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

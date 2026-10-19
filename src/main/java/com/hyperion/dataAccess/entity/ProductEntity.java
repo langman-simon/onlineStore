@@ -1,4 +1,4 @@
-package com.hyperion.model;
+package com.hyperion.dataAccess.entity;
 
 import jakarta.persistence.*;
 
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "weapons")
-public class Weapon {
+public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Weapon {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    private CategoryEntity category;
 
     @Column(length = 100)
     private String manufacturer;
@@ -37,15 +37,15 @@ public class Weapon {
     @Column(length = 500)
     private String imageUrl;
 
-    public Weapon() {
+    public ProductEntity() {
     }
 
-    public Weapon(
+    public ProductEntity(
             String name,
             String description,
             BigDecimal price,
             int stock,
-            Category category,
+            CategoryEntity category,
             String manufacturer,
             String reference,
             String imageUrl
@@ -96,11 +96,11 @@ public class Weapon {
         this.stock = stock;
     }
 
-    public Category getCategory() {
+    public CategoryEntity getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(CategoryEntity category) {
         this.category = category;
     }
 

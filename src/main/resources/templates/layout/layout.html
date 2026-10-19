@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      th:lang="${#locale.language}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title th:text="${titleKey != null} ? #{${titleKey}} : ${title}">Hyperion</title>
+
+  <link rel="stylesheet" th:href="@{/css/base/core.css}">
+
+  <link rel="stylesheet" th:href="@{/css/layout/layout.css}">
+  <link rel="stylesheet" th:href="@{/css/layout/header.css}">
+  <link rel="stylesheet" th:href="@{/css/layout/header-bubbles.css}">
+  <link rel="stylesheet" th:href="@{/css/layout/footer.css}">
+
+  <link rel="stylesheet" th:href="@{/css/components/buttons.css}">
+  <link rel="stylesheet" th:href="@{/css/components/forms.css}">
+  <link rel="stylesheet" th:href="@{/css/components/tables.css}">
+
+  <link rel="stylesheet" th:href="@{/css/pages/home.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/catalogue.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/product-details.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/cart.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/checkout.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/company.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/order.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/auth.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/account.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/admin.css}">
+</head>
+
+<body>
+
+<header th:replace="~{fragments/fragments :: header}"></header>
+
+<div th:replace="~{fragments/fragments :: banner}"></div>
+
+<main>
+  <div class="container">
+    <section layout:fragment="main-content"></section>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/fragments :: footer}"></footer>
+
+<script th:src="@{/js/global-banner.js}"></script>
+<script th:src="@{/js/header-menu.js}"></script>
+<script th:src="@{/js/catalogue-explorer.js}"></script>
+
+</body>
+</html>

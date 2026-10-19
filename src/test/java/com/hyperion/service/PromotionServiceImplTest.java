@@ -1,6 +1,6 @@
 package com.hyperion.service;
 
-import com.hyperion.repository.PromotionRepository;
+import com.hyperion.dataAccess.repository.PromotionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

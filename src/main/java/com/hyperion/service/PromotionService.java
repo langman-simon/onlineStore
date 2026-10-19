@@ -1,7 +1,7 @@
 package com.hyperion.service;
 
 import com.hyperion.cart.CartItem;
-import com.hyperion.model.Promotion;
+import com.hyperion.dataAccess.entity.PromotionEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,9 +18,9 @@ public interface PromotionService {
     boolean isFreeDeliveryApplied(List<CartItem> items, boolean authenticated);
     String getAppliedDiscountLabel(List<CartItem> items, boolean authenticated);
 
-    List<Promotion> findAll();
-    Optional<Promotion> findById(Long id);
-    Promotion save(Promotion promotion);
+    List<PromotionEntity> findAll();
+    Optional<PromotionEntity> findById(Long id);
+    PromotionEntity save(PromotionEntity promotion);
     void deleteById(Long id);
 
     BigDecimal getStandardDeliveryFee();

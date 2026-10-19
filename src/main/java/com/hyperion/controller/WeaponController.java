@@ -1,6 +1,6 @@
 package com.hyperion.controller;
 
-import com.hyperion.model.Weapon;
+import com.hyperion.dataAccess.entity.ProductEntity;
 import com.hyperion.service.CatalogueService;
 import com.hyperion.service.GlobalBannerService;
 import jakarta.servlet.http.HttpSession;
@@ -33,7 +33,7 @@ public class WeaponController {
             Model model,
             HttpSession session
     ) {
-        Optional<Weapon> weaponOpt =
+        Optional<ProductEntity> weaponOpt =
                 catalogueService.findWeaponById(id);
 
         if (weaponOpt.isEmpty()) {
@@ -45,7 +45,7 @@ public class WeaponController {
             return "redirect:/catalogue";
         }
 
-        Weapon weapon = weaponOpt.get();
+        ProductEntity weapon = weaponOpt.get();
 
         model.addAttribute("weapon", weapon);
         model.addAttribute("title", weapon.getName());

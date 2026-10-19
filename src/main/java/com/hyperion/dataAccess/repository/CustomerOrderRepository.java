@@ -1,19 +1,19 @@
-package com.hyperion.repository;
+package com.hyperion.dataAccess.repository;
 
-import com.hyperion.model.CustomerOrder;
+import com.hyperion.dataAccess.entity.CustomerOrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CustomerOrderRepository
-        extends JpaRepository<CustomerOrder, Long> {
+        extends JpaRepository<CustomerOrderEntity, Long> {
 
-    List<CustomerOrder> findByUserLoginOrderByCreatedAtDesc(
+    List<CustomerOrderEntity> findByUserLoginOrderByCreatedAtDesc(
             String login
     );
 
-    Optional<CustomerOrder> findByIdAndUserLogin(
+    Optional<CustomerOrderEntity> findByIdAndUserLogin(
             Long id,
             String login
     );

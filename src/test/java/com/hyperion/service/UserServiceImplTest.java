@@ -1,7 +1,7 @@
 package com.hyperion.service;
 
-import com.hyperion.model.User;
-import com.hyperion.repository.UserRepository;
+import com.hyperion.dataAccess.entity.UserEntity;
+import com.hyperion.dataAccess.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,17 +31,17 @@ class UserServiceImplTest {
 
     @Test
     void shouldHashPasswordBeforeRegistration() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setLogin("neo");
 
         when(userRepository.existsByLogin("neo"))
                 .thenReturn(false);
         when(passwordEncoder.encode("secret123"))
                 .thenReturn("hashed-password");
-        when(userRepository.save(any(User.class)))
+        when(userRepository.save(any(UserEntity.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        User saved = userService.register(
+        UserEntity saved = userService.register(
                 user,
                 "secret123"
         );
@@ -54,7 +54,7 @@ class UserServiceImplTest {
 
     @Test
     void shouldRejectDuplicateLoginOnRegistration() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setLogin("neo");
 
         when(userRepository.existsByLogin("neo"))

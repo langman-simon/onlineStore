@@ -1,4 +1,4 @@
-package com.hyperion.model;
+package com.hyperion.dataAccess.entity;
 
 import jakarta.persistence.*;
 
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
-public class OrderItem {
+public class OrderItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,11 +14,11 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
-    private CustomerOrder order;
+    private CustomerOrderEntity order;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "weapon_id", nullable = false)
-    private Weapon weapon;
+    private ProductEntity weapon;
 
     @Column(nullable = false)
     private int quantity;
@@ -29,10 +29,10 @@ public class OrderItem {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
 
-    public OrderItem() {
+    public OrderItemEntity() {
     }
 
-    public OrderItem(Weapon weapon, int quantity) {
+    public OrderItemEntity(ProductEntity weapon, int quantity) {
         this.weapon = weapon;
         this.quantity = quantity;
         this.unitPrice = weapon.getPrice();
@@ -43,15 +43,15 @@ public class OrderItem {
         return id;
     }
 
-    public CustomerOrder getOrder() {
+    public CustomerOrderEntity getOrder() {
         return order;
     }
 
-    public void setOrder(CustomerOrder order) {
+    public void setOrder(CustomerOrderEntity order) {
         this.order = order;
     }
 
-    public Weapon getWeapon() {
+    public ProductEntity getWeapon() {
         return weapon;
     }
 

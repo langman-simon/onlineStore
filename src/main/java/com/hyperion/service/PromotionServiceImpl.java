@@ -1,8 +1,8 @@
 package com.hyperion.service;
 
 import com.hyperion.cart.CartItem;
-import com.hyperion.model.Promotion;
-import com.hyperion.repository.PromotionRepository;
+import com.hyperion.dataAccess.entity.PromotionEntity;
+import com.hyperion.dataAccess.repository.PromotionRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -37,7 +37,7 @@ public class PromotionServiceImpl implements PromotionService {
         BigDecimal tierRate = tierRateFor(cartTotal);
 
         BigDecimal bestGlobalPromoRate = findActivePromotions().stream()
-                .filter(Promotion::isGlobal)
+                .filter(PromotionEntity::isGlobal)
                 .filter(p -> p.getDiscountPercentage() != null)
                 .map(p -> p.getDiscountPercentage().divide(new BigDecimal("100")))
                 .max(BigDecimal::compareTo)
@@ -77,8 +77,8 @@ public class PromotionServiceImpl implements PromotionService {
 
         boolean tierFreeDelivery = cartTotal.compareTo(FREE_DELIVERY_THRESHOLD) >= 0;
         boolean promoFreeDelivery = findActivePromotions().stream()
-                .filter(Promotion::isGlobal)
-                .anyMatch(Promotion::isFreeDelivery);
+                .filter(PromotionEntity::isGlobal)
+                .anyMatch(PromotionEntity::isFreeDelivery);
 
         return tierFreeDelivery || promoFreeDelivery;
     }
@@ -101,7 +101,7 @@ public class PromotionServiceImpl implements PromotionService {
         }
 
         BigDecimal cartTotal = totalOf(items);
-        List<Promotion> activePromotions = findActivePromotions();
+        List<PromotionEntity> activePromotions = findActivePromotions();
 
         BigDecimal tierRate = tierRateFor(cartTotal);
         BigDecimal tierDiscount = cartTotal.multiply(tierRate);
@@ -112,7 +112,7 @@ public class PromotionServiceImpl implements PromotionService {
                         : null
         );
 
-        for (Promotion promotion : activePromotions) {
+        for (PromotionEntity promotion : activePromotions) {
             if (!promotion.isGlobal() || promotion.getDiscountPercentage() == null) {
                 continue;
             }
@@ -125,7 +125,7 @@ public class PromotionServiceImpl implements PromotionService {
             }
         }
 
-        for (Promotion promotion : activePromotions) {
+        for (PromotionEntity promotion : activePromotions) {
             if (promotion.isGlobal() || promotion.getDiscountPercentage() == null) {
                 continue;
             }
@@ -176,7 +176,7 @@ public class PromotionServiceImpl implements PromotionService {
         boolean tierFreeDelivery = cartTotal.compareTo(FREE_DELIVERY_THRESHOLD) >= 0;
 
         boolean promoFreeDelivery = findActivePromotions().stream()
-                .filter(Promotion::isFreeDelivery)
+                .filter(PromotionEntity::isFreeDelivery)
                 .anyMatch(promotion -> promotion.isGlobal()
                         || items.stream().anyMatch(item -> promotion.appliesTo(item.getWeapon())));
 
@@ -184,17 +184,17 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public List<Promotion> findAll() {
+    public List<PromotionEntity> findAll() {
         return promotionRepository.findAll();
     }
 
     @Override
-    public Optional<Promotion> findById(Long id) {
+    public Optional<PromotionEntity> findById(Long id) {
         return promotionRepository.findById(id);
     }
 
     @Override
-    public Promotion save(Promotion promotion) {
+    public PromotionEntity save(PromotionEntity promotion) {
         return promotionRepository.save(promotion);
     }
 
@@ -276,9 +276,9 @@ public class PromotionServiceImpl implements PromotionService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private List<Promotion> findActivePromotions() {
+    private List<PromotionEntity> findActivePromotions() {
         return promotionRepository.findAll().stream()
-                .filter(Promotion::isCurrentlyValid)
+                .filter(PromotionEntity::isCurrentlyValid)
                 .toList();
     }
 }

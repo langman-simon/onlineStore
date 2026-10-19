@@ -1,7 +1,7 @@
 package com.hyperion.controller;
 
 import com.hyperion.dto.RegistrationForm;
-import com.hyperion.model.User;
+import com.hyperion.dataAccess.entity.UserEntity;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -114,7 +114,7 @@ public class AuthController {
         String normalizedLogin =
                 form.getUsername().trim();
 
-        User user = new User();
+        UserEntity user = new UserEntity();
 
         user.setLastName(form.getLastName().trim());
         user.setFirstName(form.getFirstName().trim());

@@ -1,4 +1,4 @@
-package com.hyperion.model;
+package com.hyperion.dataAccess.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "promotions")
-public class Promotion {
+public class PromotionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,11 +35,11 @@ public class Promotion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_category_id")
-    private Category targetCategory;
+    private CategoryEntity targetCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_weapon_id")
-    private Weapon targetWeapon;
+    private ProductEntity targetWeapon;
 
     public Long getId() {
         return id;
@@ -105,19 +105,19 @@ public class Promotion {
         this.active = active;
     }
 
-    public Category getTargetCategory() {
+    public CategoryEntity getTargetCategory() {
         return targetCategory;
     }
 
-    public void setTargetCategory(Category targetCategory) {
+    public void setTargetCategory(CategoryEntity targetCategory) {
         this.targetCategory = targetCategory;
     }
 
-    public Weapon getTargetWeapon() {
+    public ProductEntity getTargetWeapon() {
         return targetWeapon;
     }
 
-    public void setTargetWeapon(Weapon targetWeapon) {
+    public void setTargetWeapon(ProductEntity targetWeapon) {
         this.targetWeapon = targetWeapon;
     }
 
@@ -125,7 +125,7 @@ public class Promotion {
         return targetCategory == null && targetWeapon == null;
     }
 
-    public boolean appliesTo(Weapon weapon) {
+    public boolean appliesTo(ProductEntity weapon) {
         if (isGlobal()) {
             return true;
         }

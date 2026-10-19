@@ -1,11 +1,11 @@
 package com.hyperion.service;
 
 import com.hyperion.cart.Cart;
-import com.hyperion.model.CustomerOrder;
-import com.hyperion.model.User;
-import com.hyperion.model.Weapon;
-import com.hyperion.repository.CustomerOrderRepository;
-import com.hyperion.repository.WeaponRepository;
+import com.hyperion.dataAccess.entity.CustomerOrderEntity;
+import com.hyperion.dataAccess.entity.UserEntity;
+import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.dataAccess.repository.CustomerOrderRepository;
+import com.hyperion.dataAccess.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,14 +23,14 @@ import static org.mockito.ArgumentMatchers.eq;
 
 class OrderServiceTest {
 
-    private WeaponRepository weaponRepository;
+    private ProductRepository weaponRepository;
     private CustomerOrderRepository customerOrderRepository;
     private PromotionService promotionService;
     private OrderService orderService;
 
     @BeforeEach
     void setUp() {
-        weaponRepository = mock(WeaponRepository.class);
+        weaponRepository = mock(ProductRepository.class);
         customerOrderRepository = mock(CustomerOrderRepository.class);
         promotionService = mock(PromotionService.class);
         orderService = new OrderService(
@@ -42,13 +42,13 @@ class OrderServiceTest {
 
     @Test
     void shouldRecalculateOrderFromDatabasePrices() {
-        Weapon cartWeapon = mock(Weapon.class);
+        ProductEntity cartWeapon = mock(ProductEntity.class);
         when(cartWeapon.getId()).thenReturn(10L);
         when(cartWeapon.getPrice())
                 .thenReturn(new BigDecimal("5.00"));
         when(cartWeapon.getStock()).thenReturn(10);
 
-        Weapon databaseWeapon = mock(Weapon.class);
+        ProductEntity databaseWeapon = mock(ProductEntity.class);
         when(databaseWeapon.getId()).thenReturn(10L);
         when(databaseWeapon.getPrice())
                 .thenReturn(new BigDecimal("20.00"));
@@ -67,12 +67,12 @@ class OrderServiceTest {
                 anyList(),
                 eq(true)
         )).thenReturn(new BigDecimal("40.00"));
-        when(customerOrderRepository.save(any(CustomerOrder.class)))
+        when(customerOrderRepository.save(any(CustomerOrderEntity.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        CustomerOrder order = orderService.validateOrder(
+        CustomerOrderEntity order = orderService.validateOrder(
                 cart,
-                new User(),
+                new UserEntity(),
                 true
         );
 
@@ -86,7 +86,7 @@ class OrderServiceTest {
 
     @Test
     void shouldRejectPaymentWithWrongAmount() {
-        CustomerOrder order = new CustomerOrder(
+        CustomerOrderEntity order = new CustomerOrderEntity(
                 new BigDecimal("100.00"),
                 BigDecimal.ZERO,
                 new BigDecimal("100.00")
@@ -108,7 +108,7 @@ class OrderServiceTest {
 
     @Test
     void shouldStorePaymentReferenceAfterValidatedPayment() {
-        CustomerOrder order = new CustomerOrder(
+        CustomerOrderEntity order = new CustomerOrderEntity(
                 new BigDecimal("100.00"),
                 BigDecimal.ZERO,
                 new BigDecimal("100.00")
@@ -122,7 +122,7 @@ class OrderServiceTest {
         when(customerOrderRepository.save(order))
                 .thenReturn(order);
 
-        CustomerOrder paidOrder = orderService.validatePayment(
+        CustomerOrderEntity paidOrder = orderService.validatePayment(
                 1L,
                 new BigDecimal("100.00"),
                 "PAYPAL-123"

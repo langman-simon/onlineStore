@@ -1,6 +1,6 @@
 package com.hyperion.cart;
 
-import com.hyperion.model.Weapon;
+import com.hyperion.dataAccess.entity.ProductEntity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class Cart {
         return Collections.unmodifiableList(items);
     }
 
-    public void addWeapon(Weapon weapon, int quantity) {
+    public void addWeapon(ProductEntity weapon, int quantity) {
         if (weapon == null) {
             throw new IllegalArgumentException("error.cart.productNull");
         }

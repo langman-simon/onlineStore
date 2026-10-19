@@ -1,8 +1,8 @@
 package com.hyperion.controller;
 
 import com.hyperion.cart.Cart;
-import com.hyperion.model.CustomerOrder;
-import com.hyperion.model.User;
+import com.hyperion.dataAccess.entity.CustomerOrderEntity;
+import com.hyperion.dataAccess.entity.UserEntity;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.OrderService;
 import com.hyperion.service.PromotionService;
@@ -79,7 +79,7 @@ public class OrderController {
         boolean authenticated = isAuthenticated(authentication);
         String deliveryAddress = authenticated
                 ? userService.findByLogin(authentication.getName())
-                .map(User::getDeliveryAddress)
+                .map(UserEntity::getDeliveryAddress)
                 .orElse(null)
                 : null;
         BigDecimal originalPrice = cart.getTotalPrice();
@@ -136,7 +136,7 @@ public class OrderController {
             HttpSession session
     ) {
         try {
-            User user = userService
+            UserEntity user = userService
                     .findByLogin(authentication.getName())
                     .orElseThrow(() ->
                             new IllegalArgumentException(
@@ -144,7 +144,7 @@ public class OrderController {
                             )
                     );
 
-            CustomerOrder order = orderService.validateOrder(
+            CustomerOrderEntity order = orderService.validateOrder(
                     sessionCart.getCart(),
                     user,
                     isAuthenticated(authentication)
@@ -174,7 +174,7 @@ public class OrderController {
             Model model,
             HttpSession session
     ) {
-        Optional<CustomerOrder> orderOpt =
+        Optional<CustomerOrderEntity> orderOpt =
                 findOrderForCurrentUser(id, authentication);
 
         if (orderOpt.isEmpty()) {
@@ -186,7 +186,7 @@ public class OrderController {
             return "redirect:/order";
         }
 
-        CustomerOrder order = orderOpt.get();
+        CustomerOrderEntity order = orderOpt.get();
 
         model.addAttribute("order", order);
         model.addAttribute("paypalSandboxUrl", paypalSandboxUrl);
@@ -208,7 +208,7 @@ public class OrderController {
             Authentication authentication,
             HttpSession session
     ) {
-        Optional<CustomerOrder> orderOpt =
+        Optional<CustomerOrderEntity> orderOpt =
                 findOrderForCurrentUser(id, authentication);
 
         if (orderOpt.isEmpty()) {
@@ -263,7 +263,7 @@ public class OrderController {
             Authentication authentication,
             Model model
     ) {
-        List<CustomerOrder> orders =
+        List<CustomerOrderEntity> orders =
                 orderService.findOrdersForUser(
                         authentication.getName()
                 );
@@ -305,7 +305,7 @@ public class OrderController {
         return "redirect:/order";
     }
 
-    private Optional<CustomerOrder> findOrderForCurrentUser(
+    private Optional<CustomerOrderEntity> findOrderForCurrentUser(
             Long id,
             Authentication authentication
     ) {

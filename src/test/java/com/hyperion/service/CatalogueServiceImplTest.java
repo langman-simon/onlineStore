@@ -1,9 +1,9 @@
 package com.hyperion.service;
 
-import com.hyperion.model.Category;
-import com.hyperion.model.Weapon;
-import com.hyperion.repository.CategoryRepository;
-import com.hyperion.repository.WeaponRepository;
+import com.hyperion.dataAccess.entity.CategoryEntity;
+import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.dataAccess.repository.CategoryRepository;
+import com.hyperion.dataAccess.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Sort;
@@ -22,13 +22,13 @@ class CatalogueServiceImplTest {
     private static final Sort SORT_BY_NAME_ASC =
             Sort.by(Sort.Direction.ASC, "name");
 
-    private WeaponRepository weaponRepository;
+    private ProductRepository weaponRepository;
     private CategoryRepository categoryRepository;
     private CatalogueServiceImpl catalogueService;
 
     @BeforeEach
     void setUp() {
-        weaponRepository = mock(WeaponRepository.class);
+        weaponRepository = mock(ProductRepository.class);
         categoryRepository = mock(CategoryRepository.class);
         catalogueService = new CatalogueServiceImpl(
                 weaponRepository,
@@ -39,12 +39,12 @@ class CatalogueServiceImplTest {
     @Test
     void shouldFindAllWeaponsWhenCategoryIsNull() {
         // Arrange : sans catégorie ni recherche, le service appelle findAll(tri)
-        Weapon weapon = new Weapon();
+        ProductEntity weapon = new ProductEntity();
         when(weaponRepository.findAll(SORT_BY_NAME_ASC))
                 .thenReturn(List.of(weapon));
 
         // Act
-        List<Weapon> weapons = catalogueService.findWeapons(null);
+        List<ProductEntity> weapons = catalogueService.findWeapons(null);
 
         // Assert
         assertThat(weapons).containsExactly(weapon);
@@ -54,12 +54,12 @@ class CatalogueServiceImplTest {
     @Test
     void shouldFindWeaponsByCategory() {
         // Arrange : avec une catégorie, le service appelle findByCategoryId(id, tri)
-        Weapon weapon = new Weapon();
+        ProductEntity weapon = new ProductEntity();
         when(weaponRepository.findByCategoryId(1L, SORT_BY_NAME_ASC))
                 .thenReturn(List.of(weapon));
 
         // Act
-        List<Weapon> weapons = catalogueService.findWeapons(1L);
+        List<ProductEntity> weapons = catalogueService.findWeapons(1L);
 
         // Assert
         assertThat(weapons).containsExactly(weapon);
@@ -68,11 +68,11 @@ class CatalogueServiceImplTest {
 
     @Test
     void shouldFindAllCategories() {
-        Category category = new Category();
+        CategoryEntity category = new CategoryEntity();
         when(categoryRepository.findAllByOrderByNameAsc())
                 .thenReturn(List.of(category));
 
-        List<Category> categories = catalogueService.findAllCategories();
+        List<CategoryEntity> categories = catalogueService.findAllCategories();
 
         assertThat(categories).containsExactly(category);
         verify(categoryRepository).findAllByOrderByNameAsc();
@@ -80,22 +80,22 @@ class CatalogueServiceImplTest {
 
     @Test
     void shouldFindWeaponById() {
-        Weapon weapon = new Weapon();
+        ProductEntity weapon = new ProductEntity();
         when(weaponRepository.findById(1L))
                 .thenReturn(Optional.of(weapon));
 
-        Optional<Weapon> result = catalogueService.findWeaponById(1L);
+        Optional<ProductEntity> result = catalogueService.findWeaponById(1L);
 
         assertThat(result).contains(weapon);
     }
 
     @Test
     void shouldSaveWeapon() {
-        Weapon weapon = new Weapon();
+        ProductEntity weapon = new ProductEntity();
         when(weaponRepository.save(weapon))
                 .thenReturn(weapon);
 
-        Weapon saved = catalogueService.saveWeapon(weapon);
+        ProductEntity saved = catalogueService.saveWeapon(weapon);
 
         assertThat(saved).isSameAs(weapon);
         verify(weaponRepository).save(weapon);
@@ -103,7 +103,7 @@ class CatalogueServiceImplTest {
 
     @Test
     void shouldDeleteWeapon() {
-        Weapon weapon = new Weapon();
+        ProductEntity weapon = new ProductEntity();
 
         catalogueService.deleteWeapon(weapon);
 

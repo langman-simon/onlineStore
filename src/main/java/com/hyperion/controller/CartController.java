@@ -1,6 +1,6 @@
 package com.hyperion.controller;
 
-import com.hyperion.model.Weapon;
+import com.hyperion.dataAccess.entity.ProductEntity;
 import com.hyperion.service.CatalogueService;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.PromotionService;
@@ -43,7 +43,7 @@ public class CartController {
             @RequestParam(defaultValue = "1") int quantity,
             HttpSession session
     ) {
-        Optional<Weapon> weaponOpt =
+        Optional<ProductEntity> weaponOpt =
                 catalogueService.findWeaponById(weaponId);
 
         if (weaponOpt.isEmpty()) {
@@ -55,7 +55,7 @@ public class CartController {
             return "redirect:/catalogue";
         }
 
-        Weapon weapon = weaponOpt.get();
+        ProductEntity weapon = weaponOpt.get();
 
         if (quantity <= 0) {
             globalBannerService.error(
@@ -186,7 +186,7 @@ public class CartController {
             @RequestParam int quantity,
             HttpSession session
     ) {
-        Optional<Weapon> weaponOpt =
+        Optional<ProductEntity> weaponOpt =
                 catalogueService.findWeaponById(weaponId);
 
         if (weaponOpt.isEmpty()) {

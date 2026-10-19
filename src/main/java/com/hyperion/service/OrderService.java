@@ -2,12 +2,12 @@ package com.hyperion.service;
 
 import com.hyperion.cart.Cart;
 import com.hyperion.cart.CartItem;
-import com.hyperion.model.CustomerOrder;
-import com.hyperion.model.OrderItem;
-import com.hyperion.model.User;
-import com.hyperion.model.Weapon;
-import com.hyperion.repository.CustomerOrderRepository;
-import com.hyperion.repository.WeaponRepository;
+import com.hyperion.dataAccess.entity.CustomerOrderEntity;
+import com.hyperion.dataAccess.entity.OrderItemEntity;
+import com.hyperion.dataAccess.entity.UserEntity;
+import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.dataAccess.repository.CustomerOrderRepository;
+import com.hyperion.dataAccess.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +19,12 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    private final WeaponRepository weaponRepository;
+    private final ProductRepository weaponRepository;
     private final CustomerOrderRepository customerOrderRepository;
     private final PromotionService promotionService;
 
     public OrderService(
-            WeaponRepository weaponRepository,
+            ProductRepository weaponRepository,
             CustomerOrderRepository customerOrderRepository,
             PromotionService promotionService
     ) {
@@ -34,9 +34,9 @@ public class OrderService {
     }
 
     @Transactional
-    public CustomerOrder validateOrder(
+    public CustomerOrderEntity validateOrder(
             Cart cart,
-            User user,
+            UserEntity user,
             boolean authenticated
     ) {
         if (cart == null || cart.isEmpty()) {
@@ -51,13 +51,13 @@ public class OrderService {
             );
         }
 
-        List<OrderItem> orderItems = new ArrayList<>();
+        List<OrderItemEntity> orderItems = new ArrayList<>();
         BigDecimal originalPrice = BigDecimal.ZERO;
 
         for (CartItem cartItem : cart.getItems()) {
             Long weaponId = cartItem.getWeapon().getId();
 
-            Weapon weapon = weaponRepository.findById(weaponId)
+            ProductEntity weapon = weaponRepository.findById(weaponId)
                     .orElseThrow(() ->
                             new IllegalArgumentException(
                                     "error.product.notFound"
@@ -78,7 +78,7 @@ public class OrderService {
                 );
             }
 
-            OrderItem orderItem = new OrderItem(
+            OrderItemEntity orderItem = new OrderItemEntity(
                     weapon,
                     quantity
             );
@@ -101,7 +101,7 @@ public class OrderService {
                         authenticated
                 );
 
-        CustomerOrder order = new CustomerOrder(
+        CustomerOrderEntity order = new CustomerOrderEntity(
                 originalPrice,
                 discountAmount,
                 finalPrice
@@ -109,7 +109,7 @@ public class OrderService {
         order.setUser(user);
         orderItems.forEach(order::addItem);
 
-        CustomerOrder savedOrder =
+        CustomerOrderEntity savedOrder =
                 customerOrderRepository.save(order);
 
         cart.clear();
@@ -117,7 +117,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<CustomerOrder> findOrdersForUser(
+    public List<CustomerOrderEntity> findOrdersForUser(
             String userLogin
     ) {
         return customerOrderRepository
@@ -125,7 +125,7 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<CustomerOrder> findOrderForUser(
+    public Optional<CustomerOrderEntity> findOrderForUser(
             Long orderId,
             String userLogin
     ) {
@@ -136,7 +136,7 @@ public class OrderService {
     }
 
     @Transactional
-    public CustomerOrder validatePayment(
+    public CustomerOrderEntity validatePayment(
             Long orderId,
             BigDecimal paidAmount,
             String paymentReference
@@ -156,7 +156,7 @@ public class OrderService {
 
         String normalizedReference = paymentReference.trim();
 
-        CustomerOrder order =
+        CustomerOrderEntity order =
                 customerOrderRepository.findById(orderId)
                         .orElseThrow(() ->
                                 new IllegalArgumentException(
@@ -189,8 +189,8 @@ public class OrderService {
             );
         }
 
-        for (OrderItem orderItem : order.getItems()) {
-            Weapon weapon = weaponRepository.findById(
+        for (OrderItemEntity orderItem : order.getItems()) {
+            ProductEntity weapon = weaponRepository.findById(
                             orderItem.getWeapon().getId()
                     )
                     .orElseThrow(() ->
@@ -223,7 +223,7 @@ public class OrderService {
             Long orderId,
             String userLogin
     ) {
-        CustomerOrder order =
+        CustomerOrderEntity order =
                 customerOrderRepository.findByIdAndUserLogin(
                                 orderId,
                                 userLogin

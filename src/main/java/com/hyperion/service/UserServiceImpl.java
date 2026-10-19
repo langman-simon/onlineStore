@@ -1,7 +1,7 @@
 package com.hyperion.service;
 
-import com.hyperion.model.User;
-import com.hyperion.repository.UserRepository;
+import com.hyperion.dataAccess.entity.UserEntity;
+import com.hyperion.dataAccess.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(User user, String rawPassword) {
+    public UserEntity register(UserEntity user, String rawPassword) {
         if (userRepository.existsByLogin(user.getLogin())) {
             throw new IllegalArgumentException("error.login.used");
         }
@@ -33,8 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> authenticate(String login, String rawPassword) {
-        Optional<User> userOpt = userRepository.findByLogin(login);
+    public Optional<UserEntity> authenticate(String login, String rawPassword) {
+        Optional<UserEntity> userOpt = userRepository.findByLogin(login);
         if (userOpt.isPresent() && passwordEncoder.matches(rawPassword, userOpt.get().getPassword())) {
             return userOpt;
         }
@@ -42,14 +42,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByLogin(String login) {
+    public Optional<UserEntity> findByLogin(String login) {
         return userRepository.findByLogin(login);
     }
 
     @Override
-    public User updateProfile(String currentLogin, String newLogin, String lastName, String firstName,
-                              String deliveryAddress, String email, String phone, String secondaryPhone) {
-        User user = userRepository.findByLogin(currentLogin)
+    public UserEntity updateProfile(String currentLogin, String newLogin, String lastName, String firstName,
+                                    String deliveryAddress, String email, String phone, String secondaryPhone) {
+        UserEntity user = userRepository.findByLogin(currentLogin)
                 .orElseThrow(() -> new IllegalArgumentException("error.user.notFound"));
 
         if (!currentLogin.equals(newLogin) && userRepository.existsByLogin(newLogin)) {

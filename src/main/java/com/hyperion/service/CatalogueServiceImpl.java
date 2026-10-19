@@ -1,9 +1,9 @@
 package com.hyperion.service;
 
-import com.hyperion.model.Category;
-import com.hyperion.model.Weapon;
-import com.hyperion.repository.CategoryRepository;
-import com.hyperion.repository.WeaponRepository;
+import com.hyperion.dataAccess.entity.CategoryEntity;
+import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.dataAccess.repository.CategoryRepository;
+import com.hyperion.dataAccess.repository.ProductRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class CatalogueServiceImpl implements CatalogueService {
 
-    private final WeaponRepository weaponRepository;
+    private final ProductRepository weaponRepository;
     private final CategoryRepository categoryRepository;
 
     public CatalogueServiceImpl(
-            WeaponRepository weaponRepository,
+            ProductRepository weaponRepository,
             CategoryRepository categoryRepository
     ) {
         this.weaponRepository = weaponRepository;
@@ -25,12 +25,12 @@ public class CatalogueServiceImpl implements CatalogueService {
     }
 
     @Override
-    public List<Weapon> findWeapons(Long categoryId) {
+    public List<ProductEntity> findWeapons(Long categoryId) {
         return findWeapons(categoryId, "", "nameAsc");
     }
 
     @Override
-    public List<Weapon> findWeapons(
+    public List<ProductEntity> findWeapons(
             Long categoryId,
             String search,
             String sort
@@ -79,37 +79,37 @@ public class CatalogueServiceImpl implements CatalogueService {
     }
 
     @Override
-    public List<Category> findAllCategories() {
+    public List<CategoryEntity> findAllCategories() {
         return categoryRepository.findAllByOrderByNameAsc();
     }
 
     @Override
-    public Optional<Weapon> findWeaponById(Long weaponId) {
+    public Optional<ProductEntity> findWeaponById(Long weaponId) {
         return weaponRepository.findById(weaponId);
     }
 
     @Override
-    public Optional<Weapon> findWeaponByReference(String reference) {
+    public Optional<ProductEntity> findWeaponByReference(String reference) {
         return weaponRepository.findByReference(reference);
     }
 
     @Override
-    public Optional<Category> findCategoryById(Long categoryId) {
+    public Optional<CategoryEntity> findCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId);
     }
 
     @Override
-    public Optional<Category> findCategoryByName(String name) {
+    public Optional<CategoryEntity> findCategoryByName(String name) {
         return categoryRepository.findByName(name);
     }
 
     @Override
-    public Weapon saveWeapon(Weapon weapon) {
+    public ProductEntity saveWeapon(ProductEntity weapon) {
         return weaponRepository.save(weapon);
     }
 
     @Override
-    public void deleteWeapon(Weapon weapon) {
+    public void deleteWeapon(ProductEntity weapon) {
         weaponRepository.delete(weapon);
     }
 }

@@ -1,4 +1,4 @@
-package com.hyperion.model;
+package com.hyperion.dataAccess.entity;
 
 import jakarta.persistence.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "customer_orders")
-public class CustomerOrder {
+public class CustomerOrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class CustomerOrder {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal originalPrice;
@@ -43,11 +43,11 @@ public class CustomerOrder {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<OrderItem> items = new ArrayList<>();
+    private List<OrderItemEntity> items = new ArrayList<>();
 
-    protected CustomerOrder() {}
+    protected CustomerOrderEntity() {}
 
-    public CustomerOrder(
+    public CustomerOrderEntity(
             BigDecimal originalPrice,
             BigDecimal discountAmount,
             BigDecimal totalPrice
@@ -59,7 +59,7 @@ public class CustomerOrder {
         this.status = "PENDING_PAYMENT";
     }
 
-    public void addItem(OrderItem item) {
+    public void addItem(OrderItemEntity item) {
         items.add(item);
         item.setOrder(this);
     }
@@ -92,15 +92,15 @@ public class CustomerOrder {
         this.paymentReference = paymentReference;
     }
 
-    public List<OrderItem> getItems() {
+    public List<OrderItemEntity> getItems() {
         return items;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 
