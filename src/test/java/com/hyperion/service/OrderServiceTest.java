@@ -136,7 +136,7 @@ class OrderServiceTest {
 
     @Test
     void shouldRejectAlreadyUsedPaymentReference() {
-        CustomerOrder order = new CustomerOrder(
+        CustomerOrderEntity order = new CustomerOrderEntity(
                 new BigDecimal("100.00"),
                 BigDecimal.ZERO,
                 new BigDecimal("100.00")
