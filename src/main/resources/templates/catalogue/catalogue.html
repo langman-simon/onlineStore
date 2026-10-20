@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="catalogue-page">
+
+    <header class="catalogue-header">
+        <div>
+            <p class="eyebrow" th:text="#{catalogue.eyebrow}">Collection</p>
+            <h1 th:text="#{page.catalogue}">Catalogue</h1>
+        </div>
+
+        <form method="get" th:action="@{/catalogue}" class="catalogue-filter">
+
+            <div class="catalogue-filter__field catalogue-filter__field--search">
+                <label for="search" th:text="#{catalogue.filter.search}">Rechercher</label>
+                <input id="search"
+                       name="search"
+                       type="search"
+                       th:value="${searchQuery}"
+                       th:placeholder="#{catalogue.filter.searchPlaceholder}"
+                       class="catalogue-filter__control">
+            </div>
+
+            <div class="catalogue-filter__field">
+                <label for="categoryId" th:text="#{catalogue.filter.category}">Catégorie</label>
+                <select id="categoryId" name="categoryId" class="catalogue-filter__control">
+                    <option value="" th:text="#{catalogue.filter.all}">Toutes</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:selected="${selectedCategoryId == category.id}"
+                            th:text="#{${category.name}}">Catégorie</option>
+                </select>
+            </div>
+
+            <div class="catalogue-filter__field">
+                <label for="sort" th:text="#{catalogue.filter.sort}">Trier</label>
+                <select id="sort" name="sort" class="catalogue-filter__control">
+                    <option value="nameAsc" th:selected="${selectedSort == 'nameAsc'}"
+                            th:text="#{catalogue.filter.nameAsc}">Nom A-Z</option>
+                    <option value="nameDesc" th:selected="${selectedSort == 'nameDesc'}"
+                            th:text="#{catalogue.filter.nameDesc}">Nom Z-A</option>
+                    <option value="priceAsc" th:selected="${selectedSort == 'priceAsc'}"
+                            th:text="#{catalogue.filter.priceAsc}">Prix croissant</option>
+                    <option value="priceDesc" th:selected="${selectedSort == 'priceDesc'}"
+                            th:text="#{catalogue.filter.priceDesc}">Prix décroissant</option>
+                </select>
+            </div>
+
+            <div class="catalogue-filter__actions">
+                <button type="submit" class="btn btn--primary"
+                        th:text="#{catalogue.filter.apply}">Appliquer</button>
+                <a th:href="@{/catalogue}" class="btn catalogue-filter__reset"
+                   th:text="#{catalogue.filter.reset}">Réinitialiser</a>
+            </div>
+        </form>
+    </header>
+
+    <p th:if="${#lists.isEmpty(products)}" class="catalogue-empty"
+       th:text="#{catalogue.empty}">Aucun produit</p>
+
+    <div th:unless="${#lists.isEmpty(products)}" class="catalogue-explorer" id="catalogueExplorer">
+
+        <aside class="catalogue-sidebar">
+            <div class="catalogue-sidebar__heading">
+                <span th:text="#{catalogue.products}">Produits</span>
+                <span class="catalogue-sidebar__count" th:text="${#lists.size(products)}">0</span>
+            </div>
+
+            <div class="catalogue-product-list" role="tablist"
+                 th:attr="aria-label=#{catalogue.productsAria}">
+
+                <button th:each="product, status : ${products}"
+                        type="button"
+                        class="btn btn--selector catalogue-selector"
+                        th:classappend="${status.first} ? 'is-active'"
+                        role="tab"
+                        th:attr="data-catalogue-index=${status.index},
+                                 aria-selected=${status.first},
+                                 aria-controls='catalogue-product-' + ${product.id}">
+
+                    <span class="catalogue-selector__marker">
+                        <span class="catalogue-selector__preview">
+                            <img th:if="${!#strings.isEmpty(product.imageUrl)}"
+                                 th:src="@{${product.imageUrl}}"
+                                 th:alt="${product.name}">
+                            <span th:if="${#strings.isEmpty(product.imageUrl)}"
+                                  class="catalogue-selector__placeholder">H</span>
+                        </span>
+                    </span>
+
+                    <span class="catalogue-selector__information">
+                        <span class="catalogue-selector__name" th:text="${product.name}">Nom</span>
+                        <span class="catalogue-selector__meta" th:text="#{${product.category.name}}">Catégorie</span>
+                    </span>
+
+                    <span class="catalogue-selector__price" th:text="|${product.price} €|">0 €</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="catalogue-stage">
+            <div class="catalogue-stage__background" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="catalogue-stage__counter" aria-live="polite">
+                <span id="catalogueCurrentIndex">01</span>
+                <span class="catalogue-stage__counter-separator">/</span>
+                <span th:text="${#numbers.formatInteger(#lists.size(products), 2)}">00</span>
+            </div>
+
+            <div class="catalogue-products">
+                <article th:each="product, status : ${products}"
+                         th:id="|catalogue-product-${product.id}|"
+                         class="catalogue-product"
+                         th:classappend="${status.first} ? 'is-active'"
+                         data-catalogue-product
+                         role="tabpanel"
+                         th:attr="data-index=${status.index}, aria-hidden=${!status.first}">
+
+                    <div class="catalogue-product__visual">
+                        <div class="catalogue-product__orbit" aria-hidden="true"></div>
+
+                        <div class="catalogue-product__image">
+                            <img th:if="${!#strings.isEmpty(product.imageUrl)}"
+                                 th:src="@{${product.imageUrl}}"
+                                 th:alt="${product.name}">
+
+                            <div th:if="${#strings.isEmpty(product.imageUrl)}"
+                                 class="catalogue-product__placeholder">
+                                <span>Hyperion</span>
+                                <strong th:text="${product.name}">Nom</strong>
+                            </div>
+
+                            <div class="catalogue-product__shade"></div>
+                        </div>
+                    </div>
+
+                    <div class="catalogue-product__content">
+                        <p class="catalogue-product__category" th:text="#{${product.category.name}}">Catégorie</p>
+
+                        <h2 th:text="${product.name}">Nom</h2>
+
+                        <p th:if="${!#strings.isEmpty(product.description)}"
+                           class="catalogue-product__description"
+                           th:text="${product.description}">Description</p>
+
+                        <div class="catalogue-product__facts">
+                            <div class="catalogue-product__fact">
+                                <span th:text="#{common.price}">Prix</span>
+                                <strong th:text="|${product.price} €|">0 €</strong>
+                            </div>
+
+                            <div class="catalogue-product__fact">
+                                <span th:text="#{catalogue.availability}">Disponibilité</span>
+                                <strong th:if="${product.stock > 0}" class="stock-available"
+                                        th:text="|${product.stock} #{common.available}|">0 disponibles</strong>
+                                <strong th:unless="${product.stock > 0}" class="stock-unavailable"
+                                        th:text="#{common.unavailable}">Indisponible</strong>
+                            </div>
+                        </div>
+
+                        <a class="btn btn--primary btn--full"
+                           th:href="@{/products/{id}(id=${product.id})}">
+                            <span th:text="#{catalogue.viewProduct}">Voir le produit</span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="catalogue-stage__controls">
+                <button type="button" class="catalogue-control" id="cataloguePrevious"
+                        th:attr="aria-label=#{catalogue.previous}">←</button>
+                <button type="button" class="catalogue-control" id="catalogueNext"
+                        th:attr="aria-label=#{catalogue.next}">→</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>

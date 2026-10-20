@@ -29,28 +29,14 @@ public class CatalogueController {
         String searchQuery = search.trim();
         String selectedSort = normalizeSort(sort);
 
-        model.addAttribute(
-                "weapons",
-                catalogueService.findWeapons(
-                        categoryId,
-                        searchQuery,
-                        selectedSort
-                )
-        );
-        model.addAttribute(
-                "categories",
-                catalogueService.findAllCategories()
-        );
+        model.addAttribute("products", catalogueService.findWeapons(categoryId, searchQuery, selectedSort));
+        model.addAttribute("categories", catalogueService.findAllCategories());
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("selectedSort", selectedSort);
         model.addAttribute("titleKey", "page.catalogue");
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/catalogue/catalogue.jsp"
-        );
 
-        return "template/template";
+        return "catalogue/catalogue";
     }
 
     private String normalizeSort(String sort) {
