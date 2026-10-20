@@ -1,6 +1,6 @@
 package com.hyperion.service;
 
-import com.hyperion.dataAccess.repository.PromotionRepository;
+import com.hyperion.dataAccess.dao.PromotionDataAccess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,16 +12,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PromotionServiceImplTest {
 
-    private PromotionRepository promotionRepository;
+    private PromotionDataAccess promotionDataAccess;
     private PromotionServiceImpl promotionService;
 
     @BeforeEach
     void setup() {
-        promotionRepository = Mockito.mock(PromotionRepository.class);
-        promotionService = new PromotionServiceImpl(promotionRepository);
+        promotionDataAccess = Mockito.mock(PromotionDataAccess.class);
+        promotionService = new PromotionServiceImpl(promotionDataAccess);
     }
-
-    // --- calculateDiscount ---
 
     @Test
     void shouldApplyNoDiscountWhenBelowFirstThreshold() {
@@ -77,8 +75,6 @@ class PromotionServiceImplTest {
         assertThat(discount).isEqualByComparingTo("2250.00");
     }
 
-    // --- calculateDeliveryFee / isFreeDeliveryApplied ---
-
     @Test
     void shouldChargeStandardDeliveryFeeBelowThreshold() {
         BigDecimal cartTotal = new BigDecimal("1000.00");
@@ -128,8 +124,6 @@ class PromotionServiceImplTest {
 
         assertThat(result).isFalse();
     }
-
-    // --- calculateFinalPrice ---
 
     @Test
     void shouldCalculateFinalPriceWithFeeOnlyBelowFreeDeliveryThreshold() {

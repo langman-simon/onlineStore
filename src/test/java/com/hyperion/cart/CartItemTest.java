@@ -1,6 +1,6 @@
 package com.hyperion.cart;
 
-import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.model.Product;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -13,7 +13,7 @@ class CartItemTest {
 
     @Test
     void shouldCalculateSubtotal() {
-        ProductEntity weapon = mock(ProductEntity.class);
+        Product weapon = mock(Product.class);
         when(weapon.getPrice())
                 .thenReturn(new BigDecimal("50.00"));
 
@@ -25,7 +25,7 @@ class CartItemTest {
 
     @Test
     void shouldUpdateQuantity() {
-        ProductEntity weapon = mock(ProductEntity.class);
+        Product weapon = mock(Product.class);
         CartItem item = new CartItem(weapon, 1);
 
         item.setQuantity(4);

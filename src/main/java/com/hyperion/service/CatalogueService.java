@@ -1,32 +1,28 @@
 package com.hyperion.service;
 
-import com.hyperion.dataAccess.entity.CategoryEntity;
-import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.model.Category;
+import com.hyperion.model.Product;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CatalogueService {
 
-    List<ProductEntity> findWeapons(Long categoryId);
+    List<Product> findWeapons(Long categoryId);
 
-    List<ProductEntity> findWeapons(
-            Long categoryId,
-            String search,
-            String sort
-    );
+    List<Product> findWeapons(Long categoryId, String search, String sort);
 
-    List<CategoryEntity> findAllCategories();
+    List<Category> findAllCategories();
 
-    Optional<ProductEntity> findWeaponById(Long weaponId);
+    Optional<Product> findWeaponById(Long weaponId);
 
-    Optional<ProductEntity> findWeaponByReference(String reference);
+    Optional<Product> findWeaponByReference(String reference);
 
-    Optional<CategoryEntity> findCategoryById(Long categoryId);
+    Optional<Category> findCategoryById(Long categoryId);
 
-    Optional<CategoryEntity> findCategoryByName(String name);
+    Optional<Category> findCategoryByName(String name);
 
-    ProductEntity saveWeapon(ProductEntity weapon);
+    Product saveWeapon(Product weapon);
 
-    void deleteWeapon(ProductEntity weapon);
+    void deleteWeapon(Product weapon);
 }

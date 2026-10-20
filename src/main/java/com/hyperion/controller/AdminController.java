@@ -1,8 +1,8 @@
 package com.hyperion.controller;
 
-import com.hyperion.dataAccess.entity.CategoryEntity;
-import com.hyperion.dataAccess.entity.PromotionEntity;
-import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.model.Category;
+import com.hyperion.model.Promotion;
+import com.hyperion.model.Product;
 import com.hyperion.service.CatalogueService;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.ImageStorageService;
@@ -50,8 +50,8 @@ public class AdminController {
             @RequestParam(required = false) Long categoryId,
             Model model
     ) {
-        List<ProductEntity> weapons = catalogueService.findWeapons(categoryId);
-        List<CategoryEntity> categories = catalogueService.findAllCategories();
+        List<Product> weapons = catalogueService.findWeapons(categoryId);
+        List<Category> categories = catalogueService.findAllCategories();
 
         model.addAttribute("weapons", weapons);
         model.addAttribute("categories", categories);
@@ -108,14 +108,14 @@ public class AdminController {
                 );
             }
 
-            CategoryEntity category = findCategory(categoryId);
+            Category category = findCategory(categoryId);
 
             String imageUrl =
                     image == null || image.isEmpty()
                             ? null
                             : imageStorageService.saveWeaponImage(image);
 
-            ProductEntity weapon = new ProductEntity();
+            Product weapon = new Product();
 
             weapon.setName(name.trim());
             weapon.setDescription(description.trim());
@@ -169,12 +169,12 @@ public class AdminController {
                     manufacturer
             );
 
-            ProductEntity weapon = findWeapon(weaponId);
-            CategoryEntity category = findCategory(categoryId);
+            Product weapon = findWeapon(weaponId);
+            Category category = findCategory(categoryId);
 
             String normalizedReference = reference.trim();
 
-            Optional<ProductEntity> weaponWithSameReference =
+            Optional<Product> weaponWithSameReference =
                     catalogueService.findWeaponByReference(
                             normalizedReference
                     );
@@ -231,7 +231,7 @@ public class AdminController {
             @PathVariable Long weaponId,
             HttpSession session
     ) {
-        ProductEntity weapon = catalogueService
+        Product weapon = catalogueService
                 .findWeaponById(weaponId)
                 .orElse(null);
 
@@ -303,8 +303,8 @@ public class AdminController {
                 return "redirect:/admin";
             }
 
-            CategoryEntity targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
-            ProductEntity targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
+            Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
+            Product targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
 
             LocalDate parsedStartDate =
                     parseDate(startDate);
@@ -317,7 +317,7 @@ public class AdminController {
                     parsedEndDate
             );
 
-            PromotionEntity promotion = new PromotionEntity();
+            Promotion promotion = new Promotion();
 
             promotion.setTitle(title.trim());
 
@@ -331,7 +331,7 @@ public class AdminController {
             promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
             promotion.setTargetCategory(targetCategory);
-            promotion.setTargetWeapon(targetWeapon);
+            promotion.setTargetProduct(targetWeapon);
 
             promotionService.save(promotion);
 
@@ -389,8 +389,8 @@ public class AdminController {
                 return "redirect:/admin";
             }
 
-            CategoryEntity targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
-            ProductEntity targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
+            Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
+            Product targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
 
             LocalDate parsedStartDate =
                     parseDate(startDate);
@@ -403,7 +403,7 @@ public class AdminController {
                     parsedEndDate
             );
 
-            PromotionEntity promotion =
+            Promotion promotion =
                     findPromotion(promotionId);
 
             promotion.setTitle(title.trim());
@@ -418,7 +418,7 @@ public class AdminController {
             promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
             promotion.setTargetCategory(targetCategory);
-            promotion.setTargetWeapon(targetWeapon);
+            promotion.setTargetProduct(targetWeapon);
 
             promotionService.save(promotion);
 
@@ -445,7 +445,7 @@ public class AdminController {
             @PathVariable Long promotionId,
             HttpSession session
     ) {
-        Optional<PromotionEntity> promotion =
+        Optional<Promotion> promotion =
                 promotionService.findById(promotionId);
 
         if (promotion.isEmpty()) {
@@ -482,7 +482,7 @@ public class AdminController {
     // PRIVATE METHODS
     // =========================================================
 
-    private ProductEntity findWeapon(Long weaponId) {
+    private Product findWeapon(Long weaponId) {
         return catalogueService
                 .findWeaponById(weaponId)
                 .orElseThrow(() ->
@@ -492,7 +492,7 @@ public class AdminController {
                 );
     }
 
-    private CategoryEntity findCategory(Long categoryId) {
+    private Category findCategory(Long categoryId) {
         return catalogueService
                 .findCategoryById(categoryId)
                 .orElseThrow(() ->
@@ -502,7 +502,7 @@ public class AdminController {
                 );
     }
 
-    private PromotionEntity findPromotion(Long promotionId) {
+    private Promotion findPromotion(Long promotionId) {
         return promotionService
                 .findById(promotionId)
                 .orElseThrow(() ->

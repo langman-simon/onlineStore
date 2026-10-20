@@ -120,29 +120,4 @@ public class PromotionEntity {
     public void setTargetWeapon(ProductEntity targetWeapon) {
         this.targetWeapon = targetWeapon;
     }
-
-    public boolean isGlobal() {
-        return targetCategory == null && targetWeapon == null;
-    }
-
-    public boolean appliesTo(ProductEntity weapon) {
-        if (isGlobal()) {
-            return true;
-        }
-
-        if (targetWeapon != null) {
-            return targetWeapon.getId().equals(weapon.getId());
-        }
-
-        return targetCategory != null
-                && weapon.getCategory() != null
-                && targetCategory.getId().equals(weapon.getCategory().getId());
-    }
-
-    public boolean isCurrentlyValid() {
-        LocalDate today = LocalDate.now();
-        boolean afterStart = startDate == null || !today.isBefore(startDate);
-        boolean beforeEnd = endDate == null || !today.isAfter(endDate);
-        return active && afterStart && beforeEnd;
-    }
 }

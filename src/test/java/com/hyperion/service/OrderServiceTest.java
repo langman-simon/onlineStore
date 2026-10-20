@@ -6,6 +6,7 @@ import com.hyperion.dataAccess.entity.UserEntity;
 import com.hyperion.dataAccess.entity.ProductEntity;
 import com.hyperion.dataAccess.repository.CustomerOrderRepository;
 import com.hyperion.dataAccess.repository.ProductRepository;
+import com.hyperion.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +43,7 @@ class OrderServiceTest {
 
     @Test
     void shouldRecalculateOrderFromDatabasePrices() {
-        ProductEntity cartWeapon = mock(ProductEntity.class);
+        Product cartWeapon = mock(Product.class);
         when(cartWeapon.getId()).thenReturn(10L);
         when(cartWeapon.getPrice())
                 .thenReturn(new BigDecimal("5.00"));

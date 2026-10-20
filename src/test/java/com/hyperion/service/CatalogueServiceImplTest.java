@@ -1,12 +1,11 @@
 package com.hyperion.service;
 
-import com.hyperion.dataAccess.entity.CategoryEntity;
-import com.hyperion.dataAccess.entity.ProductEntity;
-import com.hyperion.dataAccess.repository.CategoryRepository;
-import com.hyperion.dataAccess.repository.ProductRepository;
+import com.hyperion.dataAccess.dao.CategoryDataAccess;
+import com.hyperion.dataAccess.dao.ProductDataAccess;
+import com.hyperion.model.Category;
+import com.hyperion.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,95 +17,99 @@ import static org.mockito.Mockito.when;
 
 class CatalogueServiceImplTest {
 
-    // Tri par défaut appliqué par le service : par nom, ordre croissant
-    private static final Sort SORT_BY_NAME_ASC =
-            Sort.by(Sort.Direction.ASC, "name");
-
-    private ProductRepository weaponRepository;
-    private CategoryRepository categoryRepository;
+    private ProductDataAccess productDataAccess;
+    private CategoryDataAccess categoryDataAccess;
     private CatalogueServiceImpl catalogueService;
 
     @BeforeEach
     void setUp() {
-        weaponRepository = mock(ProductRepository.class);
-        categoryRepository = mock(CategoryRepository.class);
-        catalogueService = new CatalogueServiceImpl(
-                weaponRepository,
-                categoryRepository
-        );
+        productDataAccess = mock(ProductDataAccess.class);
+        categoryDataAccess = mock(CategoryDataAccess.class);
+        catalogueService = new CatalogueServiceImpl(productDataAccess, categoryDataAccess);
     }
 
     @Test
-    void shouldFindAllWeaponsWhenCategoryIsNull() {
-        // Arrange : sans catégorie ni recherche, le service appelle findAll(tri)
-        ProductEntity weapon = new ProductEntity();
-        when(weaponRepository.findAll(SORT_BY_NAME_ASC))
-                .thenReturn(List.of(weapon));
+    void shouldFindAllProductsWhenNoCategoryAndNoSearch() {
+        Product product = new Product();
+        when(productDataAccess.findAll("nameAsc")).thenReturn(List.of(product));
 
-        // Act
-        List<ProductEntity> weapons = catalogueService.findWeapons(null);
+        List<Product> products = catalogueService.findWeapons(null);
 
-        // Assert
-        assertThat(weapons).containsExactly(weapon);
-        verify(weaponRepository).findAll(SORT_BY_NAME_ASC);
+        assertThat(products).containsExactly(product);
+        verify(productDataAccess).findAll("nameAsc");
     }
 
     @Test
-    void shouldFindWeaponsByCategory() {
-        // Arrange : avec une catégorie, le service appelle findByCategoryId(id, tri)
-        ProductEntity weapon = new ProductEntity();
-        when(weaponRepository.findByCategoryId(1L, SORT_BY_NAME_ASC))
-                .thenReturn(List.of(weapon));
+    void shouldFindProductsByCategory() {
+        Product product = new Product();
+        when(productDataAccess.findByCategory(1L, "nameAsc")).thenReturn(List.of(product));
 
-        // Act
-        List<ProductEntity> weapons = catalogueService.findWeapons(1L);
+        List<Product> products = catalogueService.findWeapons(1L);
 
-        // Assert
-        assertThat(weapons).containsExactly(weapon);
-        verify(weaponRepository).findByCategoryId(1L, SORT_BY_NAME_ASC);
+        assertThat(products).containsExactly(product);
+        verify(productDataAccess).findByCategory(1L, "nameAsc");
+    }
+
+    @Test
+    void shouldSearchByTrimmedNameWhenNoCategory() {
+        Product product = new Product();
+        when(productDataAccess.searchByName("m4", "priceAsc")).thenReturn(List.of(product));
+
+        List<Product> products = catalogueService.findWeapons(null, "  m4  ", "priceAsc");
+
+        assertThat(products).containsExactly(product);
+        verify(productDataAccess).searchByName("m4", "priceAsc");
+    }
+
+    @Test
+    void shouldSearchByNameInsideCategory() {
+        Product product = new Product();
+        when(productDataAccess.searchByNameInCategory(2L, "m4", "nameDesc")).thenReturn(List.of(product));
+
+        List<Product> products = catalogueService.findWeapons(2L, "m4", "nameDesc");
+
+        assertThat(products).containsExactly(product);
+        verify(productDataAccess).searchByNameInCategory(2L, "m4", "nameDesc");
     }
 
     @Test
     void shouldFindAllCategories() {
-        CategoryEntity category = new CategoryEntity();
-        when(categoryRepository.findAllByOrderByNameAsc())
-                .thenReturn(List.of(category));
+        Category category = new Category();
+        when(categoryDataAccess.findAllOrderByName()).thenReturn(List.of(category));
 
-        List<CategoryEntity> categories = catalogueService.findAllCategories();
+        List<Category> categories = catalogueService.findAllCategories();
 
         assertThat(categories).containsExactly(category);
-        verify(categoryRepository).findAllByOrderByNameAsc();
     }
 
     @Test
-    void shouldFindWeaponById() {
-        ProductEntity weapon = new ProductEntity();
-        when(weaponRepository.findById(1L))
-                .thenReturn(Optional.of(weapon));
+    void shouldFindProductById() {
+        Product product = new Product();
+        when(productDataAccess.findById(1L)).thenReturn(Optional.of(product));
 
-        Optional<ProductEntity> result = catalogueService.findWeaponById(1L);
+        Optional<Product> result = catalogueService.findWeaponById(1L);
 
-        assertThat(result).contains(weapon);
+        assertThat(result).contains(product);
     }
 
     @Test
-    void shouldSaveWeapon() {
-        ProductEntity weapon = new ProductEntity();
-        when(weaponRepository.save(weapon))
-                .thenReturn(weapon);
+    void shouldSaveProduct() {
+        Product product = new Product();
+        when(productDataAccess.save(product)).thenReturn(product);
 
-        ProductEntity saved = catalogueService.saveWeapon(weapon);
+        Product saved = catalogueService.saveWeapon(product);
 
-        assertThat(saved).isSameAs(weapon);
-        verify(weaponRepository).save(weapon);
+        assertThat(saved).isSameAs(product);
+        verify(productDataAccess).save(product);
     }
 
     @Test
-    void shouldDeleteWeapon() {
-        ProductEntity weapon = new ProductEntity();
+    void shouldDeleteProductById() {
+        Product product = new Product();
+        product.setId(5L);
 
-        catalogueService.deleteWeapon(weapon);
+        catalogueService.deleteWeapon(product);
 
-        verify(weaponRepository).delete(weapon);
+        verify(productDataAccess).deleteById(5L);
     }
 }

@@ -1,6 +1,6 @@
 package com.hyperion.cart;
 
-import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.model.Product;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -14,7 +14,7 @@ class CartTest {
 
     @Test
     void shouldAddWeaponToCart() {
-        ProductEntity weapon = mock(ProductEntity.class);
+        Product weapon = mock(Product.class);
         when(weapon.getId()).thenReturn(1L);
         when(weapon.getStock()).thenReturn(10);
         when(weapon.getPrice())
@@ -31,7 +31,7 @@ class CartTest {
 
     @Test
     void shouldMergeQuantityWhenWeaponAlreadyExists() {
-        ProductEntity weapon = mock(ProductEntity.class);
+        Product weapon = mock(Product.class);
         when(weapon.getId()).thenReturn(1L);
         when(weapon.getStock()).thenReturn(10);
 
@@ -45,7 +45,7 @@ class CartTest {
 
     @Test
     void shouldRejectQuantityAboveStock() {
-        ProductEntity weapon = mock(ProductEntity.class);
+        Product weapon = mock(Product.class);
         when(weapon.getId()).thenReturn(1L);
         when(weapon.getStock()).thenReturn(2);
 
@@ -60,7 +60,7 @@ class CartTest {
 
     @Test
     void shouldRejectNonPositiveQuantity() {
-        ProductEntity weapon = mock(ProductEntity.class);
+        Product weapon = mock(Product.class);
 
         Cart cart = new Cart();
 
@@ -73,7 +73,7 @@ class CartTest {
 
     @Test
     void shouldRemoveWeaponWhenQuantityBecomesZero() {
-        ProductEntity weapon = mock(ProductEntity.class);
+        Product weapon = mock(Product.class);
         when(weapon.getId()).thenReturn(1L);
         when(weapon.getStock()).thenReturn(10);
 
@@ -87,7 +87,7 @@ class CartTest {
 
     @Test
     void shouldClearCart() {
-        ProductEntity weapon = mock(ProductEntity.class);
+        Product weapon = mock(Product.class);
         when(weapon.getId()).thenReturn(1L);
         when(weapon.getStock()).thenReturn(10);
 

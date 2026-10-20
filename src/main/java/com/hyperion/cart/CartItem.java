@@ -1,20 +1,20 @@
 package com.hyperion.cart;
 
-import com.hyperion.dataAccess.entity.ProductEntity;
+import com.hyperion.model.Product;
 
 import java.math.BigDecimal;
 
 public class CartItem {
 
-    private final ProductEntity weapon;
+    private final Product weapon;
     private int quantity;
 
-    public CartItem(ProductEntity weapon, int quantity) {
+    public CartItem(Product weapon, int quantity) {
         this.weapon = weapon;
         this.quantity = quantity;
     }
 
-    public ProductEntity getWeapon() {
+    public Product getWeapon() {
         return weapon;
     }
 

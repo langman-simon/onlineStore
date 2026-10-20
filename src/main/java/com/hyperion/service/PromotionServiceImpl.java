@@ -1,8 +1,8 @@
 package com.hyperion.service;
 
 import com.hyperion.cart.CartItem;
-import com.hyperion.dataAccess.entity.PromotionEntity;
-import com.hyperion.dataAccess.repository.PromotionRepository;
+import com.hyperion.dataAccess.dao.PromotionDataAccess;
+import com.hyperion.model.Promotion;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,10 +22,10 @@ public class PromotionServiceImpl implements PromotionService {
     private static final BigDecimal TIER_2_RATE = new BigDecimal("0.10");
     private static final BigDecimal TIER_3_RATE = new BigDecimal("0.15");
 
-    private final PromotionRepository promotionRepository;
+    private final PromotionDataAccess promotionDataAccess;
 
-    public PromotionServiceImpl(PromotionRepository promotionRepository) {
-        this.promotionRepository = promotionRepository;
+    public PromotionServiceImpl(PromotionDataAccess promotionDataAccess) {
+        this.promotionDataAccess = promotionDataAccess;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class PromotionServiceImpl implements PromotionService {
         BigDecimal tierRate = tierRateFor(cartTotal);
 
         BigDecimal bestGlobalPromoRate = findActivePromotions().stream()
-                .filter(PromotionEntity::isGlobal)
+                .filter(Promotion::isGlobal)
                 .filter(p -> p.getDiscountPercentage() != null)
                 .map(p -> p.getDiscountPercentage().divide(new BigDecimal("100")))
                 .max(BigDecimal::compareTo)
@@ -77,8 +77,8 @@ public class PromotionServiceImpl implements PromotionService {
 
         boolean tierFreeDelivery = cartTotal.compareTo(FREE_DELIVERY_THRESHOLD) >= 0;
         boolean promoFreeDelivery = findActivePromotions().stream()
-                .filter(PromotionEntity::isGlobal)
-                .anyMatch(PromotionEntity::isFreeDelivery);
+                .filter(Promotion::isGlobal)
+                .anyMatch(Promotion::isFreeDelivery);
 
         return tierFreeDelivery || promoFreeDelivery;
     }
@@ -101,7 +101,7 @@ public class PromotionServiceImpl implements PromotionService {
         }
 
         BigDecimal cartTotal = totalOf(items);
-        List<PromotionEntity> activePromotions = findActivePromotions();
+        List<Promotion> activePromotions = findActivePromotions();
 
         BigDecimal tierRate = tierRateFor(cartTotal);
         BigDecimal tierDiscount = cartTotal.multiply(tierRate);
@@ -112,7 +112,7 @@ public class PromotionServiceImpl implements PromotionService {
                         : null
         );
 
-        for (PromotionEntity promotion : activePromotions) {
+        for (Promotion promotion : activePromotions) {
             if (!promotion.isGlobal() || promotion.getDiscountPercentage() == null) {
                 continue;
             }
@@ -125,7 +125,7 @@ public class PromotionServiceImpl implements PromotionService {
             }
         }
 
-        for (PromotionEntity promotion : activePromotions) {
+        for (Promotion promotion : activePromotions) {
             if (promotion.isGlobal() || promotion.getDiscountPercentage() == null) {
                 continue;
             }
@@ -176,7 +176,7 @@ public class PromotionServiceImpl implements PromotionService {
         boolean tierFreeDelivery = cartTotal.compareTo(FREE_DELIVERY_THRESHOLD) >= 0;
 
         boolean promoFreeDelivery = findActivePromotions().stream()
-                .filter(PromotionEntity::isFreeDelivery)
+                .filter(Promotion::isFreeDelivery)
                 .anyMatch(promotion -> promotion.isGlobal()
                         || items.stream().anyMatch(item -> promotion.appliesTo(item.getWeapon())));
 
@@ -184,23 +184,23 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public List<PromotionEntity> findAll() {
-        return promotionRepository.findAll();
+    public List<Promotion> findAll() {
+        return promotionDataAccess.findAll();
     }
 
     @Override
-    public Optional<PromotionEntity> findById(Long id) {
-        return promotionRepository.findById(id);
+    public Optional<Promotion> findById(Long id) {
+        return promotionDataAccess.findById(id);
     }
 
     @Override
-    public PromotionEntity save(PromotionEntity promotion) {
-        return promotionRepository.save(promotion);
+    public Promotion save(Promotion promotion) {
+        return promotionDataAccess.save(promotion);
     }
 
     @Override
     public void deleteById(Long id) {
-        promotionRepository.deleteById(id);
+        promotionDataAccess.deleteById(id);
     }
 
     @Override
@@ -276,9 +276,9 @@ public class PromotionServiceImpl implements PromotionService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private List<PromotionEntity> findActivePromotions() {
-        return promotionRepository.findAll().stream()
-                .filter(PromotionEntity::isCurrentlyValid)
+    private List<Promotion> findActivePromotions() {
+        return promotionDataAccess.findAll().stream()
+                .filter(Promotion::isCurrentlyValid)
                 .toList();
     }
 }

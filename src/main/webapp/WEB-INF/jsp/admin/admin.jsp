@@ -798,8 +798,8 @@
                             <strong>Cible :</strong>
 
                             <c:choose>
-                                <c:when test="${promo.targetWeapon != null}">
-                                    Produit : <c:out value="${promo.targetWeapon.name}"/>
+                                <c:when test="${promo.targetProduct != null}">
+                                    Produit : <c:out value="${promo.targetProduct.name}"/>
                                 </c:when>
                                 <c:when test="${promo.targetCategory != null}">
                                     Catégorie : <spring:message code="${promo.targetCategory.name}" text="${promo.targetCategory.name}"/>
@@ -892,7 +892,7 @@
 
                                 <c:forEach var="weapon" items="${weapons}">
                                     <option value="${weapon.id}"
-                                        <c:if test="${promo.targetWeapon != null && promo.targetWeapon.id == weapon.id}">
+                                        <c:if test="${promo.targetProduct != null && promo.targetProduct.id == weapon.id}">
                                             selected
                                         </c:if>>
                                         <c:out value="${weapon.name}"/>

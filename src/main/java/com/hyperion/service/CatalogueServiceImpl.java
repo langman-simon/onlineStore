@@ -1,10 +1,9 @@
 package com.hyperion.service;
 
-import com.hyperion.dataAccess.entity.CategoryEntity;
-import com.hyperion.dataAccess.entity.ProductEntity;
-import com.hyperion.dataAccess.repository.CategoryRepository;
-import com.hyperion.dataAccess.repository.ProductRepository;
-import org.springframework.data.domain.Sort;
+import com.hyperion.dataAccess.dao.CategoryDataAccess;
+import com.hyperion.dataAccess.dao.ProductDataAccess;
+import com.hyperion.model.Category;
+import com.hyperion.model.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,103 +12,75 @@ import java.util.Optional;
 @Service
 public class CatalogueServiceImpl implements CatalogueService {
 
-    private final ProductRepository weaponRepository;
-    private final CategoryRepository categoryRepository;
+    private static final String DEFAULT_SORT = "nameAsc";
+
+    private final ProductDataAccess productDataAccess;
+    private final CategoryDataAccess categoryDataAccess;
 
     public CatalogueServiceImpl(
-            ProductRepository weaponRepository,
-            CategoryRepository categoryRepository
+            ProductDataAccess productDataAccess,
+            CategoryDataAccess categoryDataAccess
     ) {
-        this.weaponRepository = weaponRepository;
-        this.categoryRepository = categoryRepository;
+        this.productDataAccess = productDataAccess;
+        this.categoryDataAccess = categoryDataAccess;
     }
 
     @Override
-    public List<ProductEntity> findWeapons(Long categoryId) {
-        return findWeapons(categoryId, "", "nameAsc");
+    public List<Product> findWeapons(Long categoryId) {
+        return findWeapons(categoryId, "", DEFAULT_SORT);
     }
 
     @Override
-    public List<ProductEntity> findWeapons(
-            Long categoryId,
-            String search,
-            String sort
-    ) {
+    public List<Product> findWeapons(Long categoryId, String search, String sort) {
         String searchQuery = search == null ? "" : search.trim();
-        Sort weaponSort = resolveSort(sort);
 
         if (categoryId == null && searchQuery.isEmpty()) {
-            return weaponRepository.findAll(weaponSort);
+            return productDataAccess.findAll(sort);
         }
 
         if (categoryId == null) {
-            return weaponRepository.findByNameContainingIgnoreCase(
-                    searchQuery,
-                    weaponSort
-            );
+            return productDataAccess.searchByName(searchQuery, sort);
         }
 
         if (searchQuery.isEmpty()) {
-            return weaponRepository.findByCategoryId(
-                    categoryId,
-                    weaponSort
-            );
+            return productDataAccess.findByCategory(categoryId, sort);
         }
 
-        return weaponRepository.findByCategoryIdAndNameContainingIgnoreCase(
-                categoryId,
-                searchQuery,
-                weaponSort
-        );
-    }
-
-    private Sort resolveSort(String sort) {
-        if (sort == null) {
-            return Sort.by(Sort.Direction.ASC, "name");
-        }
-
-        return switch (sort) {
-            case "nameDesc" -> Sort.by(Sort.Direction.DESC, "name");
-            case "priceAsc" -> Sort.by(Sort.Direction.ASC, "price")
-                    .and(Sort.by(Sort.Direction.ASC, "name"));
-            case "priceDesc" -> Sort.by(Sort.Direction.DESC, "price")
-                    .and(Sort.by(Sort.Direction.ASC, "name"));
-            default -> Sort.by(Sort.Direction.ASC, "name");
-        };
+        return productDataAccess.searchByNameInCategory(categoryId, searchQuery, sort);
     }
 
     @Override
-    public List<CategoryEntity> findAllCategories() {
-        return categoryRepository.findAllByOrderByNameAsc();
+    public List<Category> findAllCategories() {
+        return categoryDataAccess.findAllOrderByName();
     }
 
     @Override
-    public Optional<ProductEntity> findWeaponById(Long weaponId) {
-        return weaponRepository.findById(weaponId);
+    public Optional<Product> findWeaponById(Long weaponId) {
+        return productDataAccess.findById(weaponId);
     }
 
     @Override
-    public Optional<ProductEntity> findWeaponByReference(String reference) {
-        return weaponRepository.findByReference(reference);
+    public Optional<Product> findWeaponByReference(String reference) {
+        return productDataAccess.findByReference(reference);
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId);
+    public Optional<Category> findCategoryById(Long categoryId) {
+        return categoryDataAccess.findById(categoryId);
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+    public Optional<Category> findCategoryByName(String name) {
+        return categoryDataAccess.findByName(name);
     }
 
     @Override
-    public ProductEntity saveWeapon(ProductEntity weapon) {
-        return weaponRepository.save(weapon);
+    public Product saveWeapon(Product weapon) {
+        return productDataAccess.save(weapon);
     }
 
     @Override
-    public void deleteWeapon(ProductEntity weapon) {
-        weaponRepository.delete(weapon);
+    public void deleteWeapon(Product weapon) {
+        productDataAccess.deleteById(weapon.getId());
     }
 }
