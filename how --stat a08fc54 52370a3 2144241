@@ -1,0 +1,32 @@
+[33mcommit a08fc542f25f1a4ac5e82a2a27eda967ca663e42[m
+Author: AltinOSDP9 <etu52574@henallux.be>
+Date:   Sun Aug 23 18:06:25 2026 +0200
+
+    Modification dans les tests
+
+ .../hyperion/service/CatalogueServiceImplTest.java |  51 [32m++++++[m[31m---[m
+ .../com/hyperion/service/OrderServiceTest.java     |  26 [32m+++++[m
+ .../com/hyperion/service/PayPalIpnServiceTest.java | 115 [32m++++++++++++++++++++[m[31m-[m
+ .../0d3f6c95-a196-4bc6-ac88-731d78b48ee6.png       |   1 [32m+[m
+ .../7b95f316-eb61-4625-abd0-04773d3c3e4c.png       |   1 [32m+[m
+ 5 files changed, 179 insertions(+), 15 deletions(-)
+
+[33mcommit 52370a3a71242714294449509e238cd1752ee40d[m
+Author: langman-simon <langmansimon@hotmail.com>
+Date:   Sun Aug 23 18:42:03 2026 +0200
+
+    fix message traduction forget in message in checkout.jsp
+
+ src/main/resources/i18n/messages_en.properties |  6 [32m++++++[m
+ src/main/resources/i18n/messages_fr.properties |  7 [32m+++++++[m
+ src/main/webapp/WEB-INF/jsp/admin/admin.jsp    | 10 [32m+++++[m[31m-----[m
+ 3 files changed, 18 insertions(+), 5 deletions(-)
+
+[33mcommit 21442415a5bb7c3d240cd6926e0c8434e3fa9a37[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: langman-simon <langmansimon@hotmail.com>
+Date:   Thu Sep 17 16:00:10 2026 +0200
+
+    some README change
+
+ README.md | 11 [32m+[m[31m----------[m
+ 1 file changed, 1 insertion(+), 10 deletions(-)

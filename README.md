@@ -226,12 +226,3 @@ src/
 │   └── webapp/WEB-INF/jsp/
 └── test/
 ```
-
-## Remise
-
-Conformément au cahier des charges, le dépôt GitLab de remise doit contenir au minimum :
-
-- le code source complet de l'application ;
-- le script de création et, le cas échéant, de population de la base de données ;
-- le fichier `pom.xml` nécessaire à la construction avec Maven ;
-- toutes les ressources nécessaires au fonctionnement de l'application.

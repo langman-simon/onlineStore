@@ -133,4 +133,30 @@ class OrderServiceTest {
                 .isEqualTo("PAYPAL-123");
         verify(customerOrderRepository).save(order);
     }
+
+    @Test
+    void shouldRejectAlreadyUsedPaymentReference() {
+        CustomerOrder order = new CustomerOrder(
+                new BigDecimal("100.00"),
+                BigDecimal.ZERO,
+                new BigDecimal("100.00")
+        );
+
+        when(customerOrderRepository.findById(1L))
+                .thenReturn(Optional.of(order));
+
+        when(customerOrderRepository.existsByPaymentReference(
+                "PAYPAL-123"
+        )).thenReturn(true);
+
+        assertThatThrownBy(() ->
+                orderService.validatePayment(
+                        1L,
+                        new BigDecimal("100.00"),
+                        "PAYPAL-123"
+                )
+        )
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("error.payment.duplicateReference");
+    }
 }
