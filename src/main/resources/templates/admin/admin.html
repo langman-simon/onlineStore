@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<div layout:fragment="main-content">
+
+    <section class="admin-page">
+
+        <header class="admin-hero">
+
+            <div>
+                <p class="admin-hero__eyebrow" th:text="#{admin.eyebrow}">Administration</p>
+                <h1 th:text="#{admin.title}">Gestion</h1>
+                <p class="admin-hero__description" th:text="#{admin.hero.description}">Description</p>
+            </div>
+
+            <details class="admin-add-panel">
+                <summary class="btn btn--primary" th:text="#{admin.openAddProduct}">Ajouter un produit</summary>
+
+                <div class="admin-add-panel__content">
+
+                    <h2 th:text="#{admin.newProduct}">Nouveau produit</h2>
+
+                    <form method="post"
+                          th:action="@{/admin/products/add}"
+                          enctype="multipart/form-data"
+                          class="admin-product-form form--light">
+
+                        <div class="admin-product-form__grid">
+
+                            <div class="form-group">
+                                <label for="addName" th:text="#{common.name}">Nom</label>
+                                <input type="text" id="addName" name="name" maxlength="150" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addReference" th:text="#{common.reference}">Référence</label>
+                                <input type="text" id="addReference" name="reference" maxlength="100"
+                                       placeholder="HYP-020" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addManufacturer" th:text="#{common.manufacturer}">Fabricant</label>
+                                <input type="text" id="addManufacturer" name="manufacturer" maxlength="100" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addCategoryId" th:text="#{common.category}">Catégorie</label>
+                                <select id="addCategoryId" name="categoryId" required>
+                                    <option value="" disabled selected th:text="#{admin.chooseCategory}">Choisir</option>
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.id}"
+                                            th:text="#{${category.name}}">Catégorie</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addPrice" th:text="#{common.price}">Prix</label>
+                                <input type="number" id="addPrice" name="price" min="0" step="0.01" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addStock" th:text="#{common.stock}">Stock</label>
+                                <input type="number" id="addStock" name="stock" min="0" required>
+                            </div>
+
+                            <div class="form-group admin-product-form__full">
+                                <label for="addDescription" th:text="#{common.description}">Description</label>
+                                <textarea id="addDescription" name="description" rows="5" maxlength="1000" required></textarea>
+                            </div>
+
+                            <div class="form-group admin-product-form__full">
+                                <label for="addImage" th:text="#{common.image}">Image</label>
+                                <input type="file" id="addImage" name="image" accept="image/jpeg,image/png,image/webp">
+                                <small th:text="#{admin.imageOptional}">Image facultative</small>
+                            </div>
+
+                        </div>
+
+                        <div class="admin-product-form__actions">
+                            <button type="submit" class="btn btn--primary" th:text="#{admin.addProduct}">Ajouter</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </details>
+
+        </header>
+
+        <div class="admin-toolbar">
+
+            <div>
+                <h2 th:text="#{admin.products}">Produits</h2>
+                <p th:text="#{admin.productsDisplayed(${#lists.size(products)})}">0 produits</p>
+            </div>
+
+            <div class="filter--list">
+                <a th:href="@{/admin}"
+                   class="btn btn--filter"
+                   th:classappend="${selectedCategoryId == null} ? 'is-active'"
+                   th:text="#{catalogue.filter.all}">Tous</a>
+
+                <a th:each="category : ${categories}"
+                   th:href="@{/admin(categoryId=${category.id})}"
+                   class="btn btn--filter"
+                   th:classappend="${selectedCategoryId == category.id} ? 'is-active'"
+                   th:text="#{${category.name}}">Catégorie</a>
+            </div>
+
+        </div>
+
+        <div th:if="${#lists.isEmpty(products)}" class="admin-empty">
+            <h2 th:text="#{admin.noProducts}">Aucun produit</h2>
+            <p th:text="#{admin.noProductsText}">Texte</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(products)}" class="admin-product-list">
+
+            <article th:each="product : ${products}" class="admin-product">
+
+                <div class="admin-product__image">
+                    <img th:if="${!#strings.isEmpty(product.imageUrl)}"
+                         th:src="@{${product.imageUrl}}"
+                         th:alt="${product.name}">
+                    <div th:if="${#strings.isEmpty(product.imageUrl)}"
+                         class="admin-product__placeholder"
+                         th:text="#{common.noImage}">Pas d'image</div>
+                </div>
+
+                <div class="admin-product__content">
+
+                    <div class="admin-product__header">
+                        <div>
+                            <h3 th:text="${product.name}">Nom</h3>
+                            <p class="admin-product__reference" th:text="${product.reference}">Référence</p>
+                        </div>
+                        <strong class="admin-product__price" th:text="|${product.price} €|">0 €</strong>
+                    </div>
+
+                    <div class="admin-product__info">
+                    <span>
+                        <strong th:text="#{common.category}">Catégorie</strong>
+                        <th:block th:text="#{${product.category.name}}">Catégorie</th:block>
+                    </span>
+                        <span>
+                        <strong th:text="#{common.manufacturer}">Fabricant</strong>
+                        <th:block th:text="${product.manufacturer}">Fabricant</th:block>
+                    </span>
+                        <span>
+                        <strong th:text="#{common.stock}">Stock</strong>
+                        <th:block th:text="${product.stock}">0</th:block>
+                    </span>
+                    </div>
+
+                    <div class="admin-product__actions">
+
+                        <a th:href="@{/products/{id}(id=${product.id})}"
+                           class="btn btn--primary"
+                           th:text="#{admin.viewProduct}">Voir</a>
+
+                        <details class="admin-product-edit">
+
+                            <summary class="btn btn--primary" th:text="#{admin.edit}">Modifier</summary>
+
+                            <div class="admin-product-edit__content">
+
+                                <h3 th:text="#{admin.editProduct(${product.name})}">Modifier le produit</h3>
+
+                                <form method="post"
+                                      th:action="@{/admin/products/update/{id}(id=${product.id})}"
+                                      enctype="multipart/form-data"
+                                      class="admin-product-form form--light">
+
+                                    <div class="admin-product-form__grid">
+
+                                        <div class="form-group">
+                                            <label th:for="|name-${product.id}|" th:text="#{common.name}">Nom</label>
+                                            <input type="text" th:id="|name-${product.id}|" name="name"
+                                                   th:value="${product.name}" maxlength="150" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label th:for="|reference-${product.id}|" th:text="#{common.reference}">Référence</label>
+                                            <input type="text" th:id="|reference-${product.id}|" name="reference"
+                                                   th:value="${product.reference}" maxlength="100" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label th:for="|manufacturer-${product.id}|" th:text="#{common.manufacturer}">Fabricant</label>
+                                            <input type="text" th:id="|manufacturer-${product.id}|" name="manufacturer"
+                                                   th:value="${product.manufacturer}" maxlength="100" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label th:for="|category-${product.id}|" th:text="#{common.category}">Catégorie</label>
+                                            <select th:id="|category-${product.id}|" name="categoryId" required>
+                                                <option th:each="category : ${categories}"
+                                                        th:value="${category.id}"
+                                                        th:selected="${product.category.id == category.id}"
+                                                        th:text="#{${category.name}}">Catégorie</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label th:for="|price-${product.id}|" th:text="#{common.price}">Prix</label>
+                                            <input type="number" th:id="|price-${product.id}|" name="price"
+                                                   min="0" step="0.01" th:value="${product.price}" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label th:for="|stock-${product.id}|" th:text="#{common.stock}">Stock</label>
+                                            <input type="number" th:id="|stock-${product.id}|" name="stock"
+                                                   min="0" th:value="${product.stock}" required>
+                                        </div>
+
+                                        <div class="form-group admin-product-form__full">
+                                            <label th:for="|description-${product.id}|" th:text="#{common.description}">Description</label>
+                                            <textarea th:id="|description-${product.id}|" name="description"
+                                                      rows="4" maxlength="1000" required
+                                                      th:text="${product.description}">Description</textarea>
+                                        </div>
+
+                                        <div class="form-group admin-product-form__full">
+                                            <label th:for="|image-${product.id}|" th:text="#{admin.replaceImage}">Remplacer l'image</label>
+                                            <input type="file" th:id="|image-${product.id}|" name="image"
+                                                   accept="image/jpeg,image/png,image/webp">
+                                            <small th:text="#{admin.keepImage}">Laisser vide pour garder l'image</small>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="admin-product-form__actions">
+                                        <button type="submit" class="btn btn--primary" th:text="#{common.save}">Enregistrer</button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                        </details>
+
+                        <button type="button"
+                                class="btn btn--delete"
+                                th:attr="data-open-dialog=|delete-dialog-${product.id}|"
+                                th:text="#{common.delete}">Supprimer</button>
+
+                    </div>
+
+                </div>
+
+                <dialog th:id="|delete-dialog-${product.id}|" class="admin-dialog">
+
+                    <div class="admin-dialog__content">
+
+                        <h3 th:text="#{admin.deleteProduct}">Supprimer le produit</h3>
+                        <p th:text="#{admin.deleteProductQuestion(${product.name})}">Voulez-vous supprimer ?</p>
+                        <p class="admin-dialog__warning" th:text="#{admin.deleteWarning}">Attention</p>
+
+                        <div class="admin-dialog__actions">
+
+                            <button type="button"
+                                    class="btn btn--primary"
+                                    th:attr="data-close-dialog=|delete-dialog-${product.id}|"
+                                    th:text="#{common.cancel}">Annuler</button>
+
+                            <form method="post" th:action="@{/admin/products/remove/{id}(id=${product.id})}">
+                                <button type="submit" class="btn btn--delete" th:text="#{admin.confirm}">Confirmer</button>
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </dialog>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <hr class="admin-separator">
+
+    <section class="admin-promotions">
+
+        <div class="admin-promotions__header">
+
+            <h2 th:text="#{admin.promotions}">Promotions</h2>
+
+            <details class="admin-add-panel">
+
+                <summary class="btn btn--primary" th:text="#{admin.addPromotion}">Ajouter une promotion</summary>
+
+                <div class="admin-add-panel__content">
+
+                    <h3 th:text="#{admin.newPromotion}">Nouvelle promotion</h3>
+
+                    <form method="post"
+                          th:action="@{/admin/promotions/add}"
+                          class="admin-product-form form--light">
+
+                        <div class="admin-product-form__grid">
+
+                            <div class="form-group">
+                                <label for="promoTitle" th:text="#{admin.promotionTitle}">Titre</label>
+                                <input type="text" id="promoTitle" name="title" maxlength="150" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="promoDiscount" th:text="#{admin.promotionDiscount}">Réduction (%)</label>
+                                <input type="number" id="promoDiscount" name="discountPercentage"
+                                       min="0" max="100" step="0.01">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="promoTargetCategory" th:text="#{admin.targetGroup}">Catégorie ciblée</label>
+                                <select id="promoTargetCategory" name="targetCategoryId">
+                                    <option value="" th:text="#{admin.promotargetCategory}">Aucune</option>
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.id}"
+                                            th:text="#{${category.name}}">Catégorie</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="promoTargetProduct" th:text="#{admin.targetProduct}">Produit ciblé</label>
+                                <select id="promoTargetProduct" name="targetProductId">
+                                    <option value="" th:text="#{admin.promoTargetWeapon}">Aucun</option>
+                                    <option th:each="product : ${products}"
+                                            th:value="${product.id}"
+                                            th:text="${product.name}">Produit</option>
+                                </select>
+                                <small th:text="#{admin.msgIgnored}">Info</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="promoStart" th:text="#{admin.promotionStart}">Début</label>
+                                <input type="date" id="promoStart" name="startDate">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="promoEnd" th:text="#{admin.promotionEnd}">Fin</label>
+                                <input type="date" id="promoEnd" name="endDate">
+                            </div>
+
+                            <div class="form-group admin-product-form__full form--light">
+                                <label for="promoDescription" th:text="#{common.description}">Description</label>
+                                <textarea id="promoDescription" name="description" rows="4"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="promoFreeDelivery" th:text="#{admin.promotionFreeDelivery}">Livraison gratuite</label>
+                                <input type="checkbox" id="promoFreeDelivery" name="freeDelivery">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="promoActive" th:text="#{admin.promotionActive}">Active</label>
+                                <input type="checkbox" id="promoActive" name="active" checked>
+                            </div>
+
+                        </div>
+
+                        <div class="admin-product-form__actions">
+                            <button type="submit" class="btn btn--primary" th:text="#{admin.addPromotion}">Ajouter</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </details>
+
+        </div>
+
+        <div class="admin-promotion-list">
+
+            <article th:each="promo : ${promotions}"
+                     class="admin-promo"
+                     th:classappend="${promo.active} ? 'admin-promo--active' : 'admin-promo--inactive'">
+
+                <div class="admin-promo__main">
+
+                    <h3 th:text="${promo.title}">Titre</h3>
+
+                    <p th:if="${!#strings.isEmpty(promo.description)}" th:text="${promo.description}">Description</p>
+
+                    <div class="admin-promo__metadata">
+
+                        <p>
+                            <strong th:text="#{admin.promotionDiscountLabel}">Réduction</strong>
+                            <th:block th:text="${promo.discountPercentage != null} ? |${promo.discountPercentage} %| : #{common.none}">0 %</th:block>
+                        </p>
+
+                        <p>
+                            <strong th:text="#{admin.promotionFreeDeliveryLabel}">Livraison gratuite</strong>
+                            <th:block th:text="${promo.freeDelivery} ? #{common.yes} : #{common.no}">Non</th:block>
+                        </p>
+
+                        <p>
+                            <strong th:text="#{admin.promotionStartLabel}">Début</strong>
+                            <th:block th:text="${promo.startDate != null} ? ${promo.startDate} : #{admin.notDefined}">-</th:block>
+                        </p>
+
+                        <p>
+                            <strong th:text="#{admin.promotionEndLabel}">Fin</strong>
+                            <th:block th:text="${promo.endDate != null} ? ${promo.endDate} : #{admin.notDefinedF}">-</th:block>
+                        </p>
+
+                        <p>
+                            <strong th:text="#{admin.promotionStatusLabel}">Statut</strong>
+                            <th:block th:text="${promo.active} ? #{admin.promotionActiveLabel} : #{admin.promotionInactiveLabel}">Active</th:block>
+                        </p>
+
+                        <p>
+                            <strong>Cible :</strong>
+                            <th:block th:if="${promo.targetProduct != null}"
+                                      th:text="|Produit : ${promo.targetProduct.name}|">Produit</th:block>
+                            <th:block th:if="${promo.targetProduct == null and promo.targetCategory != null}"
+                                      th:text="|Catégorie : #{${promo.targetCategory.name}}|">Catégorie</th:block>
+                            <th:block th:if="${promo.targetProduct == null and promo.targetCategory == null}">Tout le site</th:block>
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <details class="admin-promo-edit">
+
+                    <summary class="btn btn--primary" th:text="#{admin.editPromotion}">Modifier</summary>
+
+                    <form method="post"
+                          th:action="@{/admin/promotions/update/{id}(id=${promo.id})}"
+                          class="admin-product-form form--light">
+
+                        <div class="admin-product-form__grid">
+
+                            <div class="form-group">
+                                <label th:for="|promo-title-${promo.id}|" th:text="#{admin.promotionTitle}">Titre</label>
+                                <input type="text" th:id="|promo-title-${promo.id}|" name="title"
+                                       th:value="${promo.title}" maxlength="150" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label th:for="|promo-discount-${promo.id}|" th:text="#{admin.promotionDiscount}">Réduction</label>
+                                <input type="number" th:id="|promo-discount-${promo.id}|" name="discountPercentage"
+                                       th:value="${promo.discountPercentage}" min="0" max="100" step="0.01">
+                            </div>
+
+                            <div class="form-group">
+                                <label th:for="|promo-target-category-${promo.id}|" th:text="#{admin.targetGroup}">Catégorie ciblée</label>
+                                <select th:id="|promo-target-category-${promo.id}|" name="targetCategoryId">
+                                    <option value="" th:text="#{admin.promotargetCategory}">Aucune</option>
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.id}"
+                                            th:selected="${promo.targetCategory != null and promo.targetCategory.id == category.id}"
+                                            th:text="#{${category.name}}">Catégorie</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label th:for="|promo-target-product-${promo.id}|" th:text="#{admin.targetProduct}">Produit ciblé</label>
+                                <select th:id="|promo-target-product-${promo.id}|" name="targetProductId">
+                                    <option value="" th:text="#{admin.promoTargetWeapon}">Aucun</option>
+                                    <option th:each="product : ${products}"
+                                            th:value="${product.id}"
+                                            th:selected="${promo.targetProduct != null and promo.targetProduct.id == product.id}"
+                                            th:text="${product.name}">Produit</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label th:for="|promo-start-${promo.id}|" th:text="#{admin.promotionStart}">Début</label>
+                                <input type="date" th:id="|promo-start-${promo.id}|" name="startDate"
+                                       th:value="${promo.startDate}">
+                            </div>
+
+                            <div class="form-group">
+                                <label th:for="|promo-end-${promo.id}|" th:text="#{admin.promotionEnd}">Fin</label>
+                                <input type="date" th:id="|promo-end-${promo.id}|" name="endDate"
+                                       th:value="${promo.endDate}">
+                            </div>
+
+                            <div class="form-group admin-product-form__full">
+                                <label th:for="|promo-description-${promo.id}|" th:text="#{common.description}">Description</label>
+                                <textarea th:id="|promo-description-${promo.id}|" name="description" rows="4"
+                                          th:text="${promo.description}">Description</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label th:for="|promo-free-delivery-${promo.id}|" th:text="#{admin.promotionFreeDelivery}">Livraison gratuite</label>
+                                <input type="checkbox" th:id="|promo-free-delivery-${promo.id}|" name="freeDelivery"
+                                       th:checked="${promo.freeDelivery}">
+                            </div>
+
+                            <div class="form-group">
+                                <label th:for="|promo-active-${promo.id}|" th:text="#{admin.promotionActive}">Active</label>
+                                <input type="checkbox" th:id="|promo-active-${promo.id}|" name="active"
+                                       th:checked="${promo.active}">
+                            </div>
+
+                        </div>
+
+                        <div class="admin-product-form__actions">
+                            <button type="submit" class="btn btn--primary" th:text="#{admin.savePromotion}">Enregistrer</button>
+                        </div>
+
+                    </form>
+
+                </details>
+
+                <form method="post"
+                      th:action="@{/admin/promotions/remove/{id}(id=${promo.id})}"
+                      class="admin-promo__delete">
+                    <button type="submit" class="btn btn--delete" th:text="#{admin.deletePromotion}">Supprimer</button>
+                </form>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <script th:src="@{/js/admin.js}"></script>
+
+</div>
+
+</body>
+</html>

@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -50,32 +49,17 @@ public class AdminController {
             @RequestParam(required = false) Long categoryId,
             Model model
     ) {
-        List<Product> weapons = catalogueService.findWeapons(categoryId);
-        List<Category> categories = catalogueService.findAllCategories();
-
-        model.addAttribute("weapons", weapons);
-        model.addAttribute("categories", categories);
+        model.addAttribute("products", catalogueService.findWeapons(categoryId));
+        model.addAttribute("categories", catalogueService.findAllCategories());
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("promotions", promotionService.findAll());
+        model.addAttribute("titleKey", "page.admin");
 
-        model.addAttribute(
-                "titleKey",
-                "page.admin"
-        );
-
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/admin/admin.jsp"
-        );
-
-        return "template/template";
+        return "admin/admin";
     }
 
-    // =========================================================
-    // WEAPONS
-    // =========================================================
 
-    @PostMapping("/weapons/add")
+    @PostMapping("/products/add")
     public String addWeapon(
             @RequestParam String name,
             @RequestParam String description,
@@ -146,7 +130,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/weapons/update/{weaponId}")
+    @PostMapping("/products/update/{weaponId}")
     public String updateWeapon(
             @PathVariable Long weaponId,
             @RequestParam String name,
@@ -226,7 +210,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/remove/{weaponId}")
+    @PostMapping("/products/remove/{weaponId}")
     public String removeWeapon(
             @PathVariable Long weaponId,
             HttpSession session
@@ -265,9 +249,6 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    // =========================================================
-    // PROMOTIONS
-    // =========================================================
 
     @PostMapping("/promotions/add")
     public String addPromotion(
@@ -285,7 +266,7 @@ public class AdminController {
             @RequestParam(required = false)
             String endDate,
             @RequestParam(required = false) Long targetCategoryId,
-            @RequestParam(required = false) Long targetWeaponId,
+            @RequestParam(required = false) Long targetProductId,
             @RequestParam(required = false, defaultValue = "false") boolean active,
             HttpSession session
     ) {
@@ -298,13 +279,13 @@ public class AdminController {
                     discount
             );
 
-            if (targetCategoryId != null && targetWeaponId != null) {
+            if (targetCategoryId != null && targetProductId != null) {
                 globalBannerService.error(session, "message.admin.noBothChoice");
                 return "redirect:/admin";
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
-            Product targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
+            Product targetWeapon = targetProductId != null ? findWeapon(targetProductId) : null;
 
             LocalDate parsedStartDate =
                     parseDate(startDate);
@@ -371,7 +352,7 @@ public class AdminController {
             @RequestParam(required = false)
             String endDate,
             @RequestParam(required = false) Long targetCategoryId,
-            @RequestParam(required = false) Long targetWeaponId,
+            @RequestParam(required = false) Long targetProductId,
             @RequestParam(required = false, defaultValue = "false") boolean active,
             HttpSession session
     ) {
@@ -384,13 +365,13 @@ public class AdminController {
                     discount
             );
 
-            if (targetCategoryId != null && targetWeaponId != null) {
+            if (targetCategoryId != null && targetProductId != null) {
                 globalBannerService.error(session, "message.admin.noBothChoice");
                 return "redirect:/admin";
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
-            Product targetWeapon = targetWeaponId != null ? findWeapon(targetWeaponId) : null;
+            Product targetWeapon = targetProductId != null ? findWeapon(targetProductId) : null;
 
             LocalDate parsedStartDate =
                     parseDate(startDate);
@@ -478,9 +459,6 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    // =========================================================
-    // PRIVATE METHODS
-    // =========================================================
 
     private Product findWeapon(Long weaponId) {
         return catalogueService
