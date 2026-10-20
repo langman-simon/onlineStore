@@ -251,7 +251,7 @@
                                     </div>
 
                                     <a class="btn btn--primary btn--full"
-                                       href="<c:url value='/weapons/${weapon.id}'/>">
+                                       href="<c:url value='/products/${weapon.id}'/>">
                                         <span><spring:message code="catalogue.viewProduct"/></span>
                                     </a>
                                 </div>

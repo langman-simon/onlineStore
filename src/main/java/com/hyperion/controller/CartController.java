@@ -63,7 +63,7 @@ public class CartController {
                     "error.cart.quantityPositive"
             );
 
-            return "redirect:/weapons/" + weaponId;
+            return "redirect:/products/" + weaponId;
         }
 
         if (quantity > weapon.getStock()) {
@@ -72,7 +72,7 @@ public class CartController {
                     "error.cart.quantityStock"
             );
 
-            return "redirect:/weapons/" + weaponId;
+            return "redirect:/products/" + weaponId;
         }
 
         try {
@@ -94,7 +94,7 @@ public class CartController {
                     exception.getMessage()
             );
 
-            return "redirect:/weapons/" + weaponId;
+            return "redirect:/products/" + weaponId;
         }
     }
 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="product-details">
+
+    <div class="product-details__image">
+        <img th:if="${product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}"
+             th:src="@{${product.imageUrl}}"
+             th:alt="${product.name}">
+
+        <div th:unless="${product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}"
+             class="image-placeholder"
+             th:text="#{common.noImage}">Pas d'image</div>
+    </div>
+
+    <div class="product-details__content">
+        <p class="eyebrow" th:text="#{${product.category.name}}">Catégorie</p>
+
+        <h1 th:text="${product.name}">Nom du produit</h1>
+
+        <p class="product-price" th:text="|${product.price} €|">0 €</p>
+
+        <p th:text="${product.description}">Description</p>
+
+        <dl class="product-characteristics">
+            <dt th:text="#{common.category}">Catégorie</dt>
+            <dd th:text="#{${product.category.name}}">Catégorie</dd>
+
+            <dt th:text="#{common.manufacturer}">Fabricant</dt>
+            <dd th:text="${product.manufacturer}">Fabricant</dd>
+
+            <dt th:text="#{common.reference}">Référence</dt>
+            <dd th:text="${product.reference}">Référence</dd>
+
+            <dt th:text="#{common.stock}">Stock</dt>
+            <dd th:text="${product.stock}">0</dd>
+        </dl>
+
+        <form th:if="${product.stock > 0}"
+              method="post"
+              th:action="@{/cart/add/{id}(id=${product.id})}"
+              class="add-to-cart-form">
+
+            <div>
+                <label for="quantity" th:text="#{common.quantity}">Quantité</label>
+                <input id="quantity"
+                       type="number"
+                       class="quantity-input"
+                       name="quantity"
+                       value="1"
+                       min="1"
+                       th:max="${product.stock}"
+                       required>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--large"
+                    th:text="#{product.addToCart}">Ajouter au panier</button>
+
+            <a class="btn btn--primary btn--large" th:href="@{/catalogue}"
+               th:text="#{common.backCatalogue}">Retour au catalogue</a>
+
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"
+               class="btn btn--primary btn--large"
+               th:text="#{common.admin}">Admin</a>
+        </form>
+
+        <th:block th:unless="${product.stock > 0}">
+            <p class="error" th:text="#{product.unavailable}">Indisponible</p>
+            <a class="btn btn--primary btn--large" th:href="@{/catalogue}"
+               th:text="#{common.backCatalogue}">Retour au catalogue</a>
+        </th:block>
+    </div>
+
+</section>
+
+</body>
+</html>

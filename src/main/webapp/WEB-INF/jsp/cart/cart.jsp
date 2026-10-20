@@ -32,7 +32,7 @@
             <c:forEach var="item" items="${cart.items}">
                 <tr>
                     <td>
-                        <a href="<c:url value='/weapons/${item.weapon.id}'/>">
+                        <a href="<c:url value='/products/${item.weapon.id}'/>">
                             <c:out value="${item.weapon.name}"/>
                         </a>
                     </td>

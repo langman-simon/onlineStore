@@ -278,7 +278,7 @@
 
                             <div class="admin-product__actions">
 
-                                <a href="<c:url value='/weapons/${weapon.id}'/>"
+                                <a href="<c:url value='/products/${weapon.id}'/>"
                                    class="btn btn--primary">
                                     <spring:message code="admin.viewProduct"/>
                                 </a>

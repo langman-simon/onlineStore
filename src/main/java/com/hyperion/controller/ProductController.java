@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/weapons")
-public class WeaponController {
+@RequestMapping("/products")
+public class ProductController {
 
     private final CatalogueService catalogueService;
     private final GlobalBannerService globalBannerService;
 
-    public WeaponController(
+    public ProductController(
             CatalogueService catalogueService,
             GlobalBannerService globalBannerService
     ) {
@@ -33,27 +33,16 @@ public class WeaponController {
             Model model,
             HttpSession session
     ) {
-        Optional<Product> weaponOpt =
-                catalogueService.findWeaponById(id);
+        Optional<Product> product = catalogueService.findWeaponById(id);
 
-        if (weaponOpt.isEmpty()) {
-            globalBannerService.error(
-                    session,
-                    "error.product.notFound"
-            );
-
+        if (product.isEmpty()) {
+            globalBannerService.error(session, "error.product.notFound");
             return "redirect:/catalogue";
         }
 
-        Product weapon = weaponOpt.get();
+        model.addAttribute("product", product.get());
+        model.addAttribute("title", product.get().getName());
 
-        model.addAttribute("weapon", weapon);
-        model.addAttribute("title", weapon.getName());
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/weapon/details.jsp"
-        );
-
-        return "template/template";
+        return "product/details";
     }
 }
