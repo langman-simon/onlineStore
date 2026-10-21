@@ -50,17 +50,17 @@ public class HomeController {
                 promotionService.getTier3RatePercent()
         );
 
-        catalogueService.findCategoryByName("category.rifles")
+        catalogueService.findCategoryByName("category.aeg")
                 .ifPresent(category ->
-                        model.addAttribute("weaponsCategory", category)
+                        model.addAttribute("aegCategory", category)
                 );
         catalogueService.findCategoryByName("category.protection")
                 .ifPresent(category ->
                         model.addAttribute("protectionCategory", category)
                 );
-        catalogueService.findCategoryByName("category.maritime")
+        catalogueService.findCategoryByName("category.sniper")
                 .ifPresent(category ->
-                        model.addAttribute("maritimeCategory", category)
+                        model.addAttribute("sniperCategory", category)
                 );
 
         model.addAttribute("titleKey", "page.home");

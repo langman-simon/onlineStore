@@ -161,10 +161,10 @@
 
         <h2><spring:message code="home.categories.title"/></h2>
 
-        <div class="home-category-grid">
-            <c:url var="weaponsCategoryUrl" value="/catalogue">
-                <c:if test="${not empty weaponsCategory}">
-                    <c:param name="categoryId" value="${weaponsCategory.id}"/>
+                <div class="home-category-grid">
+            <c:url var="aegCategoryUrl" value="/catalogue">
+                <c:if test="${not empty aegCategory}">
+                    <c:param name="categoryId" value="${aegCategory.id}"/>
                 </c:if>
             </c:url>
 
@@ -174,37 +174,25 @@
                 </c:if>
             </c:url>
 
-            <c:url var="maritimeCategoryUrl" value="/catalogue">
-                <c:if test="${not empty maritimeCategory}">
-                    <c:param name="categoryId" value="${maritimeCategory.id}"/>
+            <c:url var="sniperCategoryUrl" value="/catalogue">
+                <c:if test="${not empty sniperCategory}">
+                    <c:param name="categoryId" value="${sniperCategory.id}"/>
                 </c:if>
             </c:url>
 
-            <a href="${weaponsCategoryUrl}"
-               class="home-category-card">
-                <h3>
-                    <c:choose>
-                        <c:when test="${not empty weaponsCategory}">
-                            <spring:message code="${weaponsCategory.name}" text="${weaponsCategory.name}"/>
-                        </c:when>
-                        <c:otherwise>
-                            <spring:message code="home.categories.weapons.title"/>
-                        </c:otherwise>
-                    </c:choose>
-                </h3>
-                <p><spring:message code="home.categories.weapons.text"/></p>
+            <a href="${aegCategoryUrl}" class="home-category-card">
+                <h3><spring:message code="category.aeg"/></h3>
+                <p><spring:message code="category.aeg.description"/></p>
             </a>
 
-            <a href="${protectionCategoryUrl}"
-               class="home-category-card">
+            <a href="${protectionCategoryUrl}" class="home-category-card">
                 <h3><spring:message code="category.protection"/></h3>
-                <p><spring:message code="home.categories.protection.text"/></p>
+                <p><spring:message code="category.protection.description"/></p>
             </a>
 
-            <a href="${maritimeCategoryUrl}"
-               class="home-category-card">
-                <h3><spring:message code="category.maritime"/></h3>
-                <p><spring:message code="home.categories.maritime.text"/></p>
+            <a href="${sniperCategoryUrl}" class="home-category-card">
+                <h3><spring:message code="category.sniper"/></h3>
+                <p><spring:message code="category.sniper.description"/></p>
             </a>
         </div>
     </section>
