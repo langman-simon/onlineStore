@@ -64,7 +64,8 @@ public class HomeController {
                 );
 
         model.addAttribute("titleKey", "page.home");
-        model.addAttribute("body", "/WEB-INF/jsp/home.jsp");
-        return "template/template";
+        model.addAttribute("titleKey", "page.home");
+        return "home/home";
+        }
     }
 }

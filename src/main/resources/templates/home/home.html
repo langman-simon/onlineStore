@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="home-page">
+
+    <section class="home-hero">
+        <div class="home-hero-content">
+            <p class="eyebrow eyebrow--on-dark" th:text="#{home.hero.eyebrow}"></p>
+
+            <h1>Hyperion Industries</h1>
+
+            <p class="home-hero-subtitle" th:text="#{home.hero.subtitle}"></p>
+
+            <div class="home-actions">
+                <a th:href="@{/company}"
+                   class="btn btn--primary btn--large"
+                   th:text="#{home.hero.company}"></a>
+
+                <a th:href="@{/catalogue}"
+                   class="btn btn--primary btn--large"
+                   th:text="#{home.hero.catalogue}"></a>
+
+                <a th:href="@{/cart}"
+                   class="btn btn--primary btn--large"
+                   th:text="#{home.hero.cart}"></a>
+
+                <a sec:authorize="hasRole('ADMIN')"
+                   th:href="@{/admin}"
+                   class="btn btn--primary btn--large"
+                   th:text="#{common.admin}"></a>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-section home-promo-banner">
+        <p class="eyebrow" th:text="#{home.loyalty.eyebrow}"></p>
+
+        <div class="ornament-divider"><span></span></div>
+
+        <h2 th:text="#{home.loyalty.title}"></h2>
+
+        <div class="home-features">
+            <article class="home-feature">
+                <h3 th:text="#{home.loyalty.freeDelivery.title}"></h3>
+                <p>
+                    <th:block th:text="#{home.loyalty.freeDelivery.before}"></th:block>
+                    <strong th:text="|${freeDeliveryThreshold} €|"></strong>
+                    <th:block th:text="#{home.loyalty.freeDelivery.after}"></th:block>
+                </p>
+            </article>
+
+            <article class="home-feature">
+                <h3 th:text="|-${tier2Rate}% #{home.loyalty.discount.title}|"></h3>
+                <p>
+                    <th:block th:text="#{home.loyalty.discount.before}"></th:block>
+                    <strong th:text="|${tier2Threshold} €|"></strong>
+                    <th:block th:text="#{home.loyalty.discount.after}"></th:block>
+                </p>
+            </article>
+
+            <article class="home-feature">
+                <h3 th:text="|-${tier3Rate}% #{home.loyalty.discount.title}|"></h3>
+                <p>
+                    <th:block th:text="#{home.loyalty.discount.before}"></th:block>
+                    <strong th:text="|${tier3Threshold} €|"></strong>
+                    <th:block th:text="#{home.loyalty.best.after}"></th:block>
+                </p>
+            </article>
+        </div>
+
+        <div class="home-active-promos" th:if="${not #lists.isEmpty(promotions)}">
+            <div class="ornament-divider"><span></span></div>
+
+            <h2 th:text="#{home.promotions.title}"></h2>
+
+            <div class="home-features">
+                <article class="home-feature" th:each="promo : ${promotions}">
+                    <h3 th:text="${promo.title}"></h3>
+
+                    <p th:if="${not #strings.isEmpty(promo.description)}"
+                       th:text="${promo.description}"></p>
+
+                    <div class="home-promo-badges"
+                         th:if="${promo.discountPercentage != null or promo.freeDelivery}">
+                        <span class="home-promo-badge"
+                              th:if="${promo.discountPercentage != null}"
+                              th:text="|-${promo.discountPercentage}%|"></span>
+
+                        <span class="home-promo-badge"
+                              th:if="${promo.freeDelivery}"
+                              th:text="#{home.loyalty.freeDelivery.title}"></span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-section">
+        <p class="eyebrow" th:text="#{home.expertise.eyebrow}"></p>
+
+        <div class="ornament-divider"><span></span></div>
+
+        <h2 th:text="#{home.expertise.title}"></h2>
+        <p th:text="#{home.expertise.intro}"></p>
+
+        <div class="home-features">
+            <article class="home-feature">
+                <h3 th:text="#{home.expertise.specialized.title}"></h3>
+                <p th:text="#{home.expertise.specialized.text}"></p>
+            </article>
+
+            <article class="home-feature">
+                <h3 th:text="#{home.expertise.stock.title}"></h3>
+                <p th:text="#{home.expertise.stock.text}"></p>
+            </article>
+
+            <article class="home-feature">
+                <h3 th:text="#{home.expertise.order.title}"></h3>
+                <p th:text="#{home.expertise.order.text}"></p>
+            </article>
+        </div>
+    </section>
+
+    <section class="home-section home-catalogue-preview">
+        <p class="eyebrow" th:text="#{home.categories.eyebrow}"></p>
+
+        <div class="ornament-divider"><span></span></div>
+
+        <h2 th:text="#{home.categories.title}"></h2>
+
+        <div class="home-category-grid">
+            <a th:href="${aegCategory != null} ? @{/catalogue(categoryId=${aegCategory.id})} : @{/catalogue}"
+               class="home-category-card">
+                <h3 th:text="#{category.aeg}"></h3>
+                <p th:text="#{category.aeg.description}"></p>
+            </a>
+
+            <a th:href="${protectionCategory != null} ? @{/catalogue(categoryId=${protectionCategory.id})} : @{/catalogue}"
+               class="home-category-card">
+                <h3 th:text="#{category.protection}"></h3>
+                <p th:text="#{category.protection.description}"></p>
+            </a>
+
+            <a th:href="${sniperCategory != null} ? @{/catalogue(categoryId=${sniperCategory.id})} : @{/catalogue}"
+               class="home-category-card">
+                <h3 th:text="#{category.sniper}"></h3>
+                <p th:text="#{category.sniper.description}"></p>
+            </a>
+        </div>
+    </section>
+
+    <section class="home-section home-call-to-action">
+        <div class="ornament-divider"><span></span></div>
+
+        <h2 th:text="#{home.cta.title}"></h2>
+        <p th:text="#{home.cta.text}"></p>
+
+        <a th:href="@{/catalogue}"
+           class="btn btn--primary btn--large"
+           th:text="#{home.cta.button}"></a>
+    </section>
+
+</section>
+
+</body>
+</html>
