@@ -22,11 +22,6 @@ spring:
       encoding: UTF-8
       continue-on-error: false
 
-  mvc:
-    view:
-      prefix: /WEB-INF/jsp/
-      suffix: .jsp
-
   servlet:
     encoding:
       charset: UTF-8
