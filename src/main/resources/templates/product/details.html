@@ -24,6 +24,29 @@
 
         <p class="product-price" th:text="|${product.price} €|">0 €</p>
 
+        <div class="product-promotions" th:if="${not #lists.isEmpty(promotions)}">
+            <p class="product-promotions__title" th:text="#{product.promotions.title}">Promotions en cours</p>
+
+            <div class="product-promotion" th:each="promo : ${promotions}">
+                <strong th:text="${promo.title}">Promotion</strong>
+
+                <div class="home-promo-badges">
+                    <span class="home-promo-badge"
+                          th:if="${promo.discountPercentage != null}"
+                          th:text="|-${promo.discountPercentage.stripTrailingZeros().toPlainString()}%|">-10%</span>
+                    <span class="home-promo-badge"
+                          th:if="${promo.freeDelivery}"
+                          th:text="#{home.loyalty.freeDelivery.title}">Livraison offerte</span>
+                </div>
+
+                <p class="product-promotion__description"
+                   th:if="${not #strings.isEmpty(promo.description)}"
+                   th:text="${promo.description}">Description</p>
+            </div>
+
+            <p class="product-promotions__note" th:text="#{product.promotions.note}">Note</p>
+        </div>
+
         <p th:text="${product.description}">Description</p>
 
         <dl class="product-characteristics">

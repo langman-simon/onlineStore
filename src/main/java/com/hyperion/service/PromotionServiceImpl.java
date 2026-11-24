@@ -2,6 +2,7 @@ package com.hyperion.service;
 
 import com.hyperion.cart.CartItem;
 import com.hyperion.dataAccess.dao.PromotionDataAccess;
+import com.hyperion.model.Product;
 import com.hyperion.model.Promotion;
 import org.springframework.stereotype.Service;
 
@@ -176,6 +177,17 @@ public class PromotionServiceImpl implements PromotionService {
                         || items.stream().anyMatch(item -> promotion.appliesTo(item.getProduct())));
 
         return tierFreeDelivery || promoFreeDelivery;
+    }
+
+    @Override
+    public List<Promotion> findActivePromotionsFor(Product product) {
+        if (product == null) {
+            return List.of();
+        }
+
+        return findActivePromotions().stream()
+                .filter(promotion -> promotion.appliesTo(product))
+                .toList();
     }
 
     @Override

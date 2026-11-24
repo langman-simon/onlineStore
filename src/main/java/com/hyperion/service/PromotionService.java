@@ -1,6 +1,7 @@
 package com.hyperion.service;
 
 import com.hyperion.cart.CartItem;
+import com.hyperion.model.Product;
 import com.hyperion.model.Promotion;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ public interface PromotionService {
     String getAppliedDiscountLabel(List<CartItem> items, boolean authenticated);
 
     List<Promotion> findAll();
+    List<Promotion> findActivePromotionsFor(Product product);
     Optional<Promotion> findById(Long id);
     Promotion save(Promotion promotion);
     void deleteById(Long id);

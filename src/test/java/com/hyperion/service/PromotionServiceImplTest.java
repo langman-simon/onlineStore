@@ -1,11 +1,15 @@
 package com.hyperion.service;
 
 import com.hyperion.dataAccess.dao.PromotionDataAccess;
+import com.hyperion.model.Category;
+import com.hyperion.model.Product;
+import com.hyperion.model.Promotion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -192,5 +196,48 @@ class PromotionServiceImplTest {
                 promotionService.getNextTierIncentive(new BigDecimal("24.99"), new BigDecimal("12.50"));
 
         assertThat(incentive).isNull();
+    }
+
+    @Test
+    void shouldFindPromotionTargetingProductCategory() {
+        Category replicas = category(1L);
+        Product product = product(10L, replicas);
+        Promotion onCategory = promotionOn(replicas);
+
+        Mockito.when(promotionDataAccess.findAll()).thenReturn(List.of(onCategory));
+
+        assertThat(promotionService.findActivePromotionsFor(product)).containsExactly(onCategory);
+    }
+
+    @Test
+    void shouldIgnorePromotionTargetingAnotherCategory() {
+        Product product = product(10L, category(1L));
+        Promotion onOtherCategory = promotionOn(category(2L));
+
+        Mockito.when(promotionDataAccess.findAll()).thenReturn(List.of(onOtherCategory));
+
+        assertThat(promotionService.findActivePromotionsFor(product)).isEmpty();
+    }
+
+    private Category category(Long id) {
+        Category category = new Category();
+        category.setId(id);
+        return category;
+    }
+
+    private Product product(Long id, Category category) {
+        Product product = new Product();
+        product.setId(id);
+        product.setCategory(category);
+        return product;
+    }
+
+    private Promotion promotionOn(Category category) {
+        Promotion promotion = new Promotion();
+        promotion.setTitle("Promo");
+        promotion.setDiscountPercentage(new BigDecimal("20"));
+        promotion.setActive(true);
+        promotion.setTargetCategory(category);
+        return promotion;
     }
 }
