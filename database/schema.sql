@@ -2,7 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict 5LRUMwuo1LkcRJ42HZm0y7DmAYgYDguPOhaqnim1UcsT3m2silVjfb0HVV3QE4T
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -347,5 +346,5 @@ ALTER TABLE ONLY public.customer_orders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 5LRUMwuo1LkcRJ42HZm0y7DmAYgYDguPOhaqnim1UcsT3m2silVjfb0HVV3QE4T
+
 
