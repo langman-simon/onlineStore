@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class PromotionServiceImpl implements PromotionService {
 
-    private static final BigDecimal STANDARD_DELIVERY_FEE = new BigDecimal("50.00");
-    private static final BigDecimal FREE_DELIVERY_THRESHOLD = new BigDecimal("2000");
+    private static final BigDecimal STANDARD_DELIVERY_FEE = new BigDecimal("6.95");
+    private static final BigDecimal FREE_DELIVERY_THRESHOLD = new BigDecimal("100");
 
-    private static final BigDecimal TIER_2_THRESHOLD = new BigDecimal("6000");
-    private static final BigDecimal TIER_3_THRESHOLD = new BigDecimal("15000");
+    private static final BigDecimal TIER_2_THRESHOLD = new BigDecimal("200");
+    private static final BigDecimal TIER_3_THRESHOLD = new BigDecimal("350");
 
     private static final BigDecimal TIER_2_RATE = new BigDecimal("0.10");
     private static final BigDecimal TIER_3_RATE = new BigDecimal("0.15");

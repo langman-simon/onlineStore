@@ -23,7 +23,7 @@ class PromotionServiceImplTest {
 
     @Test
     void shouldApplyNoDiscountWhenBelowFirstThreshold() {
-        BigDecimal cartTotal = new BigDecimal("5000.00");
+        BigDecimal cartTotal = new BigDecimal("150.00");
 
         BigDecimal discount = promotionService.calculateDiscount(cartTotal, true);
 
@@ -32,7 +32,7 @@ class PromotionServiceImplTest {
 
     @Test
     void shouldApplyNoDiscountWhenNotAuthenticated() {
-        BigDecimal cartTotal = new BigDecimal("20000.00");
+        BigDecimal cartTotal = new BigDecimal("400.00");
 
         BigDecimal discount = promotionService.calculateDiscount(cartTotal, false);
 
@@ -41,52 +41,52 @@ class PromotionServiceImplTest {
 
     @Test
     void shouldApply10PercentDiscountBetweenTier2AndTier3() {
-        BigDecimal cartTotal = new BigDecimal("10000.00");
+        BigDecimal cartTotal = new BigDecimal("250.00");
 
         BigDecimal discount = promotionService.calculateDiscount(cartTotal, true);
 
-        assertThat(discount).isEqualByComparingTo("1000.00");
+        assertThat(discount).isEqualByComparingTo("25.00");
     }
 
     @Test
     void shouldApply10PercentDiscountExactlyAtTier2Threshold() {
-        BigDecimal cartTotal = new BigDecimal("6000.00");
+        BigDecimal cartTotal = new BigDecimal("200.00");
 
         BigDecimal discount = promotionService.calculateDiscount(cartTotal, true);
 
-        assertThat(discount).isEqualByComparingTo("600.00");
+        assertThat(discount).isEqualByComparingTo("20.00");
     }
 
     @Test
     void shouldApply15PercentDiscountAboveTier3Threshold() {
-        BigDecimal cartTotal = new BigDecimal("20000.00");
+        BigDecimal cartTotal = new BigDecimal("400.00");
 
         BigDecimal discount = promotionService.calculateDiscount(cartTotal, true);
 
-        assertThat(discount).isEqualByComparingTo("3000.00");
+        assertThat(discount).isEqualByComparingTo("60.00");
     }
 
     @Test
     void shouldApply15PercentDiscountExactlyAtTier3Threshold() {
-        BigDecimal cartTotal = new BigDecimal("15000.00");
+        BigDecimal cartTotal = new BigDecimal("350.00");
 
         BigDecimal discount = promotionService.calculateDiscount(cartTotal, true);
 
-        assertThat(discount).isEqualByComparingTo("2250.00");
+        assertThat(discount).isEqualByComparingTo("52.50");
     }
 
     @Test
     void shouldChargeStandardDeliveryFeeBelowThreshold() {
-        BigDecimal cartTotal = new BigDecimal("1000.00");
+        BigDecimal cartTotal = new BigDecimal("50.00");
 
         BigDecimal fee = promotionService.calculateDeliveryFee(cartTotal, true);
 
-        assertThat(fee).isEqualByComparingTo("50.00");
+        assertThat(fee).isEqualByComparingTo("6.95");
     }
 
     @Test
     void shouldOfferFreeDeliveryAtExactThreshold() {
-        BigDecimal cartTotal = new BigDecimal("2000.00");
+        BigDecimal cartTotal = new BigDecimal("100.00");
 
         BigDecimal fee = promotionService.calculateDeliveryFee(cartTotal, true);
 
@@ -95,7 +95,7 @@ class PromotionServiceImplTest {
 
     @Test
     void shouldOfferFreeDeliveryAboveThreshold() {
-        BigDecimal cartTotal = new BigDecimal("15000.00");
+        BigDecimal cartTotal = new BigDecimal("350.00");
 
         BigDecimal fee = promotionService.calculateDeliveryFee(cartTotal, true);
 
@@ -104,70 +104,70 @@ class PromotionServiceImplTest {
 
     @Test
     void shouldChargeDeliveryFeeWhenNotAuthenticatedEvenAboveThreshold() {
-        BigDecimal cartTotal = new BigDecimal("15000.00");
+        BigDecimal cartTotal = new BigDecimal("350.00");
 
         BigDecimal fee = promotionService.calculateDeliveryFee(cartTotal, false);
 
-        assertThat(fee).isEqualByComparingTo("50.00");
+        assertThat(fee).isEqualByComparingTo("6.95");
     }
 
     @Test
     void shouldIndicateFreeDeliveryAppliedWhenEligible() {
-        boolean result = promotionService.isFreeDeliveryApplied(new BigDecimal("2000.00"), true);
+        boolean result = promotionService.isFreeDeliveryApplied(new BigDecimal("100.00"), true);
 
         assertThat(result).isTrue();
     }
 
     @Test
     void shouldIndicateNoFreeDeliveryWhenBelowThreshold() {
-        boolean result = promotionService.isFreeDeliveryApplied(new BigDecimal("1999.99"), true);
+        boolean result = promotionService.isFreeDeliveryApplied(new BigDecimal("99.99"), true);
 
         assertThat(result).isFalse();
     }
 
     @Test
     void shouldCalculateFinalPriceWithFeeOnlyBelowFreeDeliveryThreshold() {
-        BigDecimal cartTotal = new BigDecimal("1000.00");
+        BigDecimal cartTotal = new BigDecimal("50.00");
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, true);
 
-        assertThat(finalPrice).isEqualByComparingTo("1050.00");
+        assertThat(finalPrice).isEqualByComparingTo("56.95");
     }
 
     @Test
     void shouldCalculateFinalPriceWithFreeDeliveryOnly() {
-        BigDecimal cartTotal = new BigDecimal("5000.00");
+        BigDecimal cartTotal = new BigDecimal("150.00");
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, true);
 
-        assertThat(finalPrice).isEqualByComparingTo("5000.00");
+        assertThat(finalPrice).isEqualByComparingTo("150.00");
     }
 
     @Test
     void shouldCalculateFinalPriceWithDiscountAndFreeDelivery() {
-        BigDecimal cartTotal = new BigDecimal("10000.00");
+        BigDecimal cartTotal = new BigDecimal("250.00");
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, true);
 
-        assertThat(finalPrice).isEqualByComparingTo("9000.00");
+        assertThat(finalPrice).isEqualByComparingTo("225.00");
     }
 
     @Test
     void shouldCalculateFinalPriceWithTopTierDiscount() {
-        BigDecimal cartTotal = new BigDecimal("20000.00");
+        BigDecimal cartTotal = new BigDecimal("400.00");
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, true);
 
-        assertThat(finalPrice).isEqualByComparingTo("17000.00");
+        assertThat(finalPrice).isEqualByComparingTo("340.00");
     }
 
     @Test
     void shouldCalculateFinalPriceWithoutAnyPromotionWhenNotAuthenticated() {
-        BigDecimal cartTotal = new BigDecimal("10000.00");
+        BigDecimal cartTotal = new BigDecimal("250.00");
 
         BigDecimal finalPrice = promotionService.calculateFinalPrice(cartTotal, false);
 
-        assertThat(finalPrice).isEqualByComparingTo("10050.00");
+        assertThat(finalPrice).isEqualByComparingTo("256.95");
     }
 
     @Test
