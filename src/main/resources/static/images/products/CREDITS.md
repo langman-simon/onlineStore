@@ -9,10 +9,6 @@ Ces images sont utilisées conformément à leur licence (attribution requise po
 | Fichier | Image d'origine | Auteur | Licence |
 |---|---|---|---|
 | sniper-l96.webp | [Airsoft Accuracy International AW L96.JPG](https://commons.wikimedia.org/wiki/File:Airsoft_Accuracy_International_AW_L96.JPG) | BrokenSphere | CC BY-SA 3.0 |
-| bbs-020.webp | [Airsoft pellets.jpg](https://commons.wikimedia.org/wiki/File:Airsoft_pellets.jpg) | voir la page Commons | CC BY-SA 3.0 |
-| bbs-025.webp | [Airsoft pellets (BBs).jpg](https://commons.wikimedia.org/wiki/File:Airsoft_pellets_(BBs).jpg) | David Lauritz | CC BY-SA 4.0 |
-| lipo-battery.webp | [Lithium Polymer Batter.jpg](https://commons.wikimedia.org/wiki/File:Lithium_Polymer_Batter.jpg) | Tntflash | CC BY-SA 3.0 |
-| battery-charger.webp | [LIPO Charger.JPG](https://commons.wikimedia.org/wiki/File:LIPO_Charger.JPG) | KundaliniZero | CC BY-SA 3.0 |
 
 ## Photos fournisseurs
 
@@ -32,3 +28,7 @@ Photos de produits issues de sites de fabricants ou de revendeurs, utilisées un
 | gloves.webp |
 | green-gas.webp |
 | midcap-mag.webp |
+| lipo-battery.webp |
+| battery-charger.webp |
+| bbs-020.webp |
+| bbs-025.webp |
