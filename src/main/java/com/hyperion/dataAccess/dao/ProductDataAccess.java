@@ -22,4 +22,6 @@ public interface ProductDataAccess {
     Product save(Product product);
 
     void deleteById(Long id);
+
+    void updateStock(Long id, int newStock);
 }

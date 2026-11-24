@@ -82,6 +82,14 @@ public class ProductDAO implements ProductDataAccess {
         repository.deleteById(id);
     }
 
+    @Override
+    @Transactional
+    public void updateStock(Long id, int newStock) {
+        ProductEntity entity = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("error.product.notFound"));
+        entity.setStock(newStock);
+    }
+
     private List<Product> toModels(List<ProductEntity> entities) {
         return entities.stream().map(mapper::toModel).toList();
     }

@@ -2,12 +2,11 @@ package com.hyperion.service;
 
 import com.hyperion.cart.Cart;
 import com.hyperion.cart.CartItem;
-import com.hyperion.dataAccess.entity.CustomerOrderEntity;
-import com.hyperion.dataAccess.entity.OrderItemEntity;
-import com.hyperion.dataAccess.entity.ProductEntity;
-import com.hyperion.dataAccess.repository.CustomerOrderRepository;
-import com.hyperion.dataAccess.repository.ProductRepository;
-import com.hyperion.dataAccess.repository.UserRepository;
+import com.hyperion.dataAccess.dao.OrderDataAccess;
+import com.hyperion.dataAccess.dao.ProductDataAccess;
+import com.hyperion.model.Order;
+import com.hyperion.model.OrderItem;
+import com.hyperion.model.Product;
 import com.hyperion.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,25 +19,22 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    private final ProductRepository productRepository;
-    private final CustomerOrderRepository customerOrderRepository;
+    private final ProductDataAccess productDataAccess;
+    private final OrderDataAccess orderDataAccess;
     private final PromotionService promotionService;
-    private final UserRepository userRepository;
 
     public OrderService(
-            ProductRepository productRepository,
-            CustomerOrderRepository customerOrderRepository,
-            PromotionService promotionService,
-            UserRepository userRepository
+            ProductDataAccess productDataAccess,
+            OrderDataAccess orderDataAccess,
+            PromotionService promotionService
     ) {
-        this.productRepository = productRepository;
-        this.customerOrderRepository = customerOrderRepository;
+        this.productDataAccess = productDataAccess;
+        this.orderDataAccess = orderDataAccess;
         this.promotionService = promotionService;
-        this.userRepository = userRepository;
     }
 
     @Transactional
-    public CustomerOrderEntity validateOrder(
+    public Order validateOrder(
             Cart cart,
             User user,
             boolean authenticated
@@ -55,13 +51,13 @@ public class OrderService {
             );
         }
 
-        List<OrderItemEntity> orderItems = new ArrayList<>();
+        List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal originalPrice = BigDecimal.ZERO;
 
         for (CartItem cartItem : cart.getItems()) {
             Long productId = cartItem.getProduct().getId();
 
-            ProductEntity product = productRepository.findById(productId)
+            Product product = productDataAccess.findById(productId)
                     .orElseThrow(() ->
                             new IllegalArgumentException(
                                     "error.product.notFound"
@@ -82,7 +78,7 @@ public class OrderService {
                 );
             }
 
-            OrderItemEntity orderItem = new OrderItemEntity(
+            OrderItem orderItem = new OrderItem(
                     product,
                     quantity
             );
@@ -105,42 +101,38 @@ public class OrderService {
                         authenticated
                 );
 
-        CustomerOrderEntity order = new CustomerOrderEntity(
-                originalPrice,
-                discountAmount,
-                finalPrice
-        );
-        order.setUser(userRepository.getReferenceById(user.getId()));
-        orderItems.forEach(order::addItem);
+        Order order = new Order();
+        order.setOriginalPrice(originalPrice);
+        order.setDiscountAmount(discountAmount);
+        order.setTotalPrice(finalPrice);
+        order.setItems(orderItems);
 
-        CustomerOrderEntity savedOrder =
-                customerOrderRepository.save(order);
+        Order savedOrder = orderDataAccess.create(order, user.getId());
 
         cart.clear();
         return savedOrder;
     }
 
     @Transactional(readOnly = true)
-    public List<CustomerOrderEntity> findOrdersForUser(
+    public List<Order> findOrdersForUser(
             String userLogin
     ) {
-        return customerOrderRepository
-                .findByUserLoginOrderByCreatedAtDesc(userLogin);
+        return orderDataAccess.findByUserLogin(userLogin);
     }
 
     @Transactional(readOnly = true)
-    public Optional<CustomerOrderEntity> findOrderForUser(
+    public Optional<Order> findOrderForUser(
             Long orderId,
             String userLogin
     ) {
-        return customerOrderRepository.findByIdAndUserLogin(
+        return orderDataAccess.findByIdAndUserLogin(
                 orderId,
                 userLogin
         );
     }
 
     @Transactional
-    public CustomerOrderEntity validatePayment(
+    public Order validatePayment(
             Long orderId,
             BigDecimal paidAmount,
             String paymentReference
@@ -160,8 +152,8 @@ public class OrderService {
 
         String normalizedReference = paymentReference.trim();
 
-        CustomerOrderEntity order =
-                customerOrderRepository.findById(orderId)
+        Order order =
+                orderDataAccess.findById(orderId)
                         .orElseThrow(() ->
                                 new IllegalArgumentException(
                                         "error.order.notFound"
@@ -180,7 +172,7 @@ public class OrderService {
             );
         }
 
-        if (customerOrderRepository
+        if (orderDataAccess
                 .existsByPaymentReference(normalizedReference)) {
             throw new IllegalArgumentException(
                     "error.payment.duplicateReference"
@@ -193,8 +185,8 @@ public class OrderService {
             );
         }
 
-        for (OrderItemEntity orderItem : order.getItems()) {
-            ProductEntity product = productRepository.findById(
+        for (OrderItem orderItem : order.getItems()) {
+            Product product = productDataAccess.findById(
                             orderItem.getProduct().getId()
                     )
                     .orElseThrow(() ->
@@ -211,15 +203,18 @@ public class OrderService {
                 );
             }
 
-            product.setStock(
+            productDataAccess.updateStock(
+                    product.getId(),
                     product.getStock() - quantity
             );
         }
 
+        orderDataAccess.markAsPaid(orderId, normalizedReference);
+
         order.setPaymentReference(normalizedReference);
         order.setStatus("PAID");
 
-        return customerOrderRepository.save(order);
+        return order;
     }
 
     @Transactional
@@ -227,8 +222,8 @@ public class OrderService {
             Long orderId,
             String userLogin
     ) {
-        CustomerOrderEntity order =
-                customerOrderRepository.findByIdAndUserLogin(
+        Order order =
+                orderDataAccess.findByIdAndUserLogin(
                                 orderId,
                                 userLogin
                         )
@@ -244,6 +239,6 @@ public class OrderService {
             );
         }
 
-        customerOrderRepository.delete(order);
+        orderDataAccess.delete(order.getId());
     }
 }

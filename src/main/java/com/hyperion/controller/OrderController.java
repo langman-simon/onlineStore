@@ -1,7 +1,7 @@
 package com.hyperion.controller;
 
 import com.hyperion.cart.Cart;
-import com.hyperion.dataAccess.entity.CustomerOrderEntity;
+import com.hyperion.model.Order;
 import com.hyperion.model.User;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.OrderService;
@@ -140,7 +140,7 @@ public class OrderController {
                             )
                     );
 
-            CustomerOrderEntity order = orderService.validateOrder(
+            Order order = orderService.validateOrder(
                     sessionCart.getCart(),
                     user,
                     isAuthenticated(authentication)
@@ -170,7 +170,7 @@ public class OrderController {
             Model model,
             HttpSession session
     ) {
-        Optional<CustomerOrderEntity> orderOpt =
+        Optional<Order> orderOpt =
                 findOrderForCurrentUser(id, authentication);
 
         if (orderOpt.isEmpty()) {
@@ -182,7 +182,7 @@ public class OrderController {
             return "redirect:/order";
         }
 
-        CustomerOrderEntity order = orderOpt.get();
+        Order order = orderOpt.get();
 
         model.addAttribute("order", order);
         model.addAttribute("paypalSandboxUrl", paypalSandboxUrl);
@@ -199,7 +199,7 @@ public class OrderController {
             Authentication authentication,
             HttpSession session
     ) {
-        Optional<CustomerOrderEntity> orderOpt =
+        Optional<Order> orderOpt =
                 findOrderForCurrentUser(id, authentication);
 
         if (orderOpt.isEmpty()) {
@@ -254,7 +254,7 @@ public class OrderController {
             Authentication authentication,
             Model model
     ) {
-        List<CustomerOrderEntity> orders =
+        List<Order> orders =
                 orderService.findOrdersForUser(
                         authentication.getName()
                 );
@@ -291,7 +291,7 @@ public class OrderController {
         return "redirect:/order";
     }
 
-    private Optional<CustomerOrderEntity> findOrderForCurrentUser(
+    private Optional<Order> findOrderForCurrentUser(
             Long id,
             Authentication authentication
     ) {
