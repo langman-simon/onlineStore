@@ -19,16 +19,16 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    private final ProductRepository weaponRepository;
+    private final ProductRepository productRepository;
     private final CustomerOrderRepository customerOrderRepository;
     private final PromotionService promotionService;
 
     public OrderService(
-            ProductRepository weaponRepository,
+            ProductRepository productRepository,
             CustomerOrderRepository customerOrderRepository,
             PromotionService promotionService
     ) {
-        this.weaponRepository = weaponRepository;
+        this.productRepository = productRepository;
         this.customerOrderRepository = customerOrderRepository;
         this.promotionService = promotionService;
     }
@@ -55,9 +55,9 @@ public class OrderService {
         BigDecimal originalPrice = BigDecimal.ZERO;
 
         for (CartItem cartItem : cart.getItems()) {
-            Long weaponId = cartItem.getWeapon().getId();
+            Long productId = cartItem.getProduct().getId();
 
-            ProductEntity weapon = weaponRepository.findById(weaponId)
+            ProductEntity product = productRepository.findById(productId)
                     .orElseThrow(() ->
                             new IllegalArgumentException(
                                     "error.product.notFound"
@@ -72,14 +72,14 @@ public class OrderService {
                 );
             }
 
-            if (weapon.getStock() < quantity) {
+            if (product.getStock() < quantity) {
                 throw new IllegalArgumentException(
                         "error.stock.insufficient"
                 );
             }
 
             OrderItemEntity orderItem = new OrderItemEntity(
-                    weapon,
+                    product,
                     quantity
             );
 
@@ -190,8 +190,8 @@ public class OrderService {
         }
 
         for (OrderItemEntity orderItem : order.getItems()) {
-            ProductEntity weapon = weaponRepository.findById(
-                            orderItem.getWeapon().getId()
+            ProductEntity product = productRepository.findById(
+                            orderItem.getProduct().getId()
                     )
                     .orElseThrow(() ->
                             new IllegalArgumentException(
@@ -201,14 +201,14 @@ public class OrderService {
 
             int quantity = orderItem.getQuantity();
 
-            if (weapon.getStock() < quantity) {
+            if (product.getStock() < quantity) {
                 throw new IllegalArgumentException(
                         "error.stock.insufficient"
                 );
             }
 
-            weapon.setStock(
-                    weapon.getStock() - quantity
+            product.setStock(
+                    product.getStock() - quantity
             );
         }
 

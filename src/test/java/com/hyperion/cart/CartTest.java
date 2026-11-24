@@ -13,15 +13,15 @@ import static org.mockito.Mockito.when;
 class CartTest {
 
     @Test
-    void shouldAddWeaponToCart() {
-        Product weapon = mock(Product.class);
-        when(weapon.getId()).thenReturn(1L);
-        when(weapon.getStock()).thenReturn(10);
-        when(weapon.getPrice())
+    void shouldAddProductToCart() {
+        Product product = mock(Product.class);
+        when(product.getId()).thenReturn(1L);
+        when(product.getStock()).thenReturn(10);
+        when(product.getPrice())
                 .thenReturn(new BigDecimal("50.00"));
 
         Cart cart = new Cart();
-        cart.addWeapon(weapon, 2);
+        cart.addProduct(product, 2);
 
         assertThat(cart.getItems()).hasSize(1);
         assertThat(cart.getTotalQuantity()).isEqualTo(2);
@@ -30,14 +30,14 @@ class CartTest {
     }
 
     @Test
-    void shouldMergeQuantityWhenWeaponAlreadyExists() {
-        Product weapon = mock(Product.class);
-        when(weapon.getId()).thenReturn(1L);
-        when(weapon.getStock()).thenReturn(10);
+    void shouldMergeQuantityWhenProductAlreadyExists() {
+        Product product = mock(Product.class);
+        when(product.getId()).thenReturn(1L);
+        when(product.getStock()).thenReturn(10);
 
         Cart cart = new Cart();
-        cart.addWeapon(weapon, 2);
-        cart.addWeapon(weapon, 3);
+        cart.addProduct(product, 2);
+        cart.addProduct(product, 3);
 
         assertThat(cart.getItems()).hasSize(1);
         assertThat(cart.getTotalQuantity()).isEqualTo(5);
@@ -45,14 +45,14 @@ class CartTest {
 
     @Test
     void shouldRejectQuantityAboveStock() {
-        Product weapon = mock(Product.class);
-        when(weapon.getId()).thenReturn(1L);
-        when(weapon.getStock()).thenReturn(2);
+        Product product = mock(Product.class);
+        when(product.getId()).thenReturn(1L);
+        when(product.getStock()).thenReturn(2);
 
         Cart cart = new Cart();
 
         assertThatThrownBy(() ->
-                cart.addWeapon(weapon, 3)
+                cart.addProduct(product, 3)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("error.cart.totalQuantityStock");
@@ -60,25 +60,25 @@ class CartTest {
 
     @Test
     void shouldRejectNonPositiveQuantity() {
-        Product weapon = mock(Product.class);
+        Product product = mock(Product.class);
 
         Cart cart = new Cart();
 
         assertThatThrownBy(() ->
-                cart.addWeapon(weapon, 0)
+                cart.addProduct(product, 0)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("error.cart.quantityPositive");
     }
 
     @Test
-    void shouldRemoveWeaponWhenQuantityBecomesZero() {
-        Product weapon = mock(Product.class);
-        when(weapon.getId()).thenReturn(1L);
-        when(weapon.getStock()).thenReturn(10);
+    void shouldRemoveProductWhenQuantityBecomesZero() {
+        Product product = mock(Product.class);
+        when(product.getId()).thenReturn(1L);
+        when(product.getStock()).thenReturn(10);
 
         Cart cart = new Cart();
-        cart.addWeapon(weapon, 2);
+        cart.addProduct(product, 2);
 
         cart.updateQuantity(1L, 0);
 
@@ -87,12 +87,12 @@ class CartTest {
 
     @Test
     void shouldClearCart() {
-        Product weapon = mock(Product.class);
-        when(weapon.getId()).thenReturn(1L);
-        when(weapon.getStock()).thenReturn(10);
+        Product product = mock(Product.class);
+        when(product.getId()).thenReturn(1L);
+        when(product.getStock()).thenReturn(10);
 
         Cart cart = new Cart();
-        cart.addWeapon(weapon, 2);
+        cart.addProduct(product, 2);
 
         cart.clear();
 

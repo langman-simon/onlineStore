@@ -18,7 +18,7 @@ public class OrderItemEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "weapon_id", nullable = false)
-    private ProductEntity weapon;
+    private ProductEntity product;
 
     @Column(nullable = false)
     private int quantity;
@@ -32,10 +32,10 @@ public class OrderItemEntity {
     public OrderItemEntity() {
     }
 
-    public OrderItemEntity(ProductEntity weapon, int quantity) {
-        this.weapon = weapon;
+    public OrderItemEntity(ProductEntity product, int quantity) {
+        this.product = product;
         this.quantity = quantity;
-        this.unitPrice = weapon.getPrice();
+        this.unitPrice = product.getPrice();
         this.subtotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
 
@@ -51,8 +51,8 @@ public class OrderItemEntity {
         this.order = order;
     }
 
-    public ProductEntity getWeapon() {
-        return weapon;
+    public ProductEntity getProduct() {
+        return product;
     }
 
     public int getQuantity() {

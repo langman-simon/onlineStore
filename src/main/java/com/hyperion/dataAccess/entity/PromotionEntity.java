@@ -39,7 +39,7 @@ public class PromotionEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_weapon_id")
-    private ProductEntity targetWeapon;
+    private ProductEntity targetProduct;
 
     public Long getId() {
         return id;
@@ -113,11 +113,11 @@ public class PromotionEntity {
         this.targetCategory = targetCategory;
     }
 
-    public ProductEntity getTargetWeapon() {
-        return targetWeapon;
+    public ProductEntity getTargetProduct() {
+        return targetProduct;
     }
 
-    public void setTargetWeapon(ProductEntity targetWeapon) {
-        this.targetWeapon = targetWeapon;
+    public void setTargetProduct(ProductEntity targetProduct) {
+        this.targetProduct = targetProduct;
     }
 }

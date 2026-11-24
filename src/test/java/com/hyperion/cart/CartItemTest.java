@@ -13,11 +13,11 @@ class CartItemTest {
 
     @Test
     void shouldCalculateSubtotal() {
-        Product weapon = mock(Product.class);
-        when(weapon.getPrice())
+        Product product = mock(Product.class);
+        when(product.getPrice())
                 .thenReturn(new BigDecimal("50.00"));
 
-        CartItem item = new CartItem(weapon, 3);
+        CartItem item = new CartItem(product, 3);
 
         assertThat(item.getSubtotal())
                 .isEqualByComparingTo("150.00");
@@ -25,8 +25,8 @@ class CartItemTest {
 
     @Test
     void shouldUpdateQuantity() {
-        Product weapon = mock(Product.class);
-        CartItem item = new CartItem(weapon, 1);
+        Product product = mock(Product.class);
+        CartItem item = new CartItem(product, 1);
 
         item.setQuantity(4);
 

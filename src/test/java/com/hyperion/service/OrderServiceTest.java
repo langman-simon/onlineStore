@@ -24,18 +24,18 @@ import static org.mockito.ArgumentMatchers.eq;
 
 class OrderServiceTest {
 
-    private ProductRepository weaponRepository;
+    private ProductRepository productRepository;
     private CustomerOrderRepository customerOrderRepository;
     private PromotionService promotionService;
     private OrderService orderService;
 
     @BeforeEach
     void setUp() {
-        weaponRepository = mock(ProductRepository.class);
+        productRepository = mock(ProductRepository.class);
         customerOrderRepository = mock(CustomerOrderRepository.class);
         promotionService = mock(PromotionService.class);
         orderService = new OrderService(
-                weaponRepository,
+                productRepository,
                 customerOrderRepository,
                 promotionService
         );
@@ -43,23 +43,23 @@ class OrderServiceTest {
 
     @Test
     void shouldRecalculateOrderFromDatabasePrices() {
-        Product cartWeapon = mock(Product.class);
-        when(cartWeapon.getId()).thenReturn(10L);
-        when(cartWeapon.getPrice())
+        Product cartProduct = mock(Product.class);
+        when(cartProduct.getId()).thenReturn(10L);
+        when(cartProduct.getPrice())
                 .thenReturn(new BigDecimal("5.00"));
-        when(cartWeapon.getStock()).thenReturn(10);
+        when(cartProduct.getStock()).thenReturn(10);
 
-        ProductEntity databaseWeapon = mock(ProductEntity.class);
-        when(databaseWeapon.getId()).thenReturn(10L);
-        when(databaseWeapon.getPrice())
+        ProductEntity databaseProduct = mock(ProductEntity.class);
+        when(databaseProduct.getId()).thenReturn(10L);
+        when(databaseProduct.getPrice())
                 .thenReturn(new BigDecimal("20.00"));
-        when(databaseWeapon.getStock()).thenReturn(10);
+        when(databaseProduct.getStock()).thenReturn(10);
 
         Cart cart = new Cart();
-        cart.addWeapon(cartWeapon, 2);
+        cart.addProduct(cartProduct, 2);
 
-        when(weaponRepository.findById(10L))
-                .thenReturn(Optional.of(databaseWeapon));
+        when(productRepository.findById(10L))
+                .thenReturn(Optional.of(databaseProduct));
         when(promotionService.calculateDiscount(
                 anyList(),
                 eq(true)

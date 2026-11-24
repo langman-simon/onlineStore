@@ -37,16 +37,16 @@ public class CartController {
         this.globalBannerService = globalBannerService;
     }
 
-    @PostMapping("/cart/add/{weaponId}")
+    @PostMapping("/cart/add/{productId}")
     public String addToCart(
-            @PathVariable Long weaponId,
+            @PathVariable Long productId,
             @RequestParam(defaultValue = "1") int quantity,
             HttpSession session
     ) {
-        Optional<Product> weaponOpt =
-                catalogueService.findWeaponById(weaponId);
+        Optional<Product> productOpt =
+                catalogueService.findWeaponById(productId);
 
-        if (weaponOpt.isEmpty()) {
+        if (productOpt.isEmpty()) {
             globalBannerService.error(
                     session,
                     "error.product.notFound"
@@ -55,7 +55,7 @@ public class CartController {
             return "redirect:/catalogue";
         }
 
-        Product weapon = weaponOpt.get();
+        Product product = productOpt.get();
 
         if (quantity <= 0) {
             globalBannerService.error(
@@ -63,21 +63,21 @@ public class CartController {
                     "error.cart.quantityPositive"
             );
 
-            return "redirect:/products/" + weaponId;
+            return "redirect:/products/" + productId;
         }
 
-        if (quantity > weapon.getStock()) {
+        if (quantity > product.getStock()) {
             globalBannerService.error(
                     session,
                     "error.cart.quantityStock"
             );
 
-            return "redirect:/products/" + weaponId;
+            return "redirect:/products/" + productId;
         }
 
         try {
-            sessionCart.getCart().addWeapon(
-                    weapon,
+            sessionCart.getCart().addProduct(
+                    product,
                     quantity
             );
 
@@ -94,7 +94,7 @@ public class CartController {
                     exception.getMessage()
             );
 
-            return "redirect:/products/" + weaponId;
+            return "redirect:/products/" + productId;
         }
     }
 
@@ -153,13 +153,13 @@ public class CartController {
         return "cart/cart";
     }
 
-    @PostMapping("/cart/remove/{weaponId}")
+    @PostMapping("/cart/remove/{productId}")
     public String removeFromCart(
-            @PathVariable Long weaponId,
+            @PathVariable Long productId,
             HttpSession session
     ) {
         try {
-            sessionCart.getCart().removeWeapon(weaponId);
+            sessionCart.getCart().removeProduct(productId);
 
             globalBannerService.success(
                     session,
@@ -176,16 +176,16 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    @PostMapping("/cart/update/{weaponId}")
+    @PostMapping("/cart/update/{productId}")
     public String updateQuantity(
-            @PathVariable Long weaponId,
+            @PathVariable Long productId,
             @RequestParam int quantity,
             HttpSession session
     ) {
-        Optional<Product> weaponOpt =
-                catalogueService.findWeaponById(weaponId);
+        Optional<Product> productOpt =
+                catalogueService.findWeaponById(productId);
 
-        if (weaponOpt.isEmpty()) {
+        if (productOpt.isEmpty()) {
             globalBannerService.error(
                     session,
                     "error.product.notFound"
@@ -203,7 +203,7 @@ public class CartController {
             return "redirect:/cart";
         }
 
-        if (quantity > weaponOpt.get().getStock()) {
+        if (quantity > productOpt.get().getStock()) {
             globalBannerService.error(
                     session,
                     "error.cart.quantityStock"
@@ -214,7 +214,7 @@ public class CartController {
 
         try {
             sessionCart.getCart().updateQuantity(
-                    weaponId,
+                    productId,
                     quantity
             );
 

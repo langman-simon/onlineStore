@@ -15,8 +15,8 @@ public class Cart {
         return Collections.unmodifiableList(items);
     }
 
-    public void addWeapon(Product weapon, int quantity) {
-        if (weapon == null) {
+    public void addProduct(Product product, int quantity) {
+        if (product == null) {
             throw new IllegalArgumentException("error.cart.productNull");
         }
 
@@ -26,7 +26,7 @@ public class Cart {
             );
         }
 
-        CartItem existingItem = findItemByWeaponId(weapon.getId());
+        CartItem existingItem = findItemByProductId(product.getId());
 
         int currentQuantity = existingItem == null
                 ? 0
@@ -34,7 +34,7 @@ public class Cart {
 
         int newQuantity = currentQuantity + quantity;
 
-        if (newQuantity > weapon.getStock()) {
+        if (newQuantity > product.getStock()) {
             throw new IllegalArgumentException(
                     "error.cart.totalQuantityStock"
             );
@@ -43,18 +43,18 @@ public class Cart {
         if (existingItem != null) {
             existingItem.setQuantity(newQuantity);
         } else {
-            items.add(new CartItem(weapon, quantity));
+            items.add(new CartItem(product, quantity));
         }
     }
 
-    private CartItem findItemByWeaponId(Long weaponId) {
-        if (weaponId == null) {
+    private CartItem findItemByProductId(Long productId) {
+        if (productId == null) {
             return null;
         }
 
         return items.stream()
-                .filter(item -> weaponId.equals(
-                        item.getWeapon().getId()
+                .filter(item -> productId.equals(
+                        item.getProduct().getId()
                 ))
                 .findFirst()
                 .orElse(null);
@@ -76,20 +76,20 @@ public class Cart {
         return items.isEmpty();
     }
 
-    public void removeWeapon(Long weaponId) {
-        items.removeIf(item -> item.getWeapon().getId().equals(weaponId));
+    public void removeProduct(Long productId) {
+        items.removeIf(item -> item.getProduct().getId().equals(productId));
     }
 
-    public void updateQuantity(Long weaponId, int quantity) {
+    public void updateQuantity(Long productId, int quantity) {
 
-        CartItem item = findItemByWeaponId(weaponId);
+        CartItem item = findItemByProductId(productId);
 
         if (item == null) {
             return;
         }
 
         if (quantity <= 0) {
-            removeWeapon(weaponId);
+            removeProduct(productId);
         } else {
             item.setQuantity(quantity);
         }

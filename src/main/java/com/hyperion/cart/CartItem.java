@@ -6,16 +6,16 @@ import java.math.BigDecimal;
 
 public class CartItem {
 
-    private final Product weapon;
+    private final Product product;
     private int quantity;
 
-    public CartItem(Product weapon, int quantity) {
-        this.weapon = weapon;
+    public CartItem(Product product, int quantity) {
+        this.product = product;
         this.quantity = quantity;
     }
 
-    public Product getWeapon() {
-        return weapon;
+    public Product getProduct() {
+        return product;
     }
 
     public int getQuantity() {
@@ -27,7 +27,7 @@ public class CartItem {
     }
 
     public BigDecimal getSubtotal() {
-        return weapon.getPrice()
+        return product.getPrice()
                 .multiply(BigDecimal.valueOf(quantity));
     }
 }

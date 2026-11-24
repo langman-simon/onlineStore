@@ -57,7 +57,7 @@ public class PromotionDAO implements PromotionDataAccess {
                         : categoryRepository.getReferenceById(promotion.getTargetCategory().getId())
         );
 
-        entity.setTargetWeapon(
+        entity.setTargetProduct(
                 promotion.getTargetProduct() == null
                         ? null
                         : productRepository.getReferenceById(promotion.getTargetProduct().getId())

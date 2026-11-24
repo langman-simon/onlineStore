@@ -131,7 +131,7 @@ public class PromotionServiceImpl implements PromotionService {
             }
 
             BigDecimal matchingSubtotal = items.stream()
-                    .filter(item -> promotion.appliesTo(item.getWeapon()))
+                    .filter(item -> promotion.appliesTo(item.getProduct()))
                     .map(CartItem::getSubtotal)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -178,7 +178,7 @@ public class PromotionServiceImpl implements PromotionService {
         boolean promoFreeDelivery = findActivePromotions().stream()
                 .filter(Promotion::isFreeDelivery)
                 .anyMatch(promotion -> promotion.isGlobal()
-                        || items.stream().anyMatch(item -> promotion.appliesTo(item.getWeapon())));
+                        || items.stream().anyMatch(item -> promotion.appliesTo(item.getProduct())));
 
         return tierFreeDelivery || promoFreeDelivery;
     }

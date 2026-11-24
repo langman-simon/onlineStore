@@ -31,25 +31,25 @@
             <tbody>
             <tr th:each="item : ${cart.items}">
                 <td>
-                    <a th:href="@{/products/{id}(id=${item.weapon.id})}"
-                       th:text="${item.weapon.name}"></a>
+                    <a th:href="@{/products/{id}(id=${item.product.id})}"
+                       th:text="${item.product.name}"></a>
                 </td>
 
-                <td th:text="|${item.weapon.price} €|"></td>
+                <td th:text="|${item.product.price} €|"></td>
                 <td th:text="${item.quantity}"></td>
                 <td th:text="|${item.subtotal} €|"></td>
 
                 <td>
                     <form method="post"
                           class="cart-quantity-form"
-                          th:action="@{/cart/update/{id}(id=${item.weapon.id})}">
+                          th:action="@{/cart/update/{id}(id=${item.product.id})}">
 
                         <input type="number"
                                name="quantity"
                                class="quantity-input"
                                th:value="${item.quantity}"
                                min="1"
-                               th:max="${item.weapon.stock}"
+                               th:max="${item.product.stock}"
                                required>
 
                         <button type="submit"
@@ -60,7 +60,7 @@
 
                 <td>
                     <form method="post"
-                          th:action="@{/cart/remove/{id}(id=${item.weapon.id})}">
+                          th:action="@{/cart/remove/{id}(id=${item.product.id})}">
                         <button type="submit"
                                 class="btn btn--primary btn--full btn--delete"
                                 th:text="#{common.delete}"></button>
