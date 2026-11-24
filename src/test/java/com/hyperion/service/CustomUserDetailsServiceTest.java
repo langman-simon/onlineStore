@@ -1,7 +1,7 @@
 package com.hyperion.service;
 
-import com.hyperion.dataAccess.entity.UserEntity;
-import com.hyperion.dataAccess.repository.UserRepository;
+import com.hyperion.dataAccess.dao.UserDataAccess;
+import com.hyperion.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,23 +16,23 @@ import static org.mockito.Mockito.when;
 
 class CustomUserDetailsServiceTest {
 
-    private UserRepository userRepository;
+    private UserDataAccess userDataAccess;
     private CustomUserDetailsService userDetailsService;
 
     @BeforeEach
     void setUp() {
-        userRepository = mock(UserRepository.class);
-        userDetailsService = new CustomUserDetailsService(userRepository);
+        userDataAccess = mock(UserDataAccess.class);
+        userDetailsService = new CustomUserDetailsService(userDataAccess);
     }
 
     @Test
     void shouldLoadRegularUserWithUserRole() {
-        UserEntity user = new UserEntity();
+        User user = new User();
         user.setLogin("neo");
         user.setPassword("hashed-password");
         user.setAdmin(false);
 
-        when(userRepository.findByLogin("neo"))
+        when(userDataAccess.findByLogin("neo"))
                 .thenReturn(Optional.of(user));
 
         UserDetails details = userDetailsService
@@ -48,12 +48,12 @@ class CustomUserDetailsServiceTest {
 
     @Test
     void shouldLoadAdminWithAdminAndUserRoles() {
-        UserEntity user = new UserEntity();
+        User user = new User();
         user.setLogin("admin");
         user.setPassword("hashed-password");
         user.setAdmin(true);
 
-        when(userRepository.findByLogin("admin"))
+        when(userDataAccess.findByLogin("admin"))
                 .thenReturn(Optional.of(user));
 
         UserDetails details = userDetailsService
@@ -69,7 +69,7 @@ class CustomUserDetailsServiceTest {
 
     @Test
     void shouldRejectUnknownUser() {
-        when(userRepository.findByLogin("unknown"))
+        when(userDataAccess.findByLogin("unknown"))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() ->

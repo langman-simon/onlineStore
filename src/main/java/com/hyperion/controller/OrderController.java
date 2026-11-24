@@ -2,7 +2,7 @@ package com.hyperion.controller;
 
 import com.hyperion.cart.Cart;
 import com.hyperion.dataAccess.entity.CustomerOrderEntity;
-import com.hyperion.dataAccess.entity.UserEntity;
+import com.hyperion.model.User;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.OrderService;
 import com.hyperion.service.PromotionService;
@@ -79,7 +79,7 @@ public class OrderController {
         boolean authenticated = isAuthenticated(authentication);
         String deliveryAddress = authenticated
                 ? userService.findByLogin(authentication.getName())
-                .map(UserEntity::getDeliveryAddress)
+                .map(User::getDeliveryAddress)
                 .orElse(null)
                 : null;
         BigDecimal originalPrice = cart.getTotalPrice();
@@ -132,7 +132,7 @@ public class OrderController {
             HttpSession session
     ) {
         try {
-            UserEntity user = userService
+            User user = userService
                     .findByLogin(authentication.getName())
                     .orElseThrow(() ->
                             new IllegalArgumentException(

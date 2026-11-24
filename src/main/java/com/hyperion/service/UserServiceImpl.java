@@ -1,7 +1,7 @@
 package com.hyperion.service;
 
-import com.hyperion.dataAccess.entity.UserEntity;
-import com.hyperion.dataAccess.repository.UserRepository;
+import com.hyperion.dataAccess.dao.UserDataAccess;
+import com.hyperion.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,31 +10,31 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserDataAccess userDataAccess;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(UserDataAccess userDataAccess, PasswordEncoder passwordEncoder) {
+        this.userDataAccess = userDataAccess;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public UserEntity register(UserEntity user, String rawPassword) {
-        if (userRepository.existsByLogin(user.getLogin())) {
+    public User register(User user, String rawPassword) {
+        if (userDataAccess.existsByLogin(user.getLogin())) {
             throw new IllegalArgumentException("error.login.used");
         }
         user.setPassword(passwordEncoder.encode(rawPassword));
-        return userRepository.save(user);
+        return userDataAccess.save(user);
     }
 
     @Override
     public boolean loginExists(String login) {
-        return userRepository.existsByLogin(login);
+        return userDataAccess.existsByLogin(login);
     }
 
     @Override
-    public Optional<UserEntity> authenticate(String login, String rawPassword) {
-        Optional<UserEntity> userOpt = userRepository.findByLogin(login);
+    public Optional<User> authenticate(String login, String rawPassword) {
+        Optional<User> userOpt = userDataAccess.findByLogin(login);
         if (userOpt.isPresent() && passwordEncoder.matches(rawPassword, userOpt.get().getPassword())) {
             return userOpt;
         }
@@ -42,17 +42,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> findByLogin(String login) {
-        return userRepository.findByLogin(login);
+    public Optional<User> findByLogin(String login) {
+        return userDataAccess.findByLogin(login);
     }
 
     @Override
-    public UserEntity updateProfile(String currentLogin, String newLogin, String lastName, String firstName,
-                                    String deliveryAddress, String email, String phone, String secondaryPhone) {
-        UserEntity user = userRepository.findByLogin(currentLogin)
+    public User updateProfile(String currentLogin, String newLogin, String lastName, String firstName,
+                              String deliveryAddress, String email, String phone, String secondaryPhone) {
+        User user = userDataAccess.findByLogin(currentLogin)
                 .orElseThrow(() -> new IllegalArgumentException("error.user.notFound"));
 
-        if (!currentLogin.equals(newLogin) && userRepository.existsByLogin(newLogin)) {
+        if (!currentLogin.equals(newLogin) && userDataAccess.existsByLogin(newLogin)) {
             throw new IllegalArgumentException("error.login.used");
         }
 
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(phone);
         user.setSecondaryPhone(secondaryPhone);
 
-        return userRepository.save(user);
+        return userDataAccess.save(user);
     }
 
 }

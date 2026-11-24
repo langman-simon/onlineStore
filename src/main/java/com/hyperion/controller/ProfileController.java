@@ -1,7 +1,7 @@
 package com.hyperion.controller;
 
 import com.hyperion.dto.ProfileForm;
-import com.hyperion.dataAccess.entity.UserEntity;
+import com.hyperion.model.User;
 import com.hyperion.service.GlobalBannerService;
 import com.hyperion.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,7 +43,7 @@ public class ProfileController {
             Model model,
             HttpSession session
     ) {
-        UserEntity user = userService
+        User user = userService
                 .findByLogin(authentication.getName())
                 .orElse(null);
 

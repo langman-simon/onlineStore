@@ -1,7 +1,7 @@
 package com.hyperion.service;
 
-import com.hyperion.dataAccess.entity.UserEntity;
-import com.hyperion.dataAccess.repository.UserRepository;
+import com.hyperion.dataAccess.dao.UserDataAccess;
+import com.hyperion.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,33 +15,33 @@ import static org.mockito.Mockito.when;
 
 class UserServiceImplTest {
 
-    private UserRepository userRepository;
+    private UserDataAccess userDataAccess;
     private PasswordEncoder passwordEncoder;
     private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
-        userRepository = mock(UserRepository.class);
+        userDataAccess = mock(UserDataAccess.class);
         passwordEncoder = mock(PasswordEncoder.class);
         userService = new UserServiceImpl(
-                userRepository,
+                userDataAccess,
                 passwordEncoder
         );
     }
 
     @Test
     void shouldHashPasswordBeforeRegistration() {
-        UserEntity user = new UserEntity();
+        User user = new User();
         user.setLogin("neo");
 
-        when(userRepository.existsByLogin("neo"))
+        when(userDataAccess.existsByLogin("neo"))
                 .thenReturn(false);
         when(passwordEncoder.encode("secret123"))
                 .thenReturn("hashed-password");
-        when(userRepository.save(any(UserEntity.class)))
+        when(userDataAccess.save(any(User.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        UserEntity saved = userService.register(
+        User saved = userService.register(
                 user,
                 "secret123"
         );
@@ -49,15 +49,15 @@ class UserServiceImplTest {
         assertThat(saved.getPassword())
                 .isEqualTo("hashed-password");
         verify(passwordEncoder).encode("secret123");
-        verify(userRepository).save(user);
+        verify(userDataAccess).save(user);
     }
 
     @Test
     void shouldRejectDuplicateLoginOnRegistration() {
-        UserEntity user = new UserEntity();
+        User user = new User();
         user.setLogin("neo");
 
-        when(userRepository.existsByLogin("neo"))
+        when(userDataAccess.existsByLogin("neo"))
                 .thenReturn(true);
 
         assertThatThrownBy(() ->

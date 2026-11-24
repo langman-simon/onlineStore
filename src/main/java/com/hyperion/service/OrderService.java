@@ -4,10 +4,11 @@ import com.hyperion.cart.Cart;
 import com.hyperion.cart.CartItem;
 import com.hyperion.dataAccess.entity.CustomerOrderEntity;
 import com.hyperion.dataAccess.entity.OrderItemEntity;
-import com.hyperion.dataAccess.entity.UserEntity;
 import com.hyperion.dataAccess.entity.ProductEntity;
 import com.hyperion.dataAccess.repository.CustomerOrderRepository;
 import com.hyperion.dataAccess.repository.ProductRepository;
+import com.hyperion.dataAccess.repository.UserRepository;
+import com.hyperion.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,21 +23,24 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final CustomerOrderRepository customerOrderRepository;
     private final PromotionService promotionService;
+    private final UserRepository userRepository;
 
     public OrderService(
             ProductRepository productRepository,
             CustomerOrderRepository customerOrderRepository,
-            PromotionService promotionService
+            PromotionService promotionService,
+            UserRepository userRepository
     ) {
         this.productRepository = productRepository;
         this.customerOrderRepository = customerOrderRepository;
         this.promotionService = promotionService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
     public CustomerOrderEntity validateOrder(
             Cart cart,
-            UserEntity user,
+            User user,
             boolean authenticated
     ) {
         if (cart == null || cart.isEmpty()) {
@@ -106,7 +110,7 @@ public class OrderService {
                 discountAmount,
                 finalPrice
         );
-        order.setUser(user);
+        order.setUser(userRepository.getReferenceById(user.getId()));
         orderItems.forEach(order::addItem);
 
         CustomerOrderEntity savedOrder =

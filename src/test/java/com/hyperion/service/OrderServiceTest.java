@@ -2,10 +2,11 @@ package com.hyperion.service;
 
 import com.hyperion.cart.Cart;
 import com.hyperion.dataAccess.entity.CustomerOrderEntity;
-import com.hyperion.dataAccess.entity.UserEntity;
 import com.hyperion.dataAccess.entity.ProductEntity;
 import com.hyperion.dataAccess.repository.CustomerOrderRepository;
 import com.hyperion.dataAccess.repository.ProductRepository;
+import com.hyperion.dataAccess.repository.UserRepository;
+import com.hyperion.model.User;
 import com.hyperion.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,8 @@ class OrderServiceTest {
         orderService = new OrderService(
                 productRepository,
                 customerOrderRepository,
-                promotionService
+                promotionService,
+                mock(UserRepository.class)
         );
     }
 
@@ -73,7 +75,7 @@ class OrderServiceTest {
 
         CustomerOrderEntity order = orderService.validateOrder(
                 cart,
-                new UserEntity(),
+                new User(),
                 true
         );
 

@@ -1,6 +1,6 @@
 package com.hyperion.dto;
 
-import com.hyperion.dataAccess.entity.UserEntity;
+import com.hyperion.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -42,7 +42,7 @@ public class ProfileForm {
     )
     private String secondaryPhone;
 
-    public static ProfileForm from(UserEntity user) {
+    public static ProfileForm from(User user) {
         ProfileForm form = new ProfileForm();
         form.setLogin(user.getLogin());
         form.setLastName(user.getLastName());

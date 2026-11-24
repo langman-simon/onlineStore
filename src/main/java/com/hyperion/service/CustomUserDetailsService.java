@@ -1,7 +1,7 @@
 package com.hyperion.service;
 
-import com.hyperion.dataAccess.entity.UserEntity;
-import com.hyperion.dataAccess.repository.UserRepository;
+import com.hyperion.dataAccess.dao.UserDataAccess;
+import com.hyperion.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,17 +10,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserDataAccess userDataAccess;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(UserDataAccess userDataAccess) {
+        this.userDataAccess = userDataAccess;
     }
 
     @Override
     public UserDetails loadUserByUsername(String login)
             throws UsernameNotFoundException {
 
-        UserEntity user = userRepository.findByLogin(login)
+        User user = userDataAccess.findByLogin(login)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(
                                 "error.user.notFound"
