@@ -19,14 +19,19 @@ public class ImageStorageService {
             "image/webp"
     );
 
-    private final Path uploadDirectory =
-            Path.of("uploads", "weapons")
-                    .toAbsolutePath()
-                    .normalize();
+    private final Path uploadDirectory;
 
     public ImageStorageService() {
+        this(Path.of("uploads", "weapons"));
+    }
+
+    ImageStorageService(Path uploadDirectory) {
+        this.uploadDirectory = uploadDirectory
+                .toAbsolutePath()
+                .normalize();
+
         try {
-            Files.createDirectories(uploadDirectory);
+            Files.createDirectories(this.uploadDirectory);
         } catch (IOException exception) {
             throw new IllegalStateException(
                     "error.image.folder",

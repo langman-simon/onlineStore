@@ -2,18 +2,24 @@ package com.hyperion.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.mock.web.MockMultipartFile;
+
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ImageStorageServiceTest {
 
+    @TempDir
+    Path tempDir;
+
     private ImageStorageService imageStorageService;
 
     @BeforeEach
     void setUp() {
-        imageStorageService = new ImageStorageService();
+        imageStorageService = new ImageStorageService(tempDir);
     }
 
     @Test
@@ -29,7 +35,7 @@ class ImageStorageServiceTest {
     void shouldRejectEmptyImage() {
         MockMultipartFile image = new MockMultipartFile(
                 "image",
-                "weapon.png",
+                "product.png",
                 "image/png",
                 new byte[0]
         );
@@ -45,7 +51,7 @@ class ImageStorageServiceTest {
     void shouldRejectUnsupportedImageFormat() {
         MockMultipartFile image = new MockMultipartFile(
                 "image",
-                "weapon.gif",
+                "product.gif",
                 "image/gif",
                 new byte[]{1, 2, 3}
         );
@@ -61,7 +67,7 @@ class ImageStorageServiceTest {
     void shouldSaveValidImage() {
         MockMultipartFile image = new MockMultipartFile(
                 "image",
-                "weapon.PNG",
+                "product.PNG",
                 "image/png",
                 new byte[]{1, 2, 3}
         );
@@ -71,5 +77,8 @@ class ImageStorageServiceTest {
         assertThat(path)
                 .startsWith("/uploads/weapons/")
                 .endsWith(".png");
+
+        String storedFilename = path.substring("/uploads/weapons/".length());
+        assertThat(tempDir.resolve(storedFilename)).exists();
     }
 }
