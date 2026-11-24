@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="auth-page">
+    <div class="auth-box auth-box--login">
+        <div class="auth-card">
+
+            <div class="auth-heading">
+                <p class="eyebrow" th:text="#{auth.login.eyebrow}"></p>
+                <h1 th:text="#{auth.login.title}"></h1>
+                <p class="auth-introduction" th:text="#{auth.login.intro}"></p>
+            </div>
+
+            <form method="post"
+                  th:action="@{/login}"
+                  class="auth-form"
+                  novalidate>
+
+                <input th:if="${param.redirect != null}"
+                       type="hidden"
+                       name="redirect"
+                       th:value="${param.redirect}">
+
+                <div class="form-group">
+                    <label for="username" th:text="#{auth.username}"></label>
+                    <input id="username"
+                           type="text"
+                           name="username"
+                           th:placeholder="#{auth.login.usernamePlaceholder}"
+                           autocomplete="username"
+                           required
+                           autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" th:text="#{auth.password}"></label>
+                    <input id="password"
+                           type="password"
+                           name="password"
+                           th:placeholder="#{auth.login.passwordPlaceholder}"
+                           autocomplete="current-password"
+                           required>
+                </div>
+
+                <button type="submit"
+                        class="btn btn--primary btn--full"
+                        th:text="#{common.login}"></button>
+            </form>
+
+            <div class="auth-footer">
+                <span th:text="#{auth.login.noAccount}"></span>
+                <a th:href="@{/register}" th:text="#{common.register}"></a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

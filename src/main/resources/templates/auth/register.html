@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="auth-page">
+    <div class="auth-box auth-box--register">
+        <div class="auth-card">
+
+            <div class="auth-heading">
+                <p class="eyebrow" th:text="#{auth.register.eyebrow}"></p>
+                <h1 th:text="#{auth.register.title}"></h1>
+                <p class="auth-introduction" th:text="#{auth.register.intro}"></p>
+            </div>
+
+            <form method="post"
+                  th:action="@{/register}"
+                  th:object="${registrationForm}"
+                  class="auth-form auth-form--register"
+                  novalidate>
+
+                <div class="auth-form-grid">
+                    <div class="form-group">
+                        <label for="firstName" th:text="#{auth.firstName}"></label>
+                        <input type="text"
+                               th:field="*{firstName}"
+                               th:placeholder="#{auth.register.firstNamePlaceholder}"
+                               autocomplete="given-name"
+                               minlength="2"
+                               maxlength="50"
+                               required
+                               autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName" th:text="#{auth.lastName}"></label>
+                        <input type="text"
+                               th:field="*{lastName}"
+                               th:placeholder="#{auth.register.lastNamePlaceholder}"
+                               autocomplete="family-name"
+                               minlength="2"
+                               maxlength="50"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username" th:text="#{auth.username}"></label>
+                        <input type="text"
+                               th:field="*{username}"
+                               th:placeholder="#{auth.register.usernamePlaceholder}"
+                               autocomplete="username"
+                               minlength="3"
+                               maxlength="50"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" th:text="#{auth.email}"></label>
+                        <input type="email"
+                               th:field="*{email}"
+                               th:placeholder="#{auth.register.emailPlaceholder}"
+                               autocomplete="email"
+                               maxlength="100"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" th:text="#{auth.password}"></label>
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               th:placeholder="#{auth.register.passwordPlaceholder}"
+                               autocomplete="new-password"
+                               minlength="8"
+                               maxlength="72"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passwordConfirmation"
+                               th:text="#{auth.passwordConfirmation}"></label>
+                        <input type="password"
+                               id="passwordConfirmation"
+                               name="passwordConfirmation"
+                               th:placeholder="#{auth.register.passwordConfirmationPlaceholder}"
+                               autocomplete="new-password"
+                               minlength="8"
+                               maxlength="72"
+                               required>
+                    </div>
+
+                    <div class="form-group auth-form-grid__full">
+                        <label for="deliveryAddress" th:text="#{auth.deliveryAddress}"></label>
+                        <input type="text"
+                               th:field="*{deliveryAddress}"
+                               th:placeholder="#{auth.register.addressPlaceholder}"
+                               autocomplete="street-address"
+                               minlength="5"
+                               maxlength="150"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" th:text="#{auth.phone}"></label>
+                        <input type="tel"
+                               th:field="*{phone}"
+                               inputmode="numeric"
+                               pattern="[0-9]{8,20}"
+                               th:placeholder="#{auth.register.phonePlaceholder}"
+                               autocomplete="tel"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="secondaryPhone">
+                            <th:block th:text="#{auth.secondaryPhone}"></th:block>
+                            <span class="optional-field" th:text="#{common.optional}"></span>
+                        </label>
+                        <input type="tel"
+                               th:field="*{secondaryPhone}"
+                               inputmode="numeric"
+                               pattern="[0-9]{8,20}"
+                               th:placeholder="#{auth.register.secondaryPhonePlaceholder}"
+                               autocomplete="tel">
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="btn btn--primary btn--large"
+                        th:text="#{auth.register.submit}"></button>
+            </form>
+
+            <div class="auth-footer">
+                <span th:text="#{auth.register.already}"></span>
+                <a th:href="@{/login}" th:text="#{common.login}"></a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

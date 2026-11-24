@@ -45,12 +45,7 @@ public class AuthController {
     @GetMapping("/login")
     public String login(Model model) {
         model.addAttribute("titleKey", "page.login");
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/auth/login.jsp"
-        );
-
-        return "template/template";
+        return "auth/login";
     }
 
     @GetMapping("/register")
@@ -62,7 +57,7 @@ public class AuthController {
 
         prepareRegisterPage(model);
 
-        return "template/template";
+        return "auth/register";
     }
 
     @PostMapping("/register")
@@ -91,7 +86,7 @@ public class AuthController {
 
             prepareRegisterPage(model);
 
-            return "template/template";
+            return "auth/register";
         }
 
         if (!form.getPassword()
@@ -108,7 +103,7 @@ public class AuthController {
 
             prepareRegisterPage(model);
 
-            return "template/template";
+            return "auth/register";
         }
 
         String normalizedLogin =
@@ -148,7 +143,7 @@ public class AuthController {
 
             prepareRegisterPage(model);
 
-            return "template/template";
+            return "auth/register";
         }
 
         try {
@@ -194,9 +189,5 @@ public class AuthController {
 
     private void prepareRegisterPage(Model model) {
         model.addAttribute("titleKey", "page.register");
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/auth/register.jsp"
-        );
     }
 }
