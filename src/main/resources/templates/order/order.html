@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="checkout-page">
+
+    <p class="eyebrow" th:text="#{checkout.eyebrow}"></p>
+    <h1 th:text="#{checkout.title}"></h1>
+
+    <th:block th:if="${#lists.isEmpty(cart.items)}">
+        <p th:text="#{cart.empty}"></p>
+        <a class="btn" th:href="@{/catalogue}" th:text="#{common.backCatalogue}"></a>
+    </th:block>
+
+    <th:block th:unless="${#lists.isEmpty(cart.items)}">
+        <table>
+            <thead>
+            <tr>
+                <th th:text="#{common.product}"></th>
+                <th th:text="#{common.unitPrice}"></th>
+                <th th:text="#{common.quantity}"></th>
+                <th th:text="#{common.subtotal}"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="item : ${cart.items}">
+                <td th:text="${item.weapon.name}"></td>
+                <td th:text="|${item.weapon.price} €|"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="|${item.subtotal} €|"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="order-total">
+            <p th:if="${not #strings.isEmpty(deliveryAddress)}">
+                <th:block th:text="|#{checkout.deliveryAddress} :|"></th:block>
+                <strong th:text="${deliveryAddress}"></strong>
+            </p>
+
+            <p>
+                <th:block th:text="|#{common.subtotal} :|"></th:block>
+                <span th:text="|${originalPrice} €|"></span>
+            </p>
+
+            <p>
+                <th:block th:text="#{cart.delivery}"></th:block>
+                <th:block th:if="${freeDelivery}">
+                    <span class="strikethrough" th:text="|${standardDeliveryFee} €|"></span>
+                    <span class="free-delivery" th:text="#{common.free}"></span>
+                </th:block>
+                <span th:unless="${freeDelivery}" th:text="|${deliveryFee} €|"></span>
+            </p>
+
+            <p class="discount" th:if="${discountAmount != null and discountAmount.signum() > 0}">
+                <th:block th:if="${not #strings.isEmpty(discountLabel)}"
+                          th:text="|${discountLabel} :|"></th:block>
+                <th:block th:if="${#strings.isEmpty(discountLabel)}"
+                          th:text="#{cart.loyaltyDiscount}"></th:block>
+                <span th:text="|- ${discountAmount} €|"></span>
+            </p>
+
+            <p>
+                <th:block th:text="#{checkout.totalPay}"></th:block>
+                <strong th:text="|${finalPrice} €|"></strong>
+            </p>
+        </div>
+
+        <div class="checkout-actions">
+            <form method="post" th:action="@{/order/confirm}">
+                <button type="submit"
+                        class="btn btn--primary btn--large"
+                        th:text="#{checkout.confirm}"></button>
+            </form>
+
+            <a class="btn btn--primary btn--large"
+               th:href="@{/cart}"
+               th:text="#{common.backCart}"></a>
+
+            <a class="btn btn--primary btn--large"
+               th:href="@{/catalogue}"
+               th:text="#{common.backCatalogue}"></a>
+        </div>
+    </th:block>
+
+</section>
+
+</body>
+</html>

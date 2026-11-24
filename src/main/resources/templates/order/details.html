@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="order-details">
+
+    <div class="order-header">
+        <p class="eyebrow" th:text="#{order.detailEyebrow}"></p>
+        <h1 th:text="#{order.number(${order.id})}"></h1>
+
+        <p>
+            <th:block th:text="|#{common.date} :|"></th:block>
+            <strong th:text="|${#temporals.format(order.createdAt, 'dd/MM/yyyy')} #{common.at} ${#temporals.format(order.createdAt, 'HH:mm')}|"></strong>
+        </p>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th th:text="#{common.product}"></th>
+            <th th:text="#{common.unitPrice}"></th>
+            <th th:text="#{common.quantity}"></th>
+            <th th:text="#{common.subtotal}"></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="item : ${order.items}">
+            <td th:text="${item.weapon.name}"></td>
+            <td th:text="|${item.unitPrice} €|"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="|${item.subtotal} €|"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="order-total">
+        <p>
+            <th:block th:text="|#{order.initialPrice} :|"></th:block>
+            <strong th:text="|${order.originalPrice} €|"></strong>
+        </p>
+
+        <p th:if="${order.discountAmount != null and order.discountAmount.signum() > 0}">
+            <th:block th:text="|#{common.discount} :|"></th:block>
+            <strong th:text="|- ${order.discountAmount} €|"></strong>
+        </p>
+
+        <p>
+            <th:block th:text="|#{common.total} :|"></th:block>
+            <strong th:text="|${order.totalPrice} €|"></strong>
+        </p>
+
+        <p th:if="${not #strings.isEmpty(order.paymentReference)}">
+            <th:block th:text="|#{order.paymentReference} :|"></th:block>
+            <strong th:text="${order.paymentReference}"></strong>
+        </p>
+
+        <p th:class="${order.status == 'PAID'} ? 'success' : 'error'"
+           th:text="${order.status == 'PAID'} ? #{order.status.paid} : #{order.status.pending_payment}"></p>
+    </div>
+
+    <div class="order-actions">
+        <a class="btn btn--primary btn--large"
+           th:href="@{/order}"
+           th:text="#{common.orders}"></a>
+
+        <a class="btn btn--primary btn--large"
+           th:href="@{/catalogue}"
+           th:text="#{common.backCatalogue}"></a>
+
+        <form th:if="${order.status == 'PENDING_PAYMENT'}"
+              method="post"
+              th:attr="action=${paypalSandboxUrl}">
+            <input type="hidden" name="business" th:value="${paypalSellerEmail}">
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="amount" th:value="${order.totalPrice}">
+            <input type="hidden" name="item_name" th:value="#{order.paypalItem(${order.id})}">
+            <input type="hidden" name="currency_code" th:value="${paypalCurrency}">
+            <input type="hidden" name="custom" th:value="${order.id}">
+            <input type="hidden" name="invoice" th:value="|HYP-${order.id}|">
+            <input type="hidden" name="notify_url" th:value="|${baseUrl}/payment/paypal/ipn|">
+            <input type="hidden" name="lc" th:value="${#locale.language == 'en'} ? 'US' : 'FR'">
+            <input type="hidden" name="return" th:value="|${baseUrl}/order/${order.id}/payment/success|">
+            <input type="hidden" name="cancel_return" th:value="|${baseUrl}/order/${order.id}/payment/cancel|">
+
+            <button type="submit"
+                    class="btn btn--primary btn--large"
+                    th:text="#{order.payPaypal}"></button>
+        </form>
+    </div>
+
+</section>
+
+</body>
+</html>

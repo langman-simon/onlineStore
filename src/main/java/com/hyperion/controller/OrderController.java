@@ -122,12 +122,8 @@ public class OrderController {
         );
 
         model.addAttribute("titleKey", "page.checkout");
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/order/checkout.jsp"
-        );
 
-        return "template/template";
+        return "order/checkout";
     }
 
     @PostMapping("/confirm")
@@ -194,12 +190,7 @@ public class OrderController {
         model.addAttribute("paypalCurrency", paypalCurrency);
         model.addAttribute("baseUrl", baseUrl);
         model.addAttribute("titleKey", "page.orderDetails");
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/order/details.jsp"
-        );
-
-        return "template/template";
+        return "order/details";
     }
 
     @GetMapping("/{id}/payment/success")
@@ -270,12 +261,7 @@ public class OrderController {
 
         model.addAttribute("orders", orders);
         model.addAttribute("titleKey", "page.orders");
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/order/list.jsp"
-        );
-
-        return "template/template";
+        return "order/list";
     }
 
     @PostMapping("/{id}/cancel")
