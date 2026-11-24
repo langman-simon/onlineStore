@@ -105,12 +105,7 @@ public class PromotionServiceImpl implements PromotionService {
 
         BigDecimal tierRate = tierRateFor(cartTotal);
         BigDecimal tierDiscount = cartTotal.multiply(tierRate);
-        DiscountResult best = new DiscountResult(
-                tierDiscount,
-                tierRate.compareTo(BigDecimal.ZERO) > 0
-                        ? "Réduction fidélité (-" + tierRate.multiply(new BigDecimal("100")).stripTrailingZeros().toPlainString() + "%)"
-                        : null
-        );
+        DiscountResult best = new DiscountResult(tierDiscount, null);
 
         for (Promotion promotion : activePromotions) {
             if (!promotion.isGlobal() || promotion.getDiscountPercentage() == null) {
@@ -220,7 +215,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public BigDecimal getTier2RatePercent() {
-        return TIER_2_RATE.multiply(new BigDecimal("100"));
+        return TIER_2_RATE.multiply(new BigDecimal("100")).setScale(0, RoundingMode.HALF_UP);
     }
 
     @Override
@@ -230,7 +225,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public BigDecimal getTier3RatePercent() {
-        return TIER_3_RATE.multiply(new BigDecimal("100"));
+        return TIER_3_RATE.multiply(new BigDecimal("100")).setScale(0, RoundingMode.HALF_UP);
     }
 
     @Override
@@ -242,7 +237,26 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public NextTierIncentive getNextTierIncentive(BigDecimal cartTotal) {
+    public NextTierIncentive getNextTierIncentive(BigDecimal cartTotal, BigDecimal currentDiscount) {
+        NextTierIncentive nextTier = nextTierFor(cartTotal);
+
+        if (nextTier == null
+                || currentDiscount == null
+                || currentDiscount.signum() <= 0
+                || cartTotal.signum() <= 0) {
+            return nextTier;
+        }
+
+        BigDecimal currentRatePercent = currentDiscount
+                .multiply(new BigDecimal("100"))
+                .divide(cartTotal, 4, RoundingMode.HALF_UP);
+
+        return nextTier.ratePercent().compareTo(currentRatePercent) > 0
+                ? nextTier
+                : null;
+    }
+
+    private NextTierIncentive nextTierFor(BigDecimal cartTotal) {
         if (cartTotal.compareTo(TIER_3_THRESHOLD) >= 0) {
             return null;
         }

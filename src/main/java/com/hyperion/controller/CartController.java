@@ -129,7 +129,7 @@ public class CartController {
                 promotionService.getRemainingForFreeDelivery(originalPrice, freeDelivery);
 
         PromotionService.NextTierIncentive nextTierIncentive =
-                promotionService.getNextTierIncentive(originalPrice);
+                promotionService.getNextTierIncentive(originalPrice, discountAmount);
 
         BigDecimal remainingForNextTier =
                 nextTierIncentive != null ? nextTierIncentive.remainingAmount() : null;

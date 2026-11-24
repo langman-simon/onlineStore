@@ -58,6 +58,7 @@
 .free-delivery { color: #2f6b3b; font-weight: 600; }
 .strikethrough { text-decoration: line-through; color: var(--text-muted); margin-right: 0.4rem; }
 .discount span { color: var(--wine); font-weight: 600; }
+.cart-summary .discount strong { color: var(--wine); }
 @media (max-width: 750px) {
 
     .cart-summary {

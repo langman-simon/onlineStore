@@ -93,12 +93,11 @@
             </p>
 
             <p class="discount" th:if="${discountAmount != null and discountAmount.signum() > 0}">
-                <th:block th:if="${not #strings.isEmpty(discountLabel)}">
-                    <strong th:text="${discountLabel}"></strong> :
-                </th:block>
+                <th:block th:if="${not #strings.isEmpty(discountLabel)}"
+                          th:text="|${discountLabel} :|"></th:block>
                 <th:block th:if="${#strings.isEmpty(discountLabel)}"
                           th:text="#{cart.loyaltyDiscount}"></th:block>
-                <span th:text="|- ${discountAmount} €|"></span>
+                <strong th:text="|- ${discountAmount} €|"></strong>
             </p>
 
             <p>

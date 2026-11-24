@@ -175,4 +175,22 @@ class PromotionServiceImplTest {
         assertThatThrownBy(() -> promotionService.calculateFinalPrice((BigDecimal) null, true))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    void shouldSuggestNextTierWhenNoBetterDiscountApplies() {
+        PromotionService.NextTierIncentive incentive =
+                promotionService.getNextTierIncentive(new BigDecimal("150.00"), BigDecimal.ZERO);
+
+        assertThat(incentive).isNotNull();
+        assertThat(incentive.remainingAmount()).isEqualByComparingTo("50.00");
+        assertThat(incentive.ratePercent()).isEqualByComparingTo("10");
+    }
+
+    @Test
+    void shouldNotSuggestNextTierWhenCurrentDiscountIsBetter() {
+        PromotionService.NextTierIncentive incentive =
+                promotionService.getNextTierIncentive(new BigDecimal("24.99"), new BigDecimal("12.50"));
+
+        assertThat(incentive).isNull();
+    }
 }
