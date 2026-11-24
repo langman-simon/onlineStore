@@ -150,7 +150,7 @@ public class CartController {
                 nextTierRate
         );
 
-        return "template/template";
+        return "cart/cart";
     }
 
     @PostMapping("/cart/remove/{weaponId}")
