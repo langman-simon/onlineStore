@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: hyperion-db
+    environment:
+      POSTGRES_DB: hyperion
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mdp
+    ports:
+      - "5432:5432"
+    volumes:
+      - hyperion-data:/var/lib/postgresql
+
+volumes:
+  hyperion-data:

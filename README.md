@@ -1,30 +1,28 @@
 # Hyperion
 
-Projet réalisé dans le cadre du cours **IG338 - Développement avancé d'application Web** à la Henallux - Département technique IESN.
+Projet réalisé dans le cadre du cours **TEB3005-NI - Développement avancé d'application Web** à la Henallux - Département technique IESN (Bloc 3, 2026-2027).
 
-Hyperion est une application Web de vente en ligne sécurisée développée avec Spring Boot. Elle propose un catalogue dynamique, un panier, l'inscription et l'authentification des clients, la prise de commande, un paiement en ligne, des promotions et une interface disponible en français et en anglais.
+Hyperion est une boutique en ligne de répliques et d'équipements **airsoft**, développée avec Spring Boot. Elle propose un catalogue dynamique, un panier, l'inscription et l'authentification des clients, la prise de commande, un paiement en ligne, des promotions et une interface disponible en français et en anglais.
 
 ## Technologies
 
 - Java 26
-- Spring Boot 4.1.0
+- Spring Boot 4.1
 - Spring MVC
 - Spring Security
-- Spring Data JPA
-- Hibernate
-- Apache Maven
-- Apache Tomcat embarqué
-- JSP / JSTL / HTML / CSS
-- PostgreSQL
+- Spring Data JPA / Hibernate
+- Gradle
+- Thymeleaf (+ Layout Dialect, Spring Security extras)
+- MapStruct
+- PostgreSQL (via Docker)
 - Jakarta Bean Validation
-- JUnit
-- Mockito
+- JUnit / Mockito
 - PayPal Sandbox
 
 ## Fonctionnalités principales
 
-- Consultation du catalogue sans authentification.
-- Consultation des catégories, des produits d'une catégorie et du détail d'un produit.
+- Consultation du catalogue sans authentification, avec recherche, filtre par catégorie et tri.
+- Consultation du détail d'un produit.
 - Ajout d'un produit au panier avec choix de la quantité.
 - Consultation, modification et suppression des articles du panier.
 - Inscription d'un client avec validation des données saisies.
@@ -32,60 +30,51 @@ Hyperion est une application Web de vente en ligne sécurisée développée avec
 - Modification du compte utilisateur.
 - Confirmation et enregistrement d'une commande avant paiement.
 - Paiement en ligne via PayPal Sandbox.
-- Mise à jour du statut de la commande après validation du paiement.
-- Promotions calculées dans la couche métier.
+- Promotions calculées dans la couche métier (paliers de fidélité, promotions globales et ciblées).
+- Interface d'administration : gestion des produits et des promotions.
 - Interface disponible en français et en anglais.
-- Traduction des libellés statiques, de certains libellés dynamiques issus de la base de données et des messages d'erreur.
-- Affichage d'un message personnalisé pour l'utilisateur authentifié.
 
 ## Prérequis
 
-Installer les outils suivants :
+- JDK 26
+- Docker Desktop
+- IntelliJ IDEA (recommandé)
 
-- JDK 26 ;
-- Apache Maven ;
-- PostgreSQL.
+Gradle n'a pas besoin d'être installé : le projet utilise le wrapper `./gradlew`.
 
-Vérification :
+## Base de données (Docker)
 
-```bash
-java -version
-mvn -version
-psql --version
-```
+### Option 1 : Docker Compose (recommandé)
 
-## Configuration de PostgreSQL
-
-La configuration actuelle utilise :
-
-```text
-Base de données : hyperion
-Hôte : localhost
-Port : 5432
-Utilisateur : postgres
-Mot de passe : mdp
-```
-
-Créer la base de données si nécessaire :
+Depuis la racine du projet :
 
 ```bash
-sudo -u postgres psql
+docker compose up -d
 ```
 
-Puis :
+Le fichier `compose.yaml` crée un conteneur PostgreSQL `hyperion-db` avec les bons identifiants. Les données sont conservées dans un volume Docker entre deux redémarrages.
 
-```sql
-CREATE DATABASE hyperion;
-ALTER USER postgres WITH PASSWORD 'mdp';
+Pour arrêter la base :
+
+```bash
+docker compose down
 ```
 
-La configuration correspondante se trouve dans :
+### Option 2 : commande Docker seule
 
-```text
-src/main/resources/application.yaml
+```bash
+docker run --name hyperion-db -e POSTGRES_DB=hyperion -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=mdp -p 5432:5432 -d postgres:18
 ```
 
-avec :
+Pour relancer le conteneur plus tard :
+
+```bash
+docker start hyperion-db
+```
+
+### Configuration
+
+La configuration de connexion se trouve dans `src/main/resources/application.yaml` :
 
 ```yaml
 spring:
@@ -95,81 +84,51 @@ spring:
     password: mdp
 ```
 
-Le schéma est créé ou mis à jour par Hibernate grâce à :
-
-```yaml
-spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-```
-
-Le fichier suivant contient les données initiales nécessaires à la démonstration :
-
-```text
-src/main/resources/data.sql
-```
-
-Il est exécuté automatiquement au démarrage de l'application.
+Le schéma est créé ou mis à jour par Hibernate (`ddl-auto: update`). Le fichier `src/main/resources/data.sql` contient les données de démonstration et est exécuté automatiquement au démarrage.
 
 ## Construction
 
-Depuis la racine du projet :
-
 ```bash
-mvn clean install
+./gradlew clean build
 ```
 
-Cette commande compile l'application et exécute les tests Maven.
+Cette commande compile l'application (dont la génération des mappers MapStruct) et exécute les tests.
 
 Pour exécuter uniquement les tests :
 
 ```bash
-mvn test
+./gradlew test
 ```
 
 ## Lancement
 
-### Maven
+### Gradle
 
 ```bash
-mvn spring-boot:run
+./gradlew bootRun
 ```
 
-### IntelliJ IDEA Ultimate
+### IntelliJ IDEA
 
-1. Ouvrir le projet à partir de `pom.xml`.
+1. Ouvrir le dossier du projet (IntelliJ détecte `build.gradle`).
 2. Configurer le SDK du projet sur Java 26.
-3. Vérifier que PostgreSQL est démarré.
-4. Exécuter la classe `com.hyperion.HyperionApplication`.
+3. Vérifier que le conteneur PostgreSQL est démarré.
+4. Lancer la tâche Gradle `bootRun` ou la classe `com.hyperion.HyperionApplication`.
 
-L'application est accessible à l'adresse :
+Après un `git pull`, recharger le projet Gradle (icône 🐘) avant de lancer l'application.
 
-```text
-http://localhost:8080/
-```
+L'application est accessible à l'adresse : http://localhost:8080/
 
 ## Comptes de démonstration
 
-### Client
+| Rôle | Login | Mot de passe |
+|---|---|---|
+| Client | `user` | `mdp` |
+| Administrateur | `admin` | `mdp` |
 
-```text
-Login : user
-Mot de passe : mdp
-```
-
-### Administrateur
-
-```text
-Login : admin
-Mot de passe : mdp
-```
-
-Les mots de passe enregistrés dans PostgreSQL sont hashés.
+Les mots de passe enregistrés dans PostgreSQL sont hashés avec BCrypt.
 
 ## Internationalisation
-
-L'application prend en charge le français et l'anglais.
 
 Les principaux fichiers de traduction sont :
 
@@ -180,49 +139,43 @@ src/main/resources/ValidationMessages_fr.properties
 src/main/resources/ValidationMessages_en.properties
 ```
 
-Les catégories stockées en base utilisent des clés de traduction afin que leurs libellés dynamiques puissent être affichés dans la langue sélectionnée.
+Les catégories stockées en base utilisent des clés de traduction afin d'être affichées dans la langue sélectionnée. La langue se change avec le paramètre `?lang=fr` ou `?lang=en`.
 
 ## Paiement
 
-Le paiement en ligne utilise PayPal Sandbox.
-
-La configuration PayPal se trouve dans :
-
-```text
-src/main/resources/application.yaml
-```
-
-La commande est enregistrée en base de données avant le paiement. Une fois le paiement validé, son statut est mis à jour.
+Le paiement en ligne utilise PayPal Sandbox (configuration dans `application.yaml`). La commande est enregistrée en base avant le paiement, puis son statut est mis à jour une fois le paiement validé.
 
 ## Architecture
 
-L'application suit une architecture MVC et une séparation en couches de type 3-tiers :
+Architecture MVC en couches :
 
 ```text
-Controller -> Service -> Repository -> PostgreSQL
-                |
-                v
-              Model
+Controller -> Service -> DAO -> Repository (Spring Data JPA) -> PostgreSQL
+                 |          |
+               Model  <- MapStruct -> Entity
 ```
-
-Les principales parties du projet sont organisées comme suit :
 
 ```text
 src/
 ├── main/
 │   ├── java/com/hyperion/
-│   │   ├── configuration/
-│   │   ├── controller/
-│   │   ├── dto/
-│   │   ├── model/
-│   │   ├── repository/
-│   │   ├── service/
+│   │   ├── cart/            panier en session
+│   │   ├── configuration/   sécurité, i18n, web
+│   │   ├── controller/      contrôleurs MVC
+│   │   ├── dataAccess/
+│   │   │   ├── dao/         accès aux données (interfaces + implémentations)
+│   │   │   ├── entity/      entités JPA
+│   │   │   ├── repository/  repositories Spring Data
+│   │   │   └── util/        mappers MapStruct Entity <-> Model
+│   │   ├── dto/             formulaires
+│   │   ├── model/           objets métier
+│   │   ├── service/         logique métier
 │   │   └── session/
-│   ├── resources/
-│   │   ├── i18n/
-│   │   ├── static/
-│   │   ├── application.yaml
-│   │   └── data.sql
-│   └── webapp/WEB-INF/jsp/
+│   └── resources/
+│       ├── i18n/
+│       ├── static/          css, js, images
+│       ├── templates/       vues Thymeleaf
+│       ├── application.yaml
+│       └── data.sql
 └── test/
 ```
