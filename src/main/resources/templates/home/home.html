@@ -88,7 +88,7 @@
                          th:if="${promo.discountPercentage != null or promo.freeDelivery}">
                         <span class="home-promo-badge"
                               th:if="${promo.discountPercentage != null}"
-                              th:text="|-${promo.discountPercentage}%|"></span>
+                              th:text="|-${promo.discountPercentage.stripTrailingZeros().toPlainString()}%|"></span>
 
                         <span class="home-promo-badge"
                               th:if="${promo.freeDelivery}"
