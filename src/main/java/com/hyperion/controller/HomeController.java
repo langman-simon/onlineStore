@@ -66,6 +66,5 @@ public class HomeController {
         model.addAttribute("titleKey", "page.home");
         model.addAttribute("titleKey", "page.home");
         return "home/home";
-        }
     }
 }
