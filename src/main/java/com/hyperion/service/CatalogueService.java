@@ -8,21 +8,21 @@ import java.util.Optional;
 
 public interface CatalogueService {
 
-    List<Product> findWeapons(Long categoryId);
+    List<Product> findProducts(Long categoryId);
 
-    List<Product> findWeapons(Long categoryId, String search, String sort);
+    List<Product> findProducts(Long categoryId, String search, String sort);
 
     List<Category> findAllCategories();
 
-    Optional<Product> findWeaponById(Long weaponId);
+    Optional<Product> findProductById(Long productId);
 
-    Optional<Product> findWeaponByReference(String reference);
+    Optional<Product> findProductByReference(String reference);
 
     Optional<Category> findCategoryById(Long categoryId);
 
     Optional<Category> findCategoryByName(String name);
 
-    Product saveWeapon(Product weapon);
+    Product saveProduct(Product product);
 
-    void deleteWeapon(Product weapon);
+    void deleteProduct(Product product);
 }

@@ -44,7 +44,7 @@ public class CartController {
             HttpSession session
     ) {
         Optional<Product> productOpt =
-                catalogueService.findWeaponById(productId);
+                catalogueService.findProductById(productId);
 
         if (productOpt.isEmpty()) {
             globalBannerService.error(
@@ -183,7 +183,7 @@ public class CartController {
             HttpSession session
     ) {
         Optional<Product> productOpt =
-                catalogueService.findWeaponById(productId);
+                catalogueService.findProductById(productId);
 
         if (productOpt.isEmpty()) {
             globalBannerService.error(

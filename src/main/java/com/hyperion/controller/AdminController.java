@@ -49,7 +49,7 @@ public class AdminController {
             @RequestParam(required = false) Long categoryId,
             Model model
     ) {
-        model.addAttribute("products", catalogueService.findWeapons(categoryId));
+        model.addAttribute("products", catalogueService.findProducts(categoryId));
         model.addAttribute("categories", catalogueService.findAllCategories());
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("promotions", promotionService.findAll());
@@ -60,7 +60,7 @@ public class AdminController {
 
 
     @PostMapping("/products/add")
-    public String addWeapon(
+    public String addProduct(
             @RequestParam String name,
             @RequestParam String description,
             @RequestParam BigDecimal price,
@@ -72,7 +72,7 @@ public class AdminController {
             HttpSession session
     ) {
         try {
-            validateWeaponData(
+            validateProductData(
                     name,
                     description,
                     price,
@@ -84,7 +84,7 @@ public class AdminController {
             String normalizedReference = reference.trim();
 
             if (catalogueService
-                    .findWeaponByReference(normalizedReference)
+                    .findProductByReference(normalizedReference)
                     .isPresent()) {
 
                 throw new IllegalArgumentException(
@@ -97,25 +97,25 @@ public class AdminController {
             String imageUrl =
                     image == null || image.isEmpty()
                             ? null
-                            : imageStorageService.saveWeaponImage(image);
+                            : imageStorageService.saveProductImage(image);
 
-            Product weapon = new Product();
+            Product product = new Product();
 
-            weapon.setName(name.trim());
-            weapon.setDescription(description.trim());
-            weapon.setPrice(price);
-            weapon.setStock(stock);
-            weapon.setReference(normalizedReference);
-            weapon.setManufacturer(manufacturer.trim());
-            weapon.setCategory(category);
-            weapon.setImageUrl(imageUrl);
+            product.setName(name.trim());
+            product.setDescription(description.trim());
+            product.setPrice(price);
+            product.setStock(stock);
+            product.setReference(normalizedReference);
+            product.setManufacturer(manufacturer.trim());
+            product.setCategory(category);
+            product.setImageUrl(imageUrl);
 
-            catalogueService.saveWeapon(weapon);
+            catalogueService.saveProduct(product);
 
             globalBannerService.success(
                     session,
                     "message.admin.weaponAdded",
-                    weapon.getName()
+                    product.getName()
             );
 
         } catch (IllegalArgumentException | IllegalStateException exception) {
@@ -130,9 +130,9 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/products/update/{weaponId}")
-    public String updateWeapon(
-            @PathVariable Long weaponId,
+    @PostMapping("/products/update/{productId}")
+    public String updateProduct(
+            @PathVariable Long productId,
             @RequestParam String name,
             @RequestParam String description,
             @RequestParam BigDecimal price,
@@ -144,7 +144,7 @@ public class AdminController {
             HttpSession session
     ) {
         try {
-            validateWeaponData(
+            validateProductData(
                     name,
                     description,
                     price,
@@ -153,49 +153,49 @@ public class AdminController {
                     manufacturer
             );
 
-            Product weapon = findWeapon(weaponId);
+            Product product = findProduct(productId);
             Category category = findCategory(categoryId);
 
             String normalizedReference = reference.trim();
 
-            Optional<Product> weaponWithSameReference =
-                    catalogueService.findWeaponByReference(
+            Optional<Product> productWithSameReference =
+                    catalogueService.findProductByReference(
                             normalizedReference
                     );
 
-            if (weaponWithSameReference.isPresent()
-                    && !weaponWithSameReference
+            if (productWithSameReference.isPresent()
+                    && !productWithSameReference
                     .get()
                     .getId()
-                    .equals(weaponId)) {
+                    .equals(productId)) {
 
                 throw new IllegalArgumentException(
                         "error.admin.referenceOther"
                 );
             }
 
-            weapon.setName(name.trim());
-            weapon.setDescription(description.trim());
-            weapon.setPrice(price);
-            weapon.setStock(stock);
-            weapon.setReference(normalizedReference);
-            weapon.setManufacturer(manufacturer.trim());
-            weapon.setCategory(category);
+            product.setName(name.trim());
+            product.setDescription(description.trim());
+            product.setPrice(price);
+            product.setStock(stock);
+            product.setReference(normalizedReference);
+            product.setManufacturer(manufacturer.trim());
+            product.setCategory(category);
 
             if (image != null && !image.isEmpty()) {
 
                 String imageUrl =
-                        imageStorageService.saveWeaponImage(image);
+                        imageStorageService.saveProductImage(image);
 
-                weapon.setImageUrl(imageUrl);
+                product.setImageUrl(imageUrl);
             }
 
-            catalogueService.saveWeapon(weapon);
+            catalogueService.saveProduct(product);
 
             globalBannerService.success(
                     session,
                     "message.admin.weaponUpdated",
-                    weapon.getName()
+                    product.getName()
             );
 
         } catch (IllegalArgumentException | IllegalStateException exception) {
@@ -210,16 +210,16 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/products/remove/{weaponId}")
-    public String removeWeapon(
-            @PathVariable Long weaponId,
+    @PostMapping("/products/remove/{productId}")
+    public String removeProduct(
+            @PathVariable Long productId,
             HttpSession session
     ) {
-        Product weapon = catalogueService
-                .findWeaponById(weaponId)
+        Product product = catalogueService
+                .findProductById(productId)
                 .orElse(null);
 
-        if (weapon == null) {
+        if (product == null) {
 
             globalBannerService.error(
                     session,
@@ -230,12 +230,12 @@ public class AdminController {
         }
 
         try {
-            catalogueService.deleteWeapon(weapon);
+            catalogueService.deleteProduct(product);
 
             globalBannerService.success(
                     session,
                     "message.admin.weaponDeleted",
-                    weapon.getName()
+                    product.getName()
             );
 
         } catch (DataIntegrityViolationException exception) {
@@ -285,7 +285,7 @@ public class AdminController {
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
-            Product targetWeapon = targetProductId != null ? findWeapon(targetProductId) : null;
+            Product targetProduct = targetProductId != null ? findProduct(targetProductId) : null;
 
             LocalDate parsedStartDate =
                     parseDate(startDate);
@@ -312,7 +312,7 @@ public class AdminController {
             promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
             promotion.setTargetCategory(targetCategory);
-            promotion.setTargetProduct(targetWeapon);
+            promotion.setTargetProduct(targetProduct);
 
             promotionService.save(promotion);
 
@@ -371,7 +371,7 @@ public class AdminController {
             }
 
             Category targetCategory = targetCategoryId != null ? findCategory(targetCategoryId) : null;
-            Product targetWeapon = targetProductId != null ? findWeapon(targetProductId) : null;
+            Product targetProduct = targetProductId != null ? findProduct(targetProductId) : null;
 
             LocalDate parsedStartDate =
                     parseDate(startDate);
@@ -399,7 +399,7 @@ public class AdminController {
             promotion.setEndDate(parsedEndDate);
             promotion.setActive(active);
             promotion.setTargetCategory(targetCategory);
-            promotion.setTargetProduct(targetWeapon);
+            promotion.setTargetProduct(targetProduct);
 
             promotionService.save(promotion);
 
@@ -460,9 +460,9 @@ public class AdminController {
     }
 
 
-    private Product findWeapon(Long weaponId) {
+    private Product findProduct(Long productId) {
         return catalogueService
-                .findWeaponById(weaponId)
+                .findProductById(productId)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "error.admin.weaponNotFound"
@@ -490,7 +490,7 @@ public class AdminController {
                 );
     }
 
-    private void validateWeaponData(
+    private void validateProductData(
             String name,
             String description,
             BigDecimal price,

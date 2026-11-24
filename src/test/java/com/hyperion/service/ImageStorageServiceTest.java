@@ -19,7 +19,7 @@ class ImageStorageServiceTest {
     @Test
     void shouldRejectNullImage() {
         assertThatThrownBy(() ->
-                imageStorageService.saveWeaponImage(null)
+                imageStorageService.saveProductImage(null)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("error.image.required");
@@ -35,7 +35,7 @@ class ImageStorageServiceTest {
         );
 
         assertThatThrownBy(() ->
-                imageStorageService.saveWeaponImage(image)
+                imageStorageService.saveProductImage(image)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("error.image.required");
@@ -51,7 +51,7 @@ class ImageStorageServiceTest {
         );
 
         assertThatThrownBy(() ->
-                imageStorageService.saveWeaponImage(image)
+                imageStorageService.saveProductImage(image)
         )
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("error.image.format");
@@ -66,7 +66,7 @@ class ImageStorageServiceTest {
                 new byte[]{1, 2, 3}
         );
 
-        String path = imageStorageService.saveWeaponImage(image);
+        String path = imageStorageService.saveProductImage(image);
 
         assertThat(path)
                 .startsWith("/uploads/weapons/")

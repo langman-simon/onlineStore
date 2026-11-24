@@ -29,7 +29,7 @@ public class CatalogueController {
         String searchQuery = search.trim();
         String selectedSort = normalizeSort(sort);
 
-        model.addAttribute("products", catalogueService.findWeapons(categoryId, searchQuery, selectedSort));
+        model.addAttribute("products", catalogueService.findProducts(categoryId, searchQuery, selectedSort));
         model.addAttribute("categories", catalogueService.findAllCategories());
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("searchQuery", searchQuery);

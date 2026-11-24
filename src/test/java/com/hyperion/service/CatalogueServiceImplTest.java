@@ -33,7 +33,7 @@ class CatalogueServiceImplTest {
         Product product = new Product();
         when(productDataAccess.findAll("nameAsc")).thenReturn(List.of(product));
 
-        List<Product> products = catalogueService.findWeapons(null);
+        List<Product> products = catalogueService.findProducts(null);
 
         assertThat(products).containsExactly(product);
         verify(productDataAccess).findAll("nameAsc");
@@ -44,7 +44,7 @@ class CatalogueServiceImplTest {
         Product product = new Product();
         when(productDataAccess.findByCategory(1L, "nameAsc")).thenReturn(List.of(product));
 
-        List<Product> products = catalogueService.findWeapons(1L);
+        List<Product> products = catalogueService.findProducts(1L);
 
         assertThat(products).containsExactly(product);
         verify(productDataAccess).findByCategory(1L, "nameAsc");
@@ -55,7 +55,7 @@ class CatalogueServiceImplTest {
         Product product = new Product();
         when(productDataAccess.searchByName("m4", "priceAsc")).thenReturn(List.of(product));
 
-        List<Product> products = catalogueService.findWeapons(null, "  m4  ", "priceAsc");
+        List<Product> products = catalogueService.findProducts(null, "  m4  ", "priceAsc");
 
         assertThat(products).containsExactly(product);
         verify(productDataAccess).searchByName("m4", "priceAsc");
@@ -66,7 +66,7 @@ class CatalogueServiceImplTest {
         Product product = new Product();
         when(productDataAccess.searchByNameInCategory(2L, "m4", "nameDesc")).thenReturn(List.of(product));
 
-        List<Product> products = catalogueService.findWeapons(2L, "m4", "nameDesc");
+        List<Product> products = catalogueService.findProducts(2L, "m4", "nameDesc");
 
         assertThat(products).containsExactly(product);
         verify(productDataAccess).searchByNameInCategory(2L, "m4", "nameDesc");
@@ -87,7 +87,7 @@ class CatalogueServiceImplTest {
         Product product = new Product();
         when(productDataAccess.findById(1L)).thenReturn(Optional.of(product));
 
-        Optional<Product> result = catalogueService.findWeaponById(1L);
+        Optional<Product> result = catalogueService.findProductById(1L);
 
         assertThat(result).contains(product);
     }
@@ -97,7 +97,7 @@ class CatalogueServiceImplTest {
         Product product = new Product();
         when(productDataAccess.save(product)).thenReturn(product);
 
-        Product saved = catalogueService.saveWeapon(product);
+        Product saved = catalogueService.saveProduct(product);
 
         assertThat(saved).isSameAs(product);
         verify(productDataAccess).save(product);
@@ -108,7 +108,7 @@ class CatalogueServiceImplTest {
         Product product = new Product();
         product.setId(5L);
 
-        catalogueService.deleteWeapon(product);
+        catalogueService.deleteProduct(product);
 
         verify(productDataAccess).deleteById(5L);
     }

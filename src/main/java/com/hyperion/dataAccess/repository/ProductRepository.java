@@ -23,7 +23,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             Sort sort
     );
 
-    void removeWeaponById(Long idWeapon);
+    void removeProductById(Long idProduct);
 
     Optional<ProductEntity> findByReference(String reference);
 }

@@ -33,7 +33,7 @@ public class ProductController {
             Model model,
             HttpSession session
     ) {
-        Optional<Product> product = catalogueService.findWeaponById(id);
+        Optional<Product> product = catalogueService.findProductById(id);
 
         if (product.isEmpty()) {
             globalBannerService.error(session, "error.product.notFound");

@@ -26,12 +26,12 @@ public class CatalogueServiceImpl implements CatalogueService {
     }
 
     @Override
-    public List<Product> findWeapons(Long categoryId) {
-        return findWeapons(categoryId, "", DEFAULT_SORT);
+    public List<Product> findProducts(Long categoryId) {
+        return findProducts(categoryId, "", DEFAULT_SORT);
     }
 
     @Override
-    public List<Product> findWeapons(Long categoryId, String search, String sort) {
+    public List<Product> findProducts(Long categoryId, String search, String sort) {
         String searchQuery = search == null ? "" : search.trim();
 
         if (categoryId == null && searchQuery.isEmpty()) {
@@ -55,12 +55,12 @@ public class CatalogueServiceImpl implements CatalogueService {
     }
 
     @Override
-    public Optional<Product> findWeaponById(Long weaponId) {
-        return productDataAccess.findById(weaponId);
+    public Optional<Product> findProductById(Long productId) {
+        return productDataAccess.findById(productId);
     }
 
     @Override
-    public Optional<Product> findWeaponByReference(String reference) {
+    public Optional<Product> findProductByReference(String reference) {
         return productDataAccess.findByReference(reference);
     }
 
@@ -75,12 +75,12 @@ public class CatalogueServiceImpl implements CatalogueService {
     }
 
     @Override
-    public Product saveWeapon(Product weapon) {
-        return productDataAccess.save(weapon);
+    public Product saveProduct(Product product) {
+        return productDataAccess.save(product);
     }
 
     @Override
-    public void deleteWeapon(Product weapon) {
-        productDataAccess.deleteById(weapon.getId());
+    public void deleteProduct(Product product) {
+        productDataAccess.deleteById(product.getId());
     }
 }

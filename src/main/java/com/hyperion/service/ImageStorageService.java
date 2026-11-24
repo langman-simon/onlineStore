@@ -35,7 +35,7 @@ public class ImageStorageService {
         }
     }
 
-    public String saveWeaponImage(MultipartFile image) {
+    public String saveProductImage(MultipartFile image) {
         if (image == null || image.isEmpty()) {
             throw new IllegalArgumentException(
                     "error.image.required"
