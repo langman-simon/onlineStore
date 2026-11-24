@@ -61,7 +61,7 @@ public class ProfileController {
                 ProfileForm.from(user)
         );
         prepareAccountPage(model);
-        return "template/template";
+        return "account/account";
     }
 
     @PostMapping("/account")
@@ -80,7 +80,7 @@ public class ProfileController {
                     "error.form.invalid"
             );
             prepareAccountPage(model);
-            return "template/template";
+            return "account/account";
         }
 
         String currentLogin = authentication.getName();
@@ -138,9 +138,5 @@ public class ProfileController {
 
     private void prepareAccountPage(Model model) {
         model.addAttribute("titleKey", "page.account");
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/account/account.jsp"
-        );
     }
 }

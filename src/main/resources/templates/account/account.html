@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="account-page">
+    <div class="account-card">
+
+        <header class="account-card__header">
+            <p class="eyebrow" th:text="#{account.eyebrow}"></p>
+            <h1 th:text="#{account.title}"></h1>
+            <p th:text="#{account.intro}"></p>
+        </header>
+
+        <form method="post"
+              th:action="@{/account}"
+              th:object="${profileForm}"
+              class="account-form">
+
+            <div class="form-group account-form__full">
+                <label for="login" th:text="#{auth.username}"></label>
+                <input type="text"
+                       th:field="*{login}"
+                       autocomplete="username"
+                       minlength="3"
+                       maxlength="50"
+                       required>
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('login')}"
+                      th:errors="*{login}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="firstName" th:text="#{auth.firstName}"></label>
+                <input type="text"
+                       th:field="*{firstName}"
+                       autocomplete="given-name"
+                       minlength="2"
+                       maxlength="50"
+                       required>
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('firstName')}"
+                      th:errors="*{firstName}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName" th:text="#{auth.lastName}"></label>
+                <input type="text"
+                       th:field="*{lastName}"
+                       autocomplete="family-name"
+                       minlength="2"
+                       maxlength="50"
+                       required>
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('lastName')}"
+                      th:errors="*{lastName}"></span>
+            </div>
+
+            <div class="form-group account-form__full">
+                <label for="deliveryAddress" th:text="#{auth.deliveryAddress}"></label>
+                <input type="text"
+                       th:field="*{deliveryAddress}"
+                       autocomplete="street-address"
+                       minlength="5"
+                       maxlength="150"
+                       required>
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('deliveryAddress')}"
+                      th:errors="*{deliveryAddress}"></span>
+            </div>
+
+            <div class="form-group account-form__full">
+                <label for="email" th:text="#{auth.email}"></label>
+                <input type="email"
+                       th:field="*{email}"
+                       autocomplete="email"
+                       maxlength="100"
+                       required>
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="phone" th:text="#{auth.phone}"></label>
+                <input type="tel"
+                       th:field="*{phone}"
+                       inputmode="numeric"
+                       pattern="[0-9]{8,20}"
+                       autocomplete="tel"
+                       required>
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('phone')}"
+                      th:errors="*{phone}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="secondaryPhone">
+                    <th:block th:text="#{auth.secondaryPhone}"></th:block>
+                    <span class="form-label-optional" th:text="#{common.optional}"></span>
+                </label>
+                <input type="tel"
+                       th:field="*{secondaryPhone}"
+                       inputmode="numeric"
+                       pattern="[0-9]{8,20}">
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('secondaryPhone')}"
+                      th:errors="*{secondaryPhone}"></span>
+            </div>
+
+            <div class="account-form__actions">
+                <a th:href="@{/}"
+                   class="btn account-form__cancel"
+                   th:text="#{common.cancel}"></a>
+
+                <button type="submit"
+                        class="btn btn--primary"
+                        th:text="#{account.save}"></button>
+            </div>
+        </form>
+
+    </div>
+</section>
+
+</body>
+</html>
