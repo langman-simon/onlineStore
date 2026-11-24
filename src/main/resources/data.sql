@@ -39,7 +39,7 @@ VALUES
     ('Billes 0,20 g (4000)', 'Sachet de 4000 billes biodégradables de 0,20 g.', 9.99, 100, (SELECT id FROM categories WHERE name = 'category.ammo'), 'Hyperion Ammo', 'HYP-012', '/images/products/bbs-020.webp'),
     ('Billes 0,25 g (4000)', 'Sachet de 4000 billes biodégradables de 0,25 g pour plus de précision.', 12.99, 80, (SELECT id FROM categories WHERE name = 'category.ammo'), 'Hyperion Ammo', 'HYP-013', '/images/products/bbs-025.webp'),
     ('Green gas', 'Bonbonne de gaz pour répliques GBB.', 11.99, 40, (SELECT id FROM categories WHERE name = 'category.ammo'), 'Hyperion Ammo', 'HYP-014', '/images/products/green-gas.webp'),
-    ('Chargeur mid-cap', 'Chargeur de 120 billes compatible avec les répliques M4.', 14.99, 35, (SELECT id FROM categories WHERE name = 'category.accessories'), 'Hyperion Gear', 'HYP-015', '/images/products/midcap-mag.webp'),
+    ('Chargeur mid-cap', 'Chargeur de 120 billes compatible avec les répliques AK.', 14.99, 35, (SELECT id FROM categories WHERE name = 'category.accessories'), 'Hyperion Gear', 'HYP-015', '/images/products/midcap-mag.webp'),
     ('Batterie LiPo 7,4 V', 'Batterie compacte et puissante pour répliques AEG.', 24.99, 18, (SELECT id FROM categories WHERE name = 'category.accessories'), 'Hyperion Gear', 'HYP-016', '/images/products/lipo-battery.webp'),
     ('Chargeur de batterie', 'Chargeur équilibreur pour batteries LiPo.', 29.99, 0, (SELECT id FROM categories WHERE name = 'category.accessories'), 'Hyperion Gear', 'HYP-017', '/images/products/battery-charger.webp')
 ON CONFLICT (reference) DO UPDATE
