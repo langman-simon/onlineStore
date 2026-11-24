@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<body>
+
+<section layout:fragment="main-content" class="cart-page">
+
+    <p class="eyebrow" th:text="#{cart.eyebrow}"></p>
+    <h1 th:text="#{cart.title}"></h1>
+
+    <div class="cart-empty" th:if="${#lists.isEmpty(cart.items)}">
+        <p th:text="#{cart.empty}"></p>
+        <a th:href="@{/catalogue}" class="btn btn--primary" th:text="#{common.backCatalogue}"></a>
+    </div>
+
+    <th:block th:unless="${#lists.isEmpty(cart.items)}">
+        <table>
+            <thead>
+            <tr>
+                <th th:text="#{common.product}"></th>
+                <th th:text="#{common.unitPrice}"></th>
+                <th th:text="#{common.quantity}"></th>
+                <th th:text="#{common.subtotal}"></th>
+                <th th:text="#{cart.modify}"></th>
+                <th th:text="#{common.delete}"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="item : ${cart.items}">
+                <td>
+                    <a th:href="@{/products/{id}(id=${item.weapon.id})}"
+                       th:text="${item.weapon.name}"></a>
+                </td>
+
+                <td th:text="|${item.weapon.price} €|"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="|${item.subtotal} €|"></td>
+
+                <td>
+                    <form method="post"
+                          class="cart-quantity-form"
+                          th:action="@{/cart/update/{id}(id=${item.weapon.id})}">
+
+                        <input type="number"
+                               name="quantity"
+                               class="quantity-input"
+                               th:value="${item.quantity}"
+                               min="1"
+                               th:max="${item.weapon.stock}"
+                               required>
+
+                        <button type="submit"
+                                class="btn btn--primary btn--full"
+                                th:text="#{common.update}"></button>
+                    </form>
+                </td>
+
+                <td>
+                    <form method="post"
+                          th:action="@{/cart/remove/{id}(id=${item.weapon.id})}">
+                        <button type="submit"
+                                class="btn btn--primary btn--full btn--delete"
+                                th:text="#{common.delete}"></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="cart-summary">
+            <p>
+                <th:block th:text="#{cart.totalItems}"></th:block>
+                <strong th:text="${cart.totalQuantity}"></strong>
+            </p>
+
+            <p>
+                <th:block th:text="|#{common.subtotal} :|"></th:block>
+                <strong th:text="|${originalPrice} €|"></strong>
+            </p>
+
+            <p>
+                <th:block th:text="#{cart.delivery}"></th:block>
+
+                <th:block th:if="${freeDelivery}">
+                    <span class="strikethrough" th:text="|${standardDeliveryFee} €|"></span>
+                    <span class="free-delivery" th:text="#{common.free}"></span>
+                </th:block>
+
+                <span th:unless="${freeDelivery}" th:text="|${deliveryFee} €|"></span>
+            </p>
+
+            <p class="discount" th:if="${discountAmount != null and discountAmount.signum() > 0}">
+                <th:block th:if="${not #strings.isEmpty(discountLabel)}">
+                    <strong th:text="${discountLabel}"></strong> :
+                </th:block>
+                <th:block th:if="${#strings.isEmpty(discountLabel)}"
+                          th:text="#{cart.loyaltyDiscount}"></th:block>
+                <span th:text="|- ${discountAmount} €|"></span>
+            </p>
+
+            <p>
+                <th:block th:text="#{cart.totalAfterPromotions}"></th:block>
+                <strong th:text="|${finalPrice} €|"></strong>
+            </p>
+        </div>
+
+        <th:block sec:authorize="isAuthenticated()">
+            <p class="promo-incentive"
+               th:if="${remainingForFreeDelivery != null and remainingForFreeDelivery.signum() > 0}">
+                <th:block th:text="#{cart.freeDelivery.before}"></th:block>
+                <strong th:text="|${remainingForFreeDelivery} €|"></strong>
+                <th:block th:text="#{cart.freeDelivery.after}"></th:block>
+            </p>
+
+            <p class="promo-incentive" th:if="${remainingForNextTier != null}">
+                <th:block th:text="#{cart.nextTier.before}"></th:block>
+                <strong th:text="|${remainingForNextTier} €|"></strong>
+                <th:block th:text="#{cart.nextTier.middle}"></th:block>
+                <strong th:text="|-${nextTierRate}%|"></strong>
+                <th:block th:text="#{cart.nextTier.after}"></th:block>
+            </p>
+        </th:block>
+
+        <div class="cart-login-prompt" sec:authorize="isAnonymous()">
+            <span th:text="#{cart.loginPrompt}"></span>
+            <a th:href="@{/login(redirect='/cart')}"
+               class="link--accent"
+               th:text="#{common.login}"></a>
+        </div>
+
+        <hr>
+
+        <div class="cart-actions">
+            <form sec:authorize="isAuthenticated()"
+                  method="get"
+                  th:action="@{/order/checkout}"
+                  class="cart-checkout-form">
+                <button type="submit" class="btn btn--primary" th:text="#{cart.checkout}"></button>
+            </form>
+
+            <a sec:authorize="isAnonymous()"
+               th:href="@{/login(redirect='/order/checkout')}"
+               class="btn btn--primary"
+               th:text="#{cart.checkout}"></a>
+
+            <a th:href="@{/catalogue}" class="btn btn--primary" th:text="#{common.backCatalogue}"></a>
+
+            <form method="post"
+                  th:action="@{/cart/clear}"
+                  class="cart-clear-form">
+                <button type="submit" class="btn btn--delete" th:text="#{cart.clear}"></button>
+            </form>
+        </div>
+    </th:block>
+
+</section>
+
+</body>
+</html>

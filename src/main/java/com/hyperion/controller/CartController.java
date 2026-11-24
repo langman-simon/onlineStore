@@ -116,10 +116,6 @@ public class CartController {
         BigDecimal deliveryFee = freeDelivery ? BigDecimal.ZERO : standardDeliveryFee;
 
         model.addAttribute("titleKey", "page.cart");
-        model.addAttribute(
-                "body",
-                "/WEB-INF/jsp/cart/cart.jsp"
-        );
         model.addAttribute("cart", sessionCart.getCart());
         model.addAttribute("originalPrice", originalPrice);
         model.addAttribute("discountAmount", discountAmount);
